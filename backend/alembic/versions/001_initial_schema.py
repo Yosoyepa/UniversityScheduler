@@ -26,7 +26,16 @@ depends_on = None
 def upgrade() -> None:
     # Create ENUM types first
     difficulty_level = postgresql.ENUM('EASY', 'MEDIUM', 'HARD', name='difficulty_level', create_type=False)
-    subject_type = postgresql.ENUM('DISCIPLINAR_OBLIGATORIA', 'DISCIPLINAR_OPTATIVA', 'FUNDAMENTAL', 'LIBRE_ELECCION', name='subject_type', create_type=False)
+    subject_type = postgresql.ENUM(
+        'DISCIPLINAR_OBLIGATORIA', 
+        'DISCIPLINAR_OPTATIVA', 
+        'FUNDAMENTAL_OBLIGATORIA',
+        'FUNDAMENTAL_OPTATIVA',
+        'LIBRE_ELECCION',
+        'TRABAJO_DE_GRADO',
+        name='subject_type', 
+        create_type=False
+    )
     task_status = postgresql.ENUM('TODO', 'IN_PROGRESS', 'DONE', 'ARCHIVED', name='task_status', create_type=False)
     task_priority = postgresql.ENUM('LOW', 'MEDIUM', 'HIGH', name='task_priority', create_type=False)
     task_category = postgresql.ENUM('TASK', 'EXAM', 'PROJECT', 'READING', name='task_category', create_type=False)
@@ -79,8 +88,8 @@ def upgrade() -> None:
         sa.Column('name', sa.String(200), nullable=False),
         sa.Column('group_code', sa.String(50), nullable=True),
         sa.Column('credits', sa.Integer(), nullable=False, server_default='3'),
-        sa.Column('color', sa.String(7), nullable=False, server_default="'#3b82f6'"),
-        sa.Column('difficulty', difficulty_level, nullable=False, server_default="'MEDIUM'"),
+        sa.Column('color', sa.String(7), nullable=False, server_default=sa.text("'#3b82f6'")),
+        sa.Column('difficulty', difficulty_level, nullable=False, server_default=sa.text("'MEDIUM'")),
         sa.Column('type', subject_type, nullable=False),
         sa.Column('professor_name', sa.String(200), nullable=True),
         sa.Column('created_at', sa.DateTime(timezone=True), nullable=False, server_default=sa.func.now()),
@@ -108,9 +117,9 @@ def upgrade() -> None:
         sa.Column('title', sa.String(255), nullable=False),
         sa.Column('description', sa.Text(), nullable=True),
         sa.Column('due_date', sa.DateTime(timezone=True), nullable=True),
-        sa.Column('status', task_status, nullable=False, server_default="'TODO'"),
-        sa.Column('priority', task_priority, nullable=False, server_default="'MEDIUM'"),
-        sa.Column('category', task_category, nullable=False, server_default="'TASK'"),
+        sa.Column('status', task_status, nullable=False, server_default=sa.text("'TODO'")),
+        sa.Column('priority', task_priority, nullable=False, server_default=sa.text("'MEDIUM'")),
+        sa.Column('category', task_category, nullable=False, server_default=sa.text("'TASK'")),
         sa.Column('is_synced_gcal', sa.Boolean(), nullable=False, server_default='false'),
         sa.Column('gcal_event_id', sa.String(255), nullable=True),
         sa.Column('completed_at', sa.DateTime(timezone=True), nullable=True),
