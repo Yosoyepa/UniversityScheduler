@@ -1,0 +1,18 @@
+@startuml TaskLifecycle
+title State Diagram: Task Lifecycle
+
+hide empty description
+
+[*] --> ToDo : Created
+
+ToDo --> InProgress : Start Working
+ToDo --> Archived : Delete/Archive
+
+InProgress --> Done : Complete
+InProgress --> ToDo : Move Back
+
+Done --> Archived : End of Semester
+Done --> InProgress : Re-open
+
+Archived --> [*]
+@enduml

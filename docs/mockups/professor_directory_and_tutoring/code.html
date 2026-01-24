@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Professor Directory and Tutoring - UniScheduler</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b6cee",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "card-dark": "#192233",
+                        "card-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased transition-colors duration-200">
+<!-- Main Container -->
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Top Navigation -->
+<div class="w-full border-b border-solid border-slate-200 dark:border-[#232f48] bg-white dark:bg-[#111722]">
+<div class="mx-auto max-w-[1440px] px-6 lg:px-10">
+<header class="flex items-center justify-between whitespace-nowrap py-4">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center text-primary">
+<span class="material-symbols-outlined !text-[32px]">school</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">UniScheduler</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-slate-600 dark:text-[#92a4c9] hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Dashboard</a>
+<a class="text-primary text-sm font-medium leading-normal" href="#">Directory</a>
+<a class="text-slate-600 dark:text-[#92a4c9] hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Calendar</a>
+<a class="text-slate-600 dark:text-[#92a4c9] hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Settings</a>
+</div>
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 ring-2 ring-slate-100 dark:ring-[#232f48]" data-alt="User profile picture placeholder showing a student or faculty member" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAv-hxUkmCFA1_Zy6puCy9F7n1mYc-9Q8H3N7Tn2zUdHV9493usa_JQ1RHdWc9gjDnYz6EZcW3NGki7GrY1eDQd_vIdh2HoSfuFB8CKEEjEA3UuTHfjQIww07JVzH8MMyRB3gJWgf-U_Vp8wMGar81UA6k0bsTdxaNR1YBH2z3fFSPt-Qig5nhDp-08g2QY7pMvnEauM9SMjE4G5lKxoTqVvdFrBDW2-6Uk06-LKKNQONu_DHSgvdJHUAWHDzCIYl9RrXch6K5KdLg");'></div>
+</div>
+<!-- Mobile Menu Icon -->
+<div class="md:hidden text-slate-900 dark:text-white">
+<span class="material-symbols-outlined">menu</span>
+</div>
+</header>
+</div>
+</div>
+<!-- Main Content Area -->
+<main class="flex-1 w-full bg-background-light dark:bg-background-dark">
+<div class="mx-auto max-w-[1280px] px-4 md:px-10 py-8 flex flex-col gap-8">
+<!-- Page Header -->
+<div class="flex flex-col gap-2">
+<h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Faculty Directory &amp; Tutoring Hours</h1>
+<p class="text-slate-500 dark:text-[#92a4c9] text-base md:text-lg font-normal leading-normal max-w-2xl">Find professors, check their office hours, and book tutoring sessions directly through our integrated calendar system.</p>
+</div>
+<!-- Search and Filter Section -->
+<div class="flex flex-col gap-4">
+<!-- Search Bar -->
+<div class="w-full">
+<label class="flex flex-col h-14 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full shadow-sm">
+<div class="text-slate-400 dark:text-[#92a4c9] flex bg-white dark:bg-[#192233] items-center justify-center pl-4 rounded-l-xl border-r-0">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl rounded-l-none text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 bg-white dark:bg-[#192233] h-full placeholder:text-slate-400 dark:placeholder:text-[#92a4c9] px-4 pl-2 text-base font-normal leading-normal border-0" placeholder="Search by professor, subject, or department..." value=""/>
+</div>
+</label>
+</div>
+<!-- Filter Chips -->
+<div class="flex flex-wrap gap-3 overflow-x-auto pb-2 scrollbar-hide">
+<button class="group flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-[#192233] border border-slate-200 dark:border-transparent pl-4 pr-3 hover:bg-slate-50 dark:hover:bg-[#232f48] transition-colors">
+<p class="text-slate-700 dark:text-white text-sm font-medium">Department</p>
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-400 group-hover:text-primary transition-colors !text-[20px]">keyboard_arrow_down</span>
+</button>
+<button class="group flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-[#192233] border border-slate-200 dark:border-transparent pl-4 pr-3 hover:bg-slate-50 dark:hover:bg-[#232f48] transition-colors">
+<p class="text-slate-700 dark:text-white text-sm font-medium">Availability</p>
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-400 group-hover:text-primary transition-colors !text-[20px]">keyboard_arrow_down</span>
+</button>
+<button class="group flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-primary text-white border border-primary pl-4 pr-3 shadow-lg shadow-primary/20">
+<p class="text-sm font-medium">Subject: All</p>
+<span class="material-symbols-outlined !text-[20px]">close</span>
+</button>
+<button class="group flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-[#192233] border border-slate-200 dark:border-transparent pl-4 pr-3 hover:bg-slate-50 dark:hover:bg-[#232f48] transition-colors">
+<p class="text-slate-700 dark:text-white text-sm font-medium">Office Hours</p>
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-400 group-hover:text-primary transition-colors !text-[20px]">keyboard_arrow_down</span>
+</button>
+<div class="ml-auto flex items-center gap-2">
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">Showing 12 results</p>
+</div>
+</div>
+</div>
+<!-- Professor Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="flex flex-col bg-white dark:bg-[#192233] rounded-xl shadow-sm dark:shadow-[0_0_4px_rgba(0,0,0,0.2)] overflow-hidden hover:shadow-md dark:hover:shadow-[0_0_15px_rgba(43,108,238,0.15)] transition-all duration-300 group">
+<div class="p-6 flex flex-col h-full">
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-16 h-16 rounded-full bg-cover bg-center border-2 border-slate-100 dark:border-[#232f48]" data-alt="Portrait of Dr. Elena Rivas" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDYjLm85XfiCjTvY8xkKHdNRaPeiJyylgq2tUD4bk9WuoCkW6ACy5CY4T5vskr1rhjgoB02C_haVScqL9euhR4yd74oFj7rXn__pHsJ-PQD_U3aSFWLMpH-qRLniSbUJ83JrxTrG8GEUaJs_wcdZjaRPw69uRTbVQ6NtDvgUfeRMO4e2-vb2o_8wnQpAV6ie4Hi0semlwAS0FJT_M3b8WLcFvqz_Q4nQPk7ggDWayVOxyW1s8G6oIqHGE3lvigKffGowdgmaNDw5ss");'></div>
+<div class="absolute bottom-0 right-0 size-4 bg-emerald-500 border-2 border-white dark:border-[#192233] rounded-full" title="Available Now"></div>
+</div>
+<div>
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Dr. Elena Rivas</h3>
+<p class="text-primary text-sm font-medium mt-1">Software Architecture</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-primary dark:text-slate-500 dark:hover:text-white transition-colors p-1">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col gap-3 mb-6">
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-[#232f48]/50">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#92a4c9] !text-[20px] mt-0.5">schedule</span>
+<div>
+<p class="text-slate-700 dark:text-slate-200 text-sm font-medium mb-1">Office Hours</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">Mon, Wed: 2:00 PM - 4:00 PM</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-[#232f48]/50">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#92a4c9] !text-[20px] mt-0.5">school</span>
+<div>
+<p class="text-slate-700 dark:text-slate-200 text-sm font-medium mb-1">Tutoring Lab</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">Fri: 10:00 AM - 12:00 PM</p>
+</div>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary hover:bg-primary/90 text-white text-sm font-medium leading-normal transition-colors">
+<span class="material-symbols-outlined !text-[20px]">calendar_add_on</span>
+<span>Book Meeting</span>
+</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex flex-col bg-white dark:bg-[#192233] rounded-xl shadow-sm dark:shadow-[0_0_4px_rgba(0,0,0,0.2)] overflow-hidden hover:shadow-md dark:hover:shadow-[0_0_15px_rgba(43,108,238,0.15)] transition-all duration-300 group">
+<div class="p-6 flex flex-col h-full">
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-16 h-16 rounded-full bg-cover bg-center border-2 border-slate-100 dark:border-[#232f48]" data-alt="Portrait of Professor Marcus Chen" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDOjN6b6EGeDBNWriFXuXY14ot5z1qp1ZB7-UR6ixX6NY2cOV6XAx35D3tueEx7ljsEh8-pKxR3rHidndoYFVkt207xv4E3keDv4Rizbjrj-2kbDeTOERBrzwCsYlzbi0Hwzd4R4Ty-mUi7CBw_Mna3LheIBjPvy0NIMGTz1l8anivpXy2SnUL2_0588AZoavNZEFUEMkk78kfcIEJx75oZhwtVfwDWdKJ0_gqNiMYi_QI6i8eUNb4jRnj-v0lkWAaPhf0PELFuZvc");'></div>
+<!-- No status dot means offline/busy -->
+</div>
+<div>
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Marcus Chen</h3>
+<p class="text-primary text-sm font-medium mt-1">Data Structures</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-primary dark:text-slate-500 dark:hover:text-white transition-colors p-1">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col gap-3 mb-6">
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-[#232f48]/50">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#92a4c9] !text-[20px] mt-0.5">schedule</span>
+<div>
+<p class="text-slate-700 dark:text-slate-200 text-sm font-medium mb-1">Office Hours</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">Tue, Thu: 1:00 PM - 3:00 PM</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-[#232f48]/50 opacity-50">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#92a4c9] !text-[20px] mt-0.5">school</span>
+<div>
+<p class="text-slate-700 dark:text-slate-200 text-sm font-medium mb-1">Tutoring Lab</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">Not Available this semester</p>
+</div>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary hover:bg-primary/90 text-white text-sm font-medium leading-normal transition-colors">
+<span class="material-symbols-outlined !text-[20px]">calendar_add_on</span>
+<span>Book Meeting</span>
+</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="flex flex-col bg-white dark:bg-[#192233] rounded-xl shadow-sm dark:shadow-[0_0_4px_rgba(0,0,0,0.2)] overflow-hidden hover:shadow-md dark:hover:shadow-[0_0_15px_rgba(43,108,238,0.15)] transition-all duration-300 group">
+<div class="p-6 flex flex-col h-full">
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-16 h-16 rounded-full bg-cover bg-center border-2 border-slate-100 dark:border-[#232f48]" data-alt="Portrait of Dr. Sarah Johnson" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAF392j6Hg81G5GRI-okmgR7Vz5G-ljUuF5QBFupJBkl6ie0wNjC_S3hQUtLspqvcWg_lNQzsz114kwNpi0ezP78hwWH_HFHqvyRzClL-swjfHQCYB1yqU_mZnKrYylbztkQLID89pHGQ1-MtHzT1JVk60yCNg1W9X1dhJ36QfrMc5G6taWG4dGOuUyl308A6PESNQRoFOh0sYB2vbQ_e3x8nXXo82p346NJTHHtzS8uzmOa9gpiV5lbyQGJAjk5sCjf7Xmx9eu7Z8");'></div>
+<div class="absolute bottom-0 right-0 size-4 bg-emerald-500 border-2 border-white dark:border-[#192233] rounded-full" title="Available Now"></div>
+</div>
+<div>
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Dr. Sarah Johnson</h3>
+<p class="text-primary text-sm font-medium mt-1">Linear Algebra</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-primary dark:text-slate-500 dark:hover:text-white transition-colors p-1">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col gap-3 mb-6">
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-[#232f48]/50">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#92a4c9] !text-[20px] mt-0.5">schedule</span>
+<div>
+<p class="text-slate-700 dark:text-slate-200 text-sm font-medium mb-1">Office Hours</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">Mon: 9:00 AM - 11:00 AM</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-[#232f48]/50">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#92a4c9] !text-[20px] mt-0.5">school</span>
+<div>
+<p class="text-slate-700 dark:text-slate-200 text-sm font-medium mb-1">Tutoring Lab</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">Thu: 3:00 PM - 5:00 PM</p>
+</div>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary hover:bg-primary/90 text-white text-sm font-medium leading-normal transition-colors">
+<span class="material-symbols-outlined !text-[20px]">calendar_add_on</span>
+<span>Book Meeting</span>
+</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="flex flex-col bg-white dark:bg-[#192233] rounded-xl shadow-sm dark:shadow-[0_0_4px_rgba(0,0,0,0.2)] overflow-hidden hover:shadow-md dark:hover:shadow-[0_0_15px_rgba(43,108,238,0.15)] transition-all duration-300 group">
+<div class="p-6 flex flex-col h-full">
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-16 h-16 rounded-full bg-cover bg-center border-2 border-slate-100 dark:border-[#232f48]" data-alt="Portrait of Prof. James Wilson" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDRzYOz5jIGdmLpnaqmC_T7dLKElsoclk4pM8IhHiYVrdZLnDLa6e0Q-RZFfGaNy3heJ5gxoYqxtk6o0PocST13mtZS1POfbp0sxd-__Hqy6C2ae1_GqSbSk-kSY1BS67jqfOgF2h9TZtNfsx6SWhYSMGlHRJSkk0Iw8mkEbLuL3AgEJKGQIQSwtH1EyFpcpirfSEVsmYXAAZdlspv02XJFgicuHvATCGMYI5FC6ZXhBUGA5Dqelz6JZ61OD91VSd7DksFOwDd5Tv0");'></div>
+</div>
+<div>
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">James Wilson</h3>
+<p class="text-primary text-sm font-medium mt-1">Computer Networks</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-primary dark:text-slate-500 dark:hover:text-white transition-colors p-1">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col gap-3 mb-6">
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-[#232f48]/50">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#92a4c9] !text-[20px] mt-0.5">schedule</span>
+<div>
+<p class="text-slate-700 dark:text-slate-200 text-sm font-medium mb-1">Office Hours</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">Wed, Fri: 1:00 PM - 3:00 PM</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-[#232f48]/50 opacity-50">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#92a4c9] !text-[20px] mt-0.5">school</span>
+<div>
+<p class="text-slate-700 dark:text-slate-200 text-sm font-medium mb-1">Tutoring Lab</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">By appointment only</p>
+</div>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary hover:bg-primary/90 text-white text-sm font-medium leading-normal transition-colors">
+<span class="material-symbols-outlined !text-[20px]">calendar_add_on</span>
+<span>Book Meeting</span>
+</button>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="flex flex-col bg-white dark:bg-[#192233] rounded-xl shadow-sm dark:shadow-[0_0_4px_rgba(0,0,0,0.2)] overflow-hidden hover:shadow-md dark:hover:shadow-[0_0_15px_rgba(43,108,238,0.15)] transition-all duration-300 group">
+<div class="p-6 flex flex-col h-full">
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-16 h-16 rounded-full bg-cover bg-center border-2 border-slate-100 dark:border-[#232f48]" data-alt="Portrait of Dr. Emily Parker" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAMp4NmiTllxdDbMqk6QzSIvsBw2-YVBZv7tgHhUTl_edfExLBS6KrbjVOKL_x2tMSZbv20hMPpKWabQSoyrb1ktfXhDpCJBozkWABGaT6XylXl8N3s3Fx13Z4GW_oAY5wAj3cZDC8SmLxo3tr59coouJ0UskiCfrWdgh5CY2PMpeXJyh7iI0nhrHp3PMZNGis2QTwijBo_RHNvjqEtteX7j65A5TWqSBsS2M77swS7b9AtQVyw8YxTv_6Hy_eGzWciFgGeG3RP4gg");'></div>
+<div class="absolute bottom-0 right-0 size-4 bg-emerald-500 border-2 border-white dark:border-[#192233] rounded-full" title="Available Now"></div>
+</div>
+<div>
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Dr. Emily Parker</h3>
+<p class="text-primary text-sm font-medium mt-1">UX/UI Design</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-primary dark:text-slate-500 dark:hover:text-white transition-colors p-1">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col gap-3 mb-6">
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-[#232f48]/50">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#92a4c9] !text-[20px] mt-0.5">schedule</span>
+<div>
+<p class="text-slate-700 dark:text-slate-200 text-sm font-medium mb-1">Office Hours</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">Tue: 10:00 AM - 12:00 PM</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-[#232f48]/50">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#92a4c9] !text-[20px] mt-0.5">school</span>
+<div>
+<p class="text-slate-700 dark:text-slate-200 text-sm font-medium mb-1">Design Critique</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">Thu: 2:00 PM - 4:00 PM</p>
+</div>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary hover:bg-primary/90 text-white text-sm font-medium leading-normal transition-colors">
+<span class="material-symbols-outlined !text-[20px]">calendar_add_on</span>
+<span>Book Meeting</span>
+</button>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="flex flex-col bg-white dark:bg-[#192233] rounded-xl shadow-sm dark:shadow-[0_0_4px_rgba(0,0,0,0.2)] overflow-hidden hover:shadow-md dark:hover:shadow-[0_0_15px_rgba(43,108,238,0.15)] transition-all duration-300 group">
+<div class="p-6 flex flex-col h-full">
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-16 h-16 rounded-full bg-cover bg-center border-2 border-slate-100 dark:border-[#232f48]" data-alt="Portrait of Prof. Robert Chen" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDCyeaTO6hZ_hjG1DP6wmpKfGcpp5WBmy1MzyLbDqc-L4tjjB54T8eo-dYGSnCs6m1bOjUFHhKE8GV3QqWv758-woy0BiOu7yvjjr4kvsLXsB_P9UMy8IEEeW6no_kcbS8pXVKpbLx4OSt1DE-XvUupcrJfzs_9PLkY1n-GYW1KsqjOJNrJV_fVizYEd8paQ1U0z-YqZ1dKepDpEUS3ya8JbBStTp8mPjY4_4FbP3VzHh4NmyphjVW1WS5oIavgRXMc0aSKkarzPCQ");'></div>
+</div>
+<div>
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Robert Chen</h3>
+<p class="text-primary text-sm font-medium mt-1">Algorithms</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-primary dark:text-slate-500 dark:hover:text-white transition-colors p-1">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col gap-3 mb-6">
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-[#232f48]/50">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#92a4c9] !text-[20px] mt-0.5">schedule</span>
+<div>
+<p class="text-slate-700 dark:text-slate-200 text-sm font-medium mb-1">Office Hours</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">Mon, Wed: 4:00 PM - 5:00 PM</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-[#232f48]/50">
+<span class="material-symbols-outlined text-slate-400 dark:text-[#92a4c9] !text-[20px] mt-0.5">school</span>
+<div>
+<p class="text-slate-700 dark:text-slate-200 text-sm font-medium mb-1">Code Review</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">Fri: 11:00 AM - 1:00 PM</p>
+</div>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary hover:bg-primary/90 text-white text-sm font-medium leading-normal transition-colors">
+<span class="material-symbols-outlined !text-[20px]">calendar_add_on</span>
+<span>Book Meeting</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Load More / Pagination -->
+<div class="flex justify-center py-6">
+<button class="flex items-center gap-2 px-6 py-3 rounded-lg border border-slate-200 dark:border-[#232f48] text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-[#192233] transition-colors font-medium">
+<span>Load More Faculty</span>
+<span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

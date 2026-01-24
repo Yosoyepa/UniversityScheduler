@@ -1,0 +1,15 @@
+@startuml C4_SystemContext
+!include <C4/C4_Context>
+
+title System Context Diagram - University Scheduler
+
+Person(student, "University Student", "A student who wants to manage their academic schedule and tasks.")
+System(scheduler, "University Scheduler", "Allows users to manage classes, tasks, and exams.")
+
+System_Ext(google_cal, "Google Calendar", "External calendar system for sync.")
+System_Ext(univ_portal, "University Portal", "Source of official class data (Future).")
+
+Rel(student, scheduler, "Uses", "HTTPS")
+Rel(scheduler, google_cal, "Syncs events to", "Google API/JSON")
+Rel(scheduler, univ_portal, "Scrapes/Imports from", "HTTPS")
+@enduml

@@ -1,0 +1,35 @@
+@startuml AddClassSequence
+title Sequence Diagram: Adding a Class with Conflict Detection
+
+actor User
+participant API as "API Controller"
+participant UC as "AddClassUseCase"
+participant Repo as "SubjectRepository"
+participant Domain as "ScheduleService"
+
+User -> API: POST /classes (JSON)
+API -> UC: execute(dto)
+
+UC -> Repo: findBySemester(currentSemester)
+Repo --> UC: List<Subject> existingSubjects
+
+UC -> Domain: checkConflicts(newSubject, existingSubjects)
+activate Domain
+loop Every Session
+    Domain -> Domain: intersect(newTime, existingTime)
+end
+
+alt Conflict Detected
+    Domain --> UC: Exception(TimeConflict)
+    UC --> API: Error 409 Conflict
+    API --> User: "Class overlaps with Math 101"
+else Time Slot Free
+    Domain --> UC: Valid
+    
+    UC -> Repo: save(newSubject)
+    Repo --> UC: Subject(id=...)
+    UC --> API: Success 201 Created
+    API --> User: {id: "...", name: "..."}
+end
+deactivate Domain
+@enduml

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Alerts and Notification Settings - UniSchedule</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&amp;family=Noto+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b6cee",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2230",
+                        "text-main": "#0d121b",
+                        "text-secondary": "#4c669a",
+                        "border-color": "#e7ebf3",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-white font-display overflow-x-hidden antialiased">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-border-color dark:border-gray-800 bg-surface-light dark:bg-surface-dark px-10 py-3 shadow-sm">
+<div class="flex items-center gap-4 text-text-main dark:text-white">
+<div class="size-8 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined !text-3xl">school</span>
+</div>
+<h2 class="text-text-main dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">UniSchedule</h2>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<div class="hidden md:flex items-center gap-4">
+<button class="text-text-secondary dark:text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="text-text-secondary dark:text-gray-400 hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 size-2 bg-red-500 rounded-full border border-white dark:border-surface-dark"></span>
+</button>
+</div>
+<div class="h-6 w-px bg-border-color dark:bg-gray-700 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="flex flex-col items-end hidden sm:flex">
+<span class="text-sm font-bold text-text-main dark:text-white">Alex Morgan</span>
+<span class="text-xs text-text-secondary dark:text-gray-400">Computer Science</span>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBrI5qiZX86K0igCWsTKEm4xbgGDyHx0mb21sl_R1YG47SCRw47Ld-34D6jrQBswlm_AR7Tu1e8a9nLCpuR3nylHTFukIjrXUwAnijAOXOdHt74dkyMrt2355Nm6BYomHDokiBu0WTc6MdwqXIQlejgyNz2d0ykRcc98OeD8xLNePRUEX03PtLNLPKm1oSTdAsOKjPwj14eh-MNjOPpfe_rj3wrMpzj3AALnhclMrNc39C9EuAnxuKWUUU29omeq7gshSzXg54hNSs");'></div>
+</div>
+</div>
+</header>
+<div class="flex min-h-[calc(100vh-65px)]">
+<!-- Sidebar -->
+<aside class="hidden lg:flex w-72 flex-col border-r border-border-color dark:border-gray-800 bg-surface-light dark:bg-surface-dark p-6">
+<div class="flex flex-col gap-8">
+<div>
+<h3 class="text-xs font-bold uppercase tracking-wider text-text-secondary dark:text-gray-500 mb-4 px-3">Settings</h3>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">General</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary dark:text-blue-400 font-semibold" href="#">
+<span class="material-symbols-outlined filled">notifications_active</span>
+<span class="text-sm">Alerts &amp; Notifications</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined">lock</span>
+<span class="text-sm font-medium">Privacy &amp; Security</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined">palette</span>
+<span class="text-sm font-medium">Appearance</span>
+</a>
+</nav>
+</div>
+<div>
+<h3 class="text-xs font-bold uppercase tracking-wider text-text-secondary dark:text-gray-500 mb-4 px-3">Support</h3>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined">help_center</span>
+<span class="text-sm font-medium">Help Center</span>
+</a>
+<button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors mt-4">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-medium">Log Out</span>
+</button>
+</nav>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-6 md:p-10 max-w-5xl mx-auto w-full">
+<div class="flex flex-col gap-8">
+<!-- Page Header -->
+<div class="flex flex-col gap-2">
+<h1 class="text-text-main dark:text-white text-3xl font-bold tracking-tight">Alerts and Notifications</h1>
+<p class="text-text-secondary dark:text-gray-400 text-base max-w-2xl">
+                        Manage how you receive updates about your classes, exams, and schedule changes.
+                    </p>
+</div>
+<!-- Notification Channels Section -->
+<section class="flex flex-col gap-4">
+<h2 class="text-lg font-semibold text-text-main dark:text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">campaign</span>
+                        Notification Channels
+                    </h2>
+<div class="flex flex-col rounded-xl border border-border-color dark:border-gray-800 bg-surface-light dark:bg-surface-dark shadow-sm overflow-hidden">
+<!-- Email Item -->
+<div class="flex items-center justify-between p-5 border-b border-border-color dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<div class="flex items-start gap-4">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/30 text-primary">
+<span class="material-symbols-outlined">mail</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-text-main dark:text-white text-base font-medium">Email Notifications</p>
+<p class="text-text-secondary dark:text-gray-400 text-sm">Receive daily digests and urgent alerts regarding schedule changes.</p>
+</div>
+</div>
+<label class="relative inline-flex cursor-pointer items-center">
+<input checked="" class="peer sr-only" type="checkbox" value=""/>
+<div class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-700"></div>
+</label>
+</div>
+<!-- Push Item -->
+<div class="flex items-center justify-between p-5 border-b border-border-color dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<div class="flex items-start gap-4">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400">
+<span class="material-symbols-outlined">smartphone</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-text-main dark:text-white text-base font-medium">Push Notifications</p>
+<p class="text-text-secondary dark:text-gray-400 text-sm">Instant updates on your mobile devices for immediate awareness.</p>
+</div>
+</div>
+<label class="relative inline-flex cursor-pointer items-center">
+<input checked="" class="peer sr-only" type="checkbox" value=""/>
+<div class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-700"></div>
+</label>
+</div>
+<!-- SMS Item -->
+<div class="flex items-center justify-between p-5 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<div class="flex items-start gap-4">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400">
+<span class="material-symbols-outlined">sms</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-text-main dark:text-white text-base font-medium">SMS Alerts</p>
+<p class="text-text-secondary dark:text-gray-400 text-sm">Receive text messages for critical exam changes only.</p>
+</div>
+</div>
+<label class="relative inline-flex cursor-pointer items-center">
+<input class="peer sr-only" type="checkbox" value=""/>
+<div class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-700"></div>
+</label>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+<!-- Reminder Timing Section -->
+<section class="flex flex-col gap-4">
+<h2 class="text-lg font-semibold text-text-main dark:text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">timer</span>
+                            Reminder Timing
+                        </h2>
+<div class="flex flex-col rounded-xl border border-border-color dark:border-gray-800 bg-surface-light dark:bg-surface-dark shadow-sm p-5 gap-6">
+<!-- Class Reminder -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-main dark:text-white" for="class-reminder">Class Reminders</label>
+<div class="relative">
+<select class="w-full appearance-none rounded-lg border border-border-color bg-background-light dark:bg-background-dark/50 dark:border-gray-700 p-3 pr-10 text-sm text-text-main dark:text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" id="class-reminder">
+<option>5 minutes before</option>
+<option selected="">15 minutes before</option>
+<option>30 minutes before</option>
+<option>1 hour before</option>
+</select>
+<span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary dark:text-gray-400">
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</span>
+</div>
+<p class="text-xs text-text-secondary dark:text-gray-500">Alerts for your regular lectures and labs.</p>
+</div>
+<!-- Exam Reminder -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-main dark:text-white" for="exam-reminder">Exam Reminders</label>
+<div class="relative">
+<select class="w-full appearance-none rounded-lg border border-border-color bg-background-light dark:bg-background-dark/50 dark:border-gray-700 p-3 pr-10 text-sm text-text-main dark:text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" id="exam-reminder">
+<option>2 hours before</option>
+<option>12 hours before</option>
+<option selected="">1 day before</option>
+<option>2 days before</option>
+</select>
+<span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary dark:text-gray-400">
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</span>
+</div>
+<p class="text-xs text-text-secondary dark:text-gray-500">Crucial alerts for midterms and final exams.</p>
+</div>
+<!-- Assignment Reminder -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-main dark:text-white" for="assign-reminder">Assignment Deadlines</label>
+<div class="relative">
+<select class="w-full appearance-none rounded-lg border border-border-color bg-background-light dark:bg-background-dark/50 dark:border-gray-700 p-3 pr-10 text-sm text-text-main dark:text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" id="assign-reminder">
+<option>1 hour before</option>
+<option selected="">2 hours before</option>
+<option>4 hours before</option>
+<option>1 day before</option>
+</select>
+<span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary dark:text-gray-400">
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Calendar Sync Section -->
+<section class="flex flex-col gap-4">
+<h2 class="text-lg font-semibold text-text-main dark:text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">sync</span>
+                            Calendar Integration
+                        </h2>
+<div class="flex flex-col rounded-xl border border-border-color dark:border-gray-800 bg-surface-light dark:bg-surface-dark shadow-sm overflow-hidden h-full">
+<div class="p-6 flex flex-col items-center justify-center text-center gap-4 flex-1">
+<div class="size-16 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mb-2">
+<!-- Google Calendar Style Icon -->
+<span class="material-symbols-outlined text-4xl text-blue-600">calendar_month</span>
+</div>
+<h3 class="text-lg font-bold text-text-main dark:text-white">Google Calendar</h3>
+<p class="text-sm text-text-secondary dark:text-gray-400 max-w-xs">
+                                    Sync your university schedule directly to your personal Google Calendar to avoid conflicts.
+                                </p>
+<div class="flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800">
+<div class="size-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-xs font-semibold text-green-700 dark:text-green-400 uppercase tracking-wide">Connected</span>
+</div>
+</div>
+<div class="bg-gray-50 dark:bg-gray-800/50 p-4 border-t border-border-color dark:border-gray-800 flex justify-between items-center">
+<span class="text-xs text-text-secondary dark:text-gray-500">Last synced: Today, 9:41 AM</span>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors shadow-sm shadow-blue-500/20">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+                                    Sync Now
+                                </button>
+</div>
+</div>
+</section>
+</div>
+<!-- Action Footer (Sticky on Mobile) -->
+<div class="mt-4 flex justify-end gap-4 border-t border-border-color dark:border-gray-800 pt-6">
+<button class="px-6 py-2.5 rounded-lg border border-border-color dark:border-gray-700 bg-white dark:bg-transparent text-text-main dark:text-white text-sm font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        Discard Changes
+                    </button>
+<button class="px-6 py-2.5 rounded-lg bg-primary hover:bg-blue-700 text-white text-sm font-bold shadow-lg shadow-blue-500/30 transition-all hover:shadow-blue-500/40">
+                        Save Preferences
+                    </button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tasks and Exams Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;family=Noto+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b6cee",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d121b] dark:text-white transition-colors duration-200">
+<div class="flex h-screen w-full flex-col overflow-hidden">
+<!-- Top Navigation -->
+<header class="flex flex-shrink-0 items-center justify-between border-b border-[#e7ebf3] bg-white dark:bg-[#1a2233] dark:border-[#2a3447] px-6 py-3 shadow-sm z-20">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3 text-primary dark:text-blue-400">
+<span class="material-symbols-outlined text-3xl">school</span>
+<h2 class="text-xl font-bold tracking-tight text-[#0d121b] dark:text-white">UniTasker</h2>
+</div>
+<!-- Search Bar -->
+<div class="hidden md:flex items-center rounded-lg bg-[#f0f2f5] dark:bg-[#252f44] px-3 py-2 w-72">
+<span class="material-symbols-outlined text-[#6b7280] dark:text-[#9ca3af]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full text-[#0d121b] dark:text-white placeholder-[#6b7280] dark:placeholder-[#9ca3af]" placeholder="Search tasks, exams, courses..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-sm font-medium text-[#4c669a] hover:text-primary dark:text-[#9ca3af] dark:hover:text-blue-400 transition-colors" href="#">Dashboard</a>
+<a class="text-sm font-medium text-primary dark:text-blue-400" href="#">Tasks &amp; Exams</a>
+<a class="text-sm font-medium text-[#4c669a] hover:text-primary dark:text-[#9ca3af] dark:hover:text-blue-400 transition-colors" href="#">Calendar</a>
+</nav>
+<div class="h-6 w-px bg-[#e7ebf3] dark:bg-[#2a3447]"></div>
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-[#f0f2f5] dark:hover:bg-[#252f44] text-[#4c669a] dark:text-[#9ca3af]">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-9 w-9 rounded-full bg-cover bg-center ring-2 ring-white dark:ring-[#2a3447]" data-alt="User profile picture showing a smiling student" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDx0qNt17vDwNPOz9TWMxwgiJDD8co6XFFuj_Q2qhv8xXp6yv_-z7AxXyFDxxlo_sQlJ4PgcA41-Mxg11U9dX_UU0dMC_zmFZHREYbO0Oawj8KJr9yUty5J5AJvdITazENPKQJK1gKdhJlcBG16bhD8KYH4Chko3CPl6ACsi8k_r2C0pusxIuJUdZaa09oZ2BCKcHD7UvlEvt3b3VqcyBmn7qVUHsnwtdjqokljAsU1qDspCnXElPdJvH62v2ktPtOgBYtkru0bolM');"></div>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="hidden w-72 flex-col border-r border-[#e7ebf3] bg-white dark:bg-[#1a2233] dark:border-[#2a3447] md:flex">
+<div class="p-4">
+<div class="flex items-center gap-3 mb-6 p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20">
+<div class="h-10 w-10 rounded-full bg-cover bg-center" data-alt="University campus building icon" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCE9ROS6sG8jo7pZx7qZ60k_qc4UcHCeeNFQ3miRtKKCk1VCYnIWahVd1CqCacUZQmnODjU9zuI85jL_mCYOC8Vr1do4-NOa-VY0glLDc44A0peDtowyybcIPueeCylha1GIy1ZAhG0PA32Mt40uGFwKgPfbxDbhRtfs2OjdHaFCqc27r5gn4rTeiLHTdnK09VGxnm7ACsBCDf8oP75y6QU-kcXwxImB4wfCK0yV28lXuOCXjC8I3zHOUAVCuZnpQXhFb9UT9eIVz4');"></div>
+<div>
+<h3 class="text-sm font-bold text-[#0d121b] dark:text-white">Fall Semester 2023</h3>
+<p class="text-xs text-[#4c669a] dark:text-[#9ca3af]">Computer Science</p>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<p class="px-3 text-xs font-bold uppercase tracking-wider text-[#9ca3af] mb-2">My Subjects</p>
+<a class="group flex items-center justify-between rounded-lg bg-primary/10 px-3 py-2.5 text-primary dark:bg-primary/20 dark:text-blue-400" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px] fill-1">grid_view</span>
+<span class="font-medium text-sm">All Subjects</span>
+</div>
+<span class="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-bold text-white">8</span>
+</a>
+<a class="group flex items-center justify-between rounded-lg px-3 py-2.5 text-[#4c669a] hover:bg-[#f0f2f5] hover:text-[#0d121b] dark:text-[#9ca3af] dark:hover:bg-[#252f44] dark:hover:text-white transition-colors" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">terminal</span>
+<span class="font-medium text-sm">Software Arch.</span>
+</div>
+<span class="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#e7ebf3] px-1.5 text-[10px] font-bold text-[#4c669a] group-hover:bg-[#d1d5db] dark:bg-[#2a3447] dark:text-[#9ca3af]">2</span>
+</a>
+<a class="group flex items-center justify-between rounded-lg px-3 py-2.5 text-[#4c669a] hover:bg-[#f0f2f5] hover:text-[#0d121b] dark:text-[#9ca3af] dark:hover:bg-[#252f44] dark:hover:text-white transition-colors" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">memory</span>
+<span class="font-medium text-sm">Op. Systems</span>
+</div>
+<span class="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#e7ebf3] px-1.5 text-[10px] font-bold text-[#4c669a] group-hover:bg-[#d1d5db] dark:bg-[#2a3447] dark:text-[#9ca3af]">1</span>
+</a>
+<a class="group flex items-center justify-between rounded-lg px-3 py-2.5 text-[#4c669a] hover:bg-[#f0f2f5] hover:text-[#0d121b] dark:text-[#9ca3af] dark:hover:bg-[#252f44] dark:hover:text-white transition-colors" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">database</span>
+<span class="font-medium text-sm">Databases II</span>
+</div>
+<span class="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#e7ebf3] px-1.5 text-[10px] font-bold text-[#4c669a] group-hover:bg-[#d1d5db] dark:bg-[#2a3447] dark:text-[#9ca3af]">3</span>
+</a>
+<a class="group flex items-center justify-between rounded-lg px-3 py-2.5 text-[#4c669a] hover:bg-[#f0f2f5] hover:text-[#0d121b] dark:text-[#9ca3af] dark:hover:bg-[#252f44] dark:hover:text-white transition-colors" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">functions</span>
+<span class="font-medium text-sm">Calculus III</span>
+</div>
+</a>
+</div>
+<div class="mt-8 border-t border-[#e7ebf3] pt-4 dark:border-[#2a3447]">
+<div class="flex items-center gap-3 px-3 py-2 text-[#4c669a] dark:text-[#9ca3af]">
+<span class="material-symbols-outlined text-[20px] text-green-500">sync</span>
+<span class="text-xs font-medium">Synced with G-Calendar</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex flex-1 flex-col overflow-y-auto bg-background-light dark:bg-background-dark p-6">
+<!-- Page Header & Stats -->
+<div class="flex flex-col gap-6 mb-8">
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div>
+<h1 class="text-3xl font-bold text-[#0d121b] dark:text-white">Tasks &amp; Exams</h1>
+<p class="text-[#4c669a] dark:text-[#9ca3af] mt-1">Manage your academic deliverables and stay ahead.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-[#e7ebf3] text-[#0d121b] text-sm font-medium hover:bg-gray-50 dark:bg-[#1a2233] dark:border-[#2a3447] dark:text-white dark:hover:bg-[#252f44]">
+<span class="material-symbols-outlined text-[20px]">calendar_month</span>
+<span class="hidden sm:inline">Show on Calendar</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-blue-500/30 hover:bg-blue-600 transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span class="hidden sm:inline">Quick Add</span>
+</button>
+</div>
+</div>
+<!-- Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="flex flex-col gap-1 rounded-xl border border-[#e7ebf3] bg-white p-5 shadow-sm dark:bg-[#1a2233] dark:border-[#2a3447]">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-[#4c669a] dark:text-[#9ca3af]">Pending Exams</span>
+<span class="material-symbols-outlined text-red-500 bg-red-50 dark:bg-red-900/20 p-1.5 rounded-lg text-lg">event_busy</span>
+</div>
+<span class="text-3xl font-bold text-[#0d121b] dark:text-white">2</span>
+</div>
+<div class="flex flex-col gap-1 rounded-xl border border-[#e7ebf3] bg-white p-5 shadow-sm dark:bg-[#1a2233] dark:border-[#2a3447]">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-[#4c669a] dark:text-[#9ca3af]">Tasks Due Soon</span>
+<span class="material-symbols-outlined text-amber-500 bg-amber-50 dark:bg-amber-900/20 p-1.5 rounded-lg text-lg">schedule</span>
+</div>
+<span class="text-3xl font-bold text-[#0d121b] dark:text-white">5</span>
+</div>
+<div class="flex flex-col gap-1 rounded-xl border border-[#e7ebf3] bg-white p-5 shadow-sm dark:bg-[#1a2233] dark:border-[#2a3447]">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-[#4c669a] dark:text-[#9ca3af]">Completed</span>
+<span class="material-symbols-outlined text-green-500 bg-green-50 dark:bg-green-900/20 p-1.5 rounded-lg text-lg">check_circle</span>
+</div>
+<span class="text-3xl font-bold text-[#0d121b] dark:text-white">12</span>
+</div>
+</div>
+</div>
+<!-- View Controls -->
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-1 rounded-lg bg-[#e7ebf3] p-1 dark:bg-[#1a2233]">
+<button class="flex items-center gap-2 rounded px-3 py-1.5 text-sm font-medium bg-white text-[#0d121b] shadow-sm dark:bg-[#2a3447] dark:text-white">
+<span class="material-symbols-outlined text-[18px]">view_kanban</span>
+                            Board
+                        </button>
+<button class="flex items-center gap-2 rounded px-3 py-1.5 text-sm font-medium text-[#4c669a] hover:bg-white/50 dark:text-[#9ca3af] dark:hover:bg-[#2a3447]/50">
+<span class="material-symbols-outlined text-[18px]">format_list_bulleted</span>
+                            List
+                        </button>
+</div>
+<div class="flex items-center gap-2 text-sm text-[#4c669a] dark:text-[#9ca3af]">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+<span>Sort by: Date</span>
+</div>
+</div>
+<!-- Kanban Board -->
+<div class="flex h-full flex-col md:flex-row gap-6 pb-6 overflow-x-auto">
+<!-- Column: To Do -->
+<div class="flex min-w-[300px] flex-1 flex-col rounded-xl bg-[#e7ebf3]/50 p-4 dark:bg-[#1a2233]/50">
+<div class="mb-4 flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-[#4c669a]"></div>
+<h3 class="font-bold text-[#0d121b] dark:text-white">To Do</h3>
+<span class="ml-1 rounded-full bg-[#dbeafe] px-2 py-0.5 text-xs font-medium text-primary dark:bg-primary/20 dark:text-blue-300">3</span>
+</div>
+<button class="text-[#4c669a] hover:text-[#0d121b] dark:text-[#9ca3af] dark:hover:text-white">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Card 1 (High Priority Exam) -->
+<div class="group relative flex flex-col gap-3 rounded-lg border border-transparent bg-white p-4 shadow-sm transition-all hover:border-primary/20 hover:shadow-md dark:bg-[#1a2233] dark:border-[#2a3447] dark:hover:border-blue-500/30">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-bold uppercase text-red-600 dark:bg-red-900/30 dark:text-red-300">Exam</span>
+<span class="rounded bg-red-50 px-1.5 py-0.5 text-[10px] font-bold uppercase text-red-500 dark:bg-red-900/10 dark:text-red-400">High</span>
+</div>
+<h4 class="font-semibold text-[#0d121b] dark:text-white leading-tight mt-1">Midterm Exam</h4>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-[#4c669a] hover:text-[#0d121b] dark:text-[#9ca3af] dark:hover:text-white">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+<p class="text-xs text-[#4c669a] dark:text-[#9ca3af] line-clamp-2">Chapters 1-5 covering Processes, Threads, and Scheduling algorithms.</p>
+<div class="mt-1 flex items-center justify-between border-t border-[#f0f2f5] pt-3 dark:border-[#2a3447]">
+<div class="flex items-center gap-1.5 text-xs font-medium text-red-500">
+<span class="material-symbols-outlined text-[16px]">event</span>
+<span>Oct 12</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-primary dark:bg-blue-900/30 dark:text-blue-300" title="Synced to Google Calendar">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+</div>
+<div class="flex h-6 items-center justify-center rounded bg-[#f0f2f5] px-2 text-[10px] font-medium text-[#4c669a] dark:bg-[#252f44] dark:text-[#9ca3af]">Op. Systems</div>
+</div>
+</div>
+</div>
+<!-- Card 2 (Task) -->
+<div class="group relative flex flex-col gap-3 rounded-lg border border-transparent bg-white p-4 shadow-sm transition-all hover:border-primary/20 hover:shadow-md dark:bg-[#1a2233] dark:border-[#2a3447] dark:hover:border-blue-500/30">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-bold uppercase text-primary dark:bg-blue-900/30 dark:text-blue-300">Task</span>
+<span class="rounded bg-green-50 px-1.5 py-0.5 text-[10px] font-bold uppercase text-green-600 dark:bg-green-900/10 dark:text-green-400">Low</span>
+</div>
+<h4 class="font-semibold text-[#0d121b] dark:text-white leading-tight mt-1">Read Chapter 4</h4>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-[#4c669a] hover:text-[#0d121b] dark:text-[#9ca3af] dark:hover:text-white">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+<div class="mt-1 flex items-center justify-between border-t border-[#f0f2f5] pt-3 dark:border-[#2a3447]">
+<div class="flex items-center gap-1.5 text-xs font-medium text-[#4c669a] dark:text-[#9ca3af]">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Oct 15</span>
+</div>
+<div class="flex h-6 items-center justify-center rounded bg-[#f0f2f5] px-2 text-[10px] font-medium text-[#4c669a] dark:bg-[#252f44] dark:text-[#9ca3af]">Software Arch.</div>
+</div>
+</div>
+<!-- Card 3 (Task) -->
+<div class="group relative flex flex-col gap-3 rounded-lg border border-transparent bg-white p-4 shadow-sm transition-all hover:border-primary/20 hover:shadow-md dark:bg-[#1a2233] dark:border-[#2a3447] dark:hover:border-blue-500/30">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-bold uppercase text-primary dark:bg-blue-900/30 dark:text-blue-300">Task</span>
+<span class="rounded bg-amber-50 px-1.5 py-0.5 text-[10px] font-bold uppercase text-amber-600 dark:bg-amber-900/10 dark:text-amber-400">Med</span>
+</div>
+<h4 class="font-semibold text-[#0d121b] dark:text-white leading-tight mt-1">SQL Practice Set 2</h4>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-[#4c669a] hover:text-[#0d121b] dark:text-[#9ca3af] dark:hover:text-white">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+<div class="mt-1 flex items-center justify-between border-t border-[#f0f2f5] pt-3 dark:border-[#2a3447]">
+<div class="flex items-center gap-1.5 text-xs font-medium text-[#4c669a] dark:text-[#9ca3af]">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Oct 18</span>
+</div>
+<div class="flex h-6 items-center justify-center rounded bg-[#f0f2f5] px-2 text-[10px] font-medium text-[#4c669a] dark:bg-[#252f44] dark:text-[#9ca3af]">Databases II</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: In Progress -->
+<div class="flex min-w-[300px] flex-1 flex-col rounded-xl bg-[#e7ebf3]/50 p-4 dark:bg-[#1a2233]/50">
+<div class="mb-4 flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-amber-400"></div>
+<h3 class="font-bold text-[#0d121b] dark:text-white">In Progress</h3>
+<span class="ml-1 rounded-full bg-[#fef3c7] px-2 py-0.5 text-xs font-medium text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">1</span>
+</div>
+<button class="text-[#4c669a] hover:text-[#0d121b] dark:text-[#9ca3af] dark:hover:text-white">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Card 4 (Project) -->
+<div class="group relative flex flex-col gap-3 rounded-lg border border-transparent bg-white p-4 shadow-sm transition-all hover:border-primary/20 hover:shadow-md dark:bg-[#1a2233] dark:border-[#2a3447] dark:hover:border-blue-500/30">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-bold uppercase text-primary dark:bg-blue-900/30 dark:text-blue-300">Task</span>
+<span class="rounded bg-amber-50 px-1.5 py-0.5 text-[10px] font-bold uppercase text-amber-600 dark:bg-amber-900/10 dark:text-amber-400">Med</span>
+</div>
+<h4 class="font-semibold text-[#0d121b] dark:text-white leading-tight mt-1">Final Project - Phase 1</h4>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-[#4c669a] hover:text-[#0d121b] dark:text-[#9ca3af] dark:hover:text-white">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+<p class="text-xs text-[#4c669a] dark:text-[#9ca3af] line-clamp-2">Backend API implementation and database schema design.</p>
+<div class="mt-1 flex items-center justify-between border-t border-[#f0f2f5] pt-3 dark:border-[#2a3447]">
+<div class="flex items-center gap-1.5 text-xs font-medium text-[#4c669a] dark:text-[#9ca3af]">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Oct 20</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-primary dark:bg-blue-900/30 dark:text-blue-300" title="Synced to Google Calendar">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+</div>
+<div class="flex h-6 items-center justify-center rounded bg-[#f0f2f5] px-2 text-[10px] font-medium text-[#4c669a] dark:bg-[#252f44] dark:text-[#9ca3af]">Software Arch.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: Done -->
+<div class="flex min-w-[300px] flex-1 flex-col rounded-xl bg-[#e7ebf3]/50 p-4 dark:bg-[#1a2233]/50">
+<div class="mb-4 flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-green-500"></div>
+<h3 class="font-bold text-[#0d121b] dark:text-white">Done</h3>
+<span class="ml-1 rounded-full bg-[#dcfce7] px-2 py-0.5 text-xs font-medium text-green-600 dark:bg-green-900/30 dark:text-green-400">1</span>
+</div>
+<button class="text-[#4c669a] hover:text-[#0d121b] dark:text-[#9ca3af] dark:hover:text-white">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Card 5 (Completed) -->
+<div class="group relative flex flex-col gap-3 rounded-lg border border-transparent bg-white opacity-60 hover:opacity-100 p-4 shadow-sm transition-all hover:border-primary/20 hover:shadow-md dark:bg-[#1a2233] dark:border-[#2a3447] dark:hover:border-blue-500/30">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-bold uppercase text-gray-500 dark:bg-gray-800 dark:text-gray-400">Task</span>
+</div>
+<h4 class="font-semibold text-[#0d121b] dark:text-white leading-tight mt-1 line-through decoration-gray-400">Linux Workshop</h4>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-[#4c669a] hover:text-[#0d121b] dark:text-[#9ca3af] dark:hover:text-white">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</button>
+</div>
+<div class="mt-1 flex items-center justify-between border-t border-[#f0f2f5] pt-3 dark:border-[#2a3447]">
+<div class="flex items-center gap-1.5 text-xs font-medium text-green-600 dark:text-green-400">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>Completed</span>
+</div>
+<div class="flex h-6 items-center justify-center rounded bg-[#f0f2f5] px-2 text-[10px] font-medium text-[#4c669a] dark:bg-[#252f44] dark:text-[#9ca3af]">Op. Systems</div>
+</div>
+</div>
+</div>
+<!-- Empty State Illustration Placeholder -->
+<div class="mt-8 flex flex-col items-center justify-center gap-2 opacity-50">
+<div class="h-24 w-32 rounded-lg bg-center bg-no-repeat bg-contain" data-alt="Abstract line drawing representing relaxation or empty state" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1BttEOA_RIHWzox99YD12WekT2OqNXtyQyV99W1H1yCky7LWbaUQ6F3FNm19naZyRLAEcJknw0xNMlNrA8yifhZ2ymhrQ3T2UDz2SMiD_DejKt70lHkK3IAf64WWoWTvBE3vGQBBjv8nblPMzlFrmE6dTiTki3GIZiB079w3NPO_O4-vDjMFQKGQfI1lS-Wu12J5R8zXalTCEJJmCWcSECjwdtzYf7X2jGTVbDiMfJ6JY57P9NeUBQ-zF8xPFws46EUX4dXQzp9g');"></div>
+<p class="text-xs text-[#4c669a] dark:text-[#9ca3af]">No more completed tasks</p>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

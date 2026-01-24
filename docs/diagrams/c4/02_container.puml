@@ -1,0 +1,20 @@
+@startuml C4_Container
+!include <C4/C4_Container>
+
+title Container Diagram - University Scheduler
+
+Person(student, "University Student", "Uses the app via browser or mobile.")
+
+System_Boundary(c1, "University Scheduler") {
+    Container(web_app, "Web Application", "Next.js (React)", "Delivers the SPA/PWA to the user's browser.")
+    Container(api, "API Application", "Python (FastAPI)", "Handles business logic, auth, and data access via Ports & Adapters.")
+    ContainerDb(database, "Database", "PostgreSQL", "Stores user data, schedules, and tasks.")
+}
+
+System_Ext(google_cal, "Google Calendar", "External Calendar")
+
+Rel(student, web_app, "Visits", "HTTPS")
+Rel(web_app, api, "API calls", "JSON/REST")
+Rel(api, database, "Reads/Writes", "SQL/SQLAlchemy")
+Rel(api, google_cal, "Syncs", "HTTPS/JSON")
+@enduml
