@@ -1,10 +1,12 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 
+
 class Settings(BaseSettings):
     PROJECT_NAME: str = "University Scheduler"
     VERSION: str = "0.1.0"
     API_V1_STR: str = "/api/v1"
+    DEBUG: bool = False
     
     # Database
     POSTGRES_USER: str = "postgres"
@@ -13,13 +15,31 @@ class Settings(BaseSettings):
     POSTGRES_PORT: str = "5432"
     POSTGRES_DB: str = "university_scheduler"
     
+    @property
+    def DATABASE_URL(self) -> str:
+        """Sync database URL for Alembic migrations."""
+        return (
+            f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
+            f"@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        )
+    
+    @property
+    def ASYNC_DATABASE_URL(self) -> str:
+        """Async database URL for SQLAlchemy async engine."""
+        return (
+            f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
+            f"@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        )
+    
     # Auth
     SECRET_KEY: str = "YOUR_SECRET_KEY"  # Change in production
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
 
+
 @lru_cache()
-def get_settings():
+def get_settings() -> Settings:
     return Settings()
+
