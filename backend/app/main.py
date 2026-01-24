@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.cross_cutting import register_exception_handlers
+
 app = FastAPI(
     title="University Scheduler API",
     description="Backend for University Scheduler Application using Hexagonal Architecture",
@@ -18,10 +20,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Register global exception handlers
+register_exception_handlers(app)
+
+
 @app.get("/health")
 async def health_check():
     return {"status": "ok", "message": "University Scheduler API is running"}
 
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+
