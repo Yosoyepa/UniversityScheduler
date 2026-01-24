@@ -54,8 +54,10 @@ class SubjectType(str, enum.Enum):
     """Type of subject/course."""
     DISCIPLINAR_OBLIGATORIA = "DISCIPLINAR_OBLIGATORIA"
     DISCIPLINAR_OPTATIVA = "DISCIPLINAR_OPTATIVA"
-    FUNDAMENTAL = "FUNDAMENTAL"
+    FUNDAMENTAL_OBLIGATORIA = "FUNDAMENTAL_OBLIGATORIA"
+    FUNDAMENTAL_OPTATIVA = "FUNDAMENTAL_OPTATIVA"
     LIBRE_ELECCION = "LIBRE_ELECCION"
+    TRABAJO_DE_GRADO = "TRABAJO_DE_GRADO"
 
 
 # =============================================================================
