@@ -1,0 +1,34 @@
+@startuml SyncGoogleCalendarSequence
+title Sequence Diagram: Google Calendar Synchronization
+
+actor User
+participant API as "Tasks Controller"
+participant Service as "TaskService"
+participant Repo as "TaskRepository"
+participant Adapter as "GoogleCalendarAdapter"
+participant GCal as "Google Calendar API"
+
+User -> API: POST /tasks (is_synced_gcal=true)
+API -> Service: createTask(dto)
+
+Service -> Repo: save(task)
+Repo --> Service: Task(id=...)
+
+alt is_synced_gcal == true
+    Service -> Adapter: createEvent(task)
+    activate Adapter
+    
+    Adapter -> GCal: POST /calendars/primary/events
+    activate GCal
+    GCal --> Adapter: Event(id="gcal_123")
+    deactivate GCal
+    
+    Adapter --> Service: "gcal_123"
+    deactivate Adapter
+    
+    Service -> Repo: updateExternalId(taskId, "gcal_123")
+end
+
+Service --> API: TaskResource
+API --> User: 201 Created
+@enduml

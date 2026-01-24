@@ -1,0 +1,29 @@
+@startuml DeploymentDiagram
+skinparam componentStyle uml2
+
+title Deployment Diagram - Production Environment
+
+cloud "Google Cloud Platform" {
+    component "Google Calendar API" as gcal_api
+}
+
+cloud "Cloud Provider (Render/Railway)" {
+    
+    node "Web Tier" {
+        component "Next.js App" as web_app
+    }
+    
+    node "App Tier" {
+        component "FastAPI Backend" as api
+    }
+    
+    database "Data Tier" {
+        database "PostgreSQL" as db
+    }
+}
+
+web_app --> api : HTTPS/JSON
+api --> db : TCP/IP
+api --> gcal_api : HTTPS
+
+@enduml

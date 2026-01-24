@@ -1,0 +1,80 @@
+@startuml ER_Diagram
+hide circle
+skinparam linetype ortho
+
+title Entity-Relationship Diagram - University Scheduler
+
+' Entities
+entity "users" as users {
+  *id : UUID <<PK>>
+  --
+  *email : VARCHAR(255) <<U>>
+  *full_name : VARCHAR(255)
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+entity "settings" as settings {
+  *user_id : UUID <<PK, FK>>
+  --
+  dark_mode : BOOLEAN
+  email_notifications : BOOLEAN
+  alert_preferences : JSONB
+}
+
+entity "semesters" as semesters {
+  *id : UUID <<PK>>
+  --
+  *user_id : UUID <<FK>>
+  *name : VARCHAR(100)
+  *start_date : DATE
+  *end_date : DATE
+  is_active : BOOLEAN
+}
+
+entity "subjects" as subjects {
+  *id : UUID <<PK>>
+  --
+  *semester_id : UUID <<FK>>
+  *name : VARCHAR(200)
+  group_code : VARCHAR(50)
+  credits : INTEGER
+  color : VARCHAR(7)
+  difficulty : difficulty_level
+  type : subject_type
+  professor_name : VARCHAR(200)
+}
+
+entity "class_sessions" as class_sessions {
+  *id : UUID <<PK>>
+  --
+  *subject_id : UUID <<FK>>
+  *day_of_week : INTEGER
+  *start_time : TIME
+  *end_time : TIME
+  location : VARCHAR(255)
+  attendance_required : BOOLEAN
+}
+
+entity "tasks" as tasks {
+  *id : UUID <<PK>>
+  --
+  *user_id : UUID <<FK>>
+  subject_id : UUID <<FK>>
+  *title : VARCHAR(255)
+  description : TEXT
+  due_date : TIMESTAMP
+  status : task_status
+  priority : task_priority
+  category : task_category
+  is_synced_gcal : BOOLEAN
+}
+
+' Relations
+users ||..|| settings : "has (1:1)"
+users ||..o{ semesters : "manages (1:N)"
+users ||..o{ tasks : "owns (1:N)"
+semesters ||..o{ subjects : "contains (1:N)"
+subjects ||..o{ class_sessions : "has (1:N)"
+subjects ||..o{ tasks : "related to (1:N)"
+@enduml

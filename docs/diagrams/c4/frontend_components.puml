@@ -1,0 +1,52 @@
+@startuml FrontendComponents
+title Component Diagram - Frontend (Next.js)
+
+package "Frontend Application" {
+    
+    package "Presentation Layer (Components)" {
+        package "Atoms" {
+            [Button]
+            [Input]
+            [Badge]
+            [Icon]
+        }
+        
+        package "Molecules" {
+            [FormField] --> [Input]
+            [FormField] --> [Label]
+            [TaskCard] --> [Badge]
+            [TaskCard] --> [Icon]
+            [ClassCard]
+        }
+        
+        package "Organisms" {
+            [ScheduleGrid] --> [ClassCard]
+            [KanbanBoard] --> [TaskCard]
+            [ClassFormModal] --> [FormField]
+            [TaskFormModal] --> [FormField]
+        }
+        
+        package "Templates" {
+            [DashboardLayout]
+            [AuthLayout]
+        }
+    }
+    
+    package "Container Layer (Pages/App)" {
+        [SchedulePage] --> [ScheduleGrid]
+        [SchedulePage] --> [DashboardLayout]
+        
+        [TasksPage] --> [KanbanBoard]
+        [TasksPage] --> [DashboardLayout]
+    }
+    
+    package "Features Logic (Hooks/Context)" {
+        [useSchedule]
+        [useTasks]
+        [AuthContext]
+    }
+    
+    [ScheduleGrid] ..> [useSchedule] : uses
+    [KanbanBoard] ..> [useTasks] : uses
+}
+@enduml
