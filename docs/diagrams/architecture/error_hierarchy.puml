@@ -1,0 +1,26 @@
+@startuml
+abstract class BaseAppException {
+    + code: str
+    + message: str
+}
+
+class DomainException {
+    + entity_id: UUID
+}
+
+class InfrastructureException {
+    + service_name: str
+}
+
+BaseAppException <|-- DomainException
+BaseAppException <|-- InfrastructureException
+
+DomainException <|-- ScheduleConflictException
+DomainException <|-- InvalidEntityStateException
+
+InfrastructureException <|-- ExternalServiceTimeout
+InfrastructureException <|-- DatabaseConnectionError
+
+note bottom of ScheduleConflictException : Mapped to HTTP 409
+note bottom of ExternalServiceTimeout : Mapped to HTTP 503
+@enduml

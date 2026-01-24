@@ -1,0 +1,20 @@
+@startuml
+skinparam componentStyle rectangle
+
+package "Academic Planning Module" {
+    [SubjectService] --> (SubjectCreatedEvent)
+}
+
+package "Task Module" {
+    [TaskService] --> (TaskCompletedEvent)
+}
+
+node "Event Bus" {
+    (SubjectCreatedEvent) ..> [GCal Sync Listener] : async
+    (TaskCompletedEvent) ..> [Progress Tracker Listener] : async
+    (TaskCompletedEvent) ..> [Notification Listener] : async
+}
+
+[GCal Sync Listener] --> [Google Calendar Adapter]
+[Progress Tracker Listener] --> [Academic Progress Service]
+@enduml

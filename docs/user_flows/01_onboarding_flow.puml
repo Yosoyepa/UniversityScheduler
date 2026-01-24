@@ -1,0 +1,49 @@
+@startuml
+title User Flow: Crear Nuevo Semestre y Configurar Materias
+
+start
+
+:Usuario accede al Dashboard;
+
+if (¿Existe Semestre Activo?) then (No)
+  :Usuario hace clic en "Crear Semestre";
+  :Sistema muestra Modal de Nuevo Semestre;
+  
+  repeat
+    :Usuario ingresa Nombre ("2024-1");
+    :Usuario selecciona Fechas (Inicio, Fin);
+    :Usuario confirma;
+    
+    if (¿Fechas Válidas?) then (Sí)
+      :Sistema crea Semestre;
+      :Sistema lo marca como Activo;
+      break
+    else (No)
+      :Sistema muestra error\n"Fecha fin anterior a inicio";
+    endif
+  repeat while (Datos inválidos)
+else (Sí)
+  :Sistema carga Semestre Activo;
+endif
+
+:Usuario hace clic en "Agregar Materia";
+
+repeat
+  :Sistema abre formulario de Materia;
+  :Usuario ingresa:\n- Nombre\n- Créditos\n- Profesor;
+  :Usuario agrega Sesiones (Día/Hora);
+  
+  :Usuario hace clic en "Guardar";
+  
+  if (¿Conflicto de Horario?) then (Sí)
+    :Sistema resalta conflicto visualmente;
+    :Muestra opciones:\n1. Corregir horario\n2. Cancelar;
+  else (No)
+    :Sistema guarda Materia;
+    :Sistema actualiza Calendario;
+    break
+  endif
+repeat while (Conflicto o Error)
+
+stop
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+package "Testing Strategy" {
+    component "E2E Tests (Playwright)\nCoverage: 10%" as E2E
+    component "Integration Tests (Pytest + Testcontainers)\nCoverage: 30%" as Integration
+    component "Unit Tests (Pytest)\nDomain Logic & Entities\nCoverage: 60%" as Unit
+}
+
+Unit -[hidden]- Integration
+Integration -[hidden]- E2E
+@enduml
