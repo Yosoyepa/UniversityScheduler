@@ -10,11 +10,10 @@ Following architecture-patterns skill:
     - No framework dependencies (SQLAlchemy, FastAPI, etc.)
 """
 from dataclasses import dataclass, field
-from datetime import datetime
 from typing import Optional
-from uuid import UUID, uuid4
+from uuid import UUID
 
-from app.shared.domain.entities import Entity, utc_now
+from app.shared.domain.entities import Entity
 from app.shared.domain.value_objects import Email
 
 
@@ -72,6 +71,10 @@ class User(Entity):
         return f"<User(id={self.id}, email={self.email})>"
 
 
+def _default_alert_preferences() -> dict:
+    return {"days_before": [1], "hours_before": [1]}
+
+
 @dataclass
 class Settings:
     """
@@ -82,10 +85,7 @@ class Settings:
     user_id: UUID
     dark_mode: bool = False
     email_notifications: bool = True
-    alert_preferences: dict = field(default_factory=lambda: {
-        "days_before": [1],
-        "hours_before": [1],
-    })
+    alert_preferences: dict = field(default_factory=_default_alert_preferences)
     
     def enable_dark_mode(self) -> None:
         self.dark_mode = True

@@ -16,7 +16,7 @@ Exception Hierarchy:
 """
 from abc import ABC
 from dataclasses import dataclass, field
-from typing import Optional, List, Any
+from typing import Optional, List
 from uuid import UUID
 
 

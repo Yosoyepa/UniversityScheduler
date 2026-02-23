@@ -32,7 +32,7 @@ class Settings(BaseSettings):
         )
     
     # Auth
-    SECRET_KEY: str = "YOUR_SECRET_KEY"  # Change in production
+    SECRET_KEY: str = "dev-only-secret-key-change-in-production"  # Must be overridden via env var in production
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     

@@ -10,7 +10,6 @@ Following architecture-patterns skill:
     - Business rules live in domain entities
 """
 from dataclasses import dataclass
-from typing import Optional
 from uuid import uuid4
 
 from app.modules.users.domain.entities import User, Settings

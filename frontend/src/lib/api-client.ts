@@ -24,7 +24,11 @@ const REFRESH_TOKEN_KEY = "refresh_token";
  */
 export function getAccessToken(): string | null {
     if (typeof window === "undefined") return null;
-    return localStorage.getItem(ACCESS_TOKEN_KEY);
+    try {
+        return localStorage.getItem(ACCESS_TOKEN_KEY);
+    } catch {
+        return null;
+    }
 }
 
 /**
@@ -32,7 +36,11 @@ export function getAccessToken(): string | null {
  */
 export function getRefreshToken(): string | null {
     if (typeof window === "undefined") return null;
-    return localStorage.getItem(REFRESH_TOKEN_KEY);
+    try {
+        return localStorage.getItem(REFRESH_TOKEN_KEY);
+    } catch {
+        return null;
+    }
 }
 
 /**
@@ -40,8 +48,12 @@ export function getRefreshToken(): string | null {
  */
 export function setTokens(accessToken: string, refreshToken: string): void {
     if (typeof window === "undefined") return;
-    localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    try {
+        localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+        localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    } catch {
+        // localStorage unavailable or quota exceeded; silently ignore
+    }
 }
 
 /**
@@ -49,8 +61,12 @@ export function setTokens(accessToken: string, refreshToken: string): void {
  */
 export function clearTokens(): void {
     if (typeof window === "undefined") return;
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    try {
+        localStorage.removeItem(ACCESS_TOKEN_KEY);
+        localStorage.removeItem(REFRESH_TOKEN_KEY);
+    } catch {
+        // localStorage unavailable; silently ignore
+    }
 }
 
 /**
@@ -162,26 +178,41 @@ export async function request<T>(
 
 /**
  * Attempt to refresh the access token.
+ *
+ * Uses a single shared promise to prevent race conditions when multiple
+ * concurrent requests fail with 401 simultaneously.
  */
+let _refreshPromise: Promise<boolean> | null = null;
+
 async function attemptTokenRefresh(): Promise<boolean> {
-    const refreshToken = getRefreshToken();
-    if (!refreshToken) return false;
-
-    try {
-        const response = await fetch(buildUrl("/auth/refresh"), {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ refresh_token: refreshToken }),
-        });
-
-        if (!response.ok) return false;
-
-        const data = await response.json();
-        setTokens(data.access_token, data.refresh_token);
-        return true;
-    } catch {
-        return false;
+    if (_refreshPromise) {
+        return _refreshPromise;
     }
+
+    _refreshPromise = (async () => {
+        const refreshToken = getRefreshToken();
+        if (!refreshToken) return false;
+
+        try {
+            const response = await fetch(buildUrl("/auth/refresh"), {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ refresh_token: refreshToken }),
+            });
+
+            if (!response.ok) return false;
+
+            const data = await response.json();
+            setTokens(data.access_token, data.refresh_token);
+            return true;
+        } catch {
+            return false;
+        } finally {
+            _refreshPromise = null;
+        }
+    })();
+
+    return _refreshPromise;
 }
 
 // =============================================================================

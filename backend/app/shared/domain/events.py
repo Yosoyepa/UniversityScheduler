@@ -21,8 +21,11 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Callable, Dict, List, Type, TypeVar
 from uuid import UUID
+import logging
 
 from app.shared.domain.entities import utc_now
+
+logger = logging.getLogger(__name__)
 
 
 # =============================================================================
@@ -211,7 +214,7 @@ class SyncEventBus(IEventBus):
             except Exception as e:
                 # Log but don't propagate - other handlers should still run
                 # In production, use proper logging
-                print(f"[EventBus] Error in handler for {event.event_name}: {e}")
+                logger.error("Error in handler for %s: %s", event.event_name, e, exc_info=True)
     
     def clear(self) -> None:
         """Clear all handlers. Useful for testing."""
