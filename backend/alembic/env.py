@@ -23,13 +23,13 @@ from app.shared.infrastructure.database import Base
 
 # Import all models to register them with Base.metadata
 # These imports are required for autogenerate to detect tables
-from app.modules.users.infrastructure.models import UserModel, SettingsModel
-from app.modules.academic_planning.infrastructure.models import (
+from app.modules.users.infrastructure.models import UserModel, SettingsModel  # noqa: F401
+from app.modules.academic_planning.infrastructure.models import (  # noqa: F401
     SemesterModel,
     SubjectModel,
     ClassSessionModel,
 )
-from app.modules.tasks.infrastructure.models import TaskModel
+from app.modules.tasks.infrastructure.models import TaskModel  # noqa: F401
 
 # Alembic Config object
 config = context.config

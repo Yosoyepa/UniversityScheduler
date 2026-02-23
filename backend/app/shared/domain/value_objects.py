@@ -10,7 +10,6 @@ Following solid_principles skill: immutable (frozen=True), single responsibility
 from dataclasses import dataclass
 from datetime import time
 from enum import IntEnum
-from typing import Optional
 import re
 
 

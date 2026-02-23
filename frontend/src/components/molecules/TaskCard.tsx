@@ -6,7 +6,7 @@
  */
 
 import { Badge, BadgeVariant } from "../atoms/Badge";
-import { CalendarIcon, TaskIcon } from "../atoms/Icon";
+import { CalendarIcon } from "../atoms/Icon";
 import type { TaskWithSubject, TaskPriority, TaskCategory } from "@/types";
 
 // =============================================================================

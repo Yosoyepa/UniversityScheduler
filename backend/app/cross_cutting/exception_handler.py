@@ -13,8 +13,8 @@ HTTP Status Code Mapping (from 09_error_handling.md):
     - DatabaseConnectionError → 503 Service Unavailable
 """
 from datetime import datetime, timezone
-from typing import Callable
 from uuid import uuid4
+import logging
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
@@ -22,16 +22,10 @@ from pydantic import ValidationError as PydanticValidationError
 
 from app.shared.domain.exceptions import (
     BaseAppException,
-    DomainException,
-    InfrastructureException,
-    ScheduleConflictException,
-    InvalidEntityStateException,
-    EntityNotFoundException,
-    ValidationException,
-    ExternalServiceTimeout,
-    DatabaseConnectionError,
     get_http_status_code,
 )
+
+logger = logging.getLogger(__name__)
 
 
 async def app_exception_handler(
@@ -115,8 +109,8 @@ async def unhandled_exception_handler(
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
     
-    # Log the actual error (in production, use proper logging)
-    print(f"[ERROR] Unhandled exception: {exc}")
+    # Log the actual error
+    logger.error("Unhandled exception: %s", exc, exc_info=True)
     
     return JSONResponse(
         status_code=500,

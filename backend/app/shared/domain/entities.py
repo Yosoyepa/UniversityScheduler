@@ -6,7 +6,6 @@ Entities have identity (UUID) and lifecycle timestamps.
 """
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Optional
 from uuid import UUID, uuid4
 
 

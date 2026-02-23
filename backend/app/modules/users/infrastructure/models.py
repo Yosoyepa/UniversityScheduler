@@ -125,10 +125,7 @@ class SettingsModel(Base):
     )
     alert_preferences: Mapped[dict] = mapped_column(
         JSONB,
-        default=lambda: {
-            "days_before": [1],
-            "hours_before": [1],
-        },
+        server_default='{"days_before": [1], "hours_before": [1]}',
         nullable=False,
     )
     
