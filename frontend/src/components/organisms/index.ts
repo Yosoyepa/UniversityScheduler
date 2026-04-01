@@ -6,3 +6,6 @@
 
 export * from "./ScheduleGrid";
 export * from "./ClassFormModal";
+export * from "./KanbanBoard";
+export * from "./TaskFormModal";
+

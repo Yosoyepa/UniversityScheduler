@@ -5,13 +5,14 @@ from app.config import get_settings
 from app.cross_cutting import register_exception_handlers
 from app.modules.users.adapter.router import router as auth_router
 from app.modules.academic_planning.adapter.router import router as academic_planning_router
+from app.modules.tasks.adapter.router import router as tasks_router
 
 settings = get_settings()
 
 app = FastAPI(
     title="University Scheduler API",
     description="Backend for University Scheduler Application using Hexagonal Architecture",
-    version="0.1.0",
+    version="0.2.0-alpha.1",
     docs_url="/docs",
     redoc_url="/redoc",
 )
@@ -34,6 +35,10 @@ app.include_router(
     academic_planning_router,
     prefix="/api/v1",
     tags=["academic-planning"]
+)
+app.include_router(
+    tasks_router,
+    prefix="/api/v1"
 )
 
 

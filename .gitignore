@@ -4,3 +4,4 @@ node_modules/
 temp/
 venv/
 .venv/
+.implementation_tasks/
