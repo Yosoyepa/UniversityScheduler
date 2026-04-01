@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import get_settings
 from app.cross_cutting import register_exception_handlers
 from app.modules.users.adapter.router import router as auth_router
+from app.modules.academic_planning.adapter.router import router as academic_planning_router
 
 settings = get_settings()
 
@@ -29,6 +30,11 @@ register_exception_handlers(app)
 
 # Register API routers with versioned prefix
 app.include_router(auth_router, prefix=settings.API_V1_STR)
+app.include_router(
+    academic_planning_router,
+    prefix="/api/v1",
+    tags=["academic-planning"]
+)
 
 
 @app.get("/health")
