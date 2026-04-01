@@ -101,6 +101,17 @@ chore(<scope>): <description>
 
 ---
 
+## Rule 7: Always Update the Global Tracking Checklist
+
+**After finishing ANY implementation block or bugfix**, you MUST follow the `/post-implementation` workflow.
+
+This requires you to open and update the local checklist located at:
+`.implementation_tasks/analysis_v2.0_tracking.md`
+
+This document is your source of truth. Mark completed tasks `[x]` to maintain an accurate memory of the project state across sessions.
+
+---
+
 ## Skill Directory
 
 ```
