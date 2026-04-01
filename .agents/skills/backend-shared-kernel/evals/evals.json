@@ -1,0 +1,41 @@
+{
+  "skill_name": "backend-shared-kernel",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need a new value object called 'PhoneNumber' that validates Colombian phone numbers (10 digits starting with 3). Put it in the shared kernel.",
+      "expected_output": "A frozen/immutable dataclass in backend/app/shared/domain/value_objects.py with validation in __post_init__, no framework dependencies.",
+      "files": [],
+      "expectations": [
+        "Adds PhoneNumber class to value_objects.py",
+        "Uses frozen dataclass or equivalent immutability pattern",
+        "Validates format in __post_init__",
+        "No imports from FastAPI, SQLAlchemy, or Pydantic"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We need a new exception called DuplicateEmailException that should return HTTP 409 with the conflicting email in the response body. Where does this go?",
+      "expected_output": "A new exception class in shared/domain/exceptions.py inheriting from DomainException, with HTTP 409 mapping added to get_http_status_code().",
+      "files": [],
+      "expectations": [
+        "Creates DuplicateEmailException inheriting from DomainException",
+        "Adds HTTP 409 mapping in get_http_status_code()",
+        "Overrides to_dict() to include the email field",
+        "Does not modify cross_cutting/exception_handler.py directly (it uses BaseAppException catch-all)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I want to add a new domain event called SemesterActivatedEvent with semester_id and activated_at fields. How should I create it and where?",
+      "expected_output": "A new event dataclass in shared/domain/events.py inheriting from DomainEvent with the required fields.",
+      "files": [],
+      "expectations": [
+        "Adds SemesterActivatedEvent as a dataclass inheriting from DomainEvent",
+        "Includes semester_id (UUID) and activated_at (datetime) fields",
+        "Placed in backend/app/shared/domain/events.py",
+        "Re-exported in shared/domain/__init__.py if the pattern is established"
+      ]
+    }
+  ]
+}

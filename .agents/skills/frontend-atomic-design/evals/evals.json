@@ -1,0 +1,41 @@
+{
+  "skill_name": "frontend-atomic-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need a Spinner loading component for the UniversityScheduler. It should show a spinning animation and accept a size prop (sm, md, lg). Where should this go in the component hierarchy?",
+      "expected_output": "A Spinner.tsx file in frontend/src/components/atoms/ with a size prop interface, exported through the atoms barrel file.",
+      "files": [],
+      "expectations": [
+        "Creates Spinner.tsx in the atoms/ directory",
+        "Defines a SpinnerProps interface with size variant",
+        "Updates atoms/index.ts barrel to export Spinner",
+        "Does not import from molecules or organisms"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I want a ClassCard molecule that shows a subject's name, professor, and a colored time badge. It should compose the Badge and Icon atoms.",
+      "expected_output": "A ClassCard.tsx in molecules/ that imports Badge and Icon from atoms, with proper barrel export.",
+      "files": [],
+      "expectations": [
+        "Creates ClassCard.tsx in molecules/ directory",
+        "Imports Badge and Icon from @/components/atoms or @/components",
+        "Defines ClassCardProps interface with subject data",
+        "Updates molecules/index.ts barrel"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Create a ScheduleGrid organism that renders a weekly calendar grid with ClassCard molecules positioned by time slot.",
+      "expected_output": "A ScheduleGrid.tsx in organisms/ that imports ClassCard from molecules and composes a grid layout, with proper barrel export.",
+      "files": [],
+      "expectations": [
+        "Creates ScheduleGrid.tsx in organisms/ directory",
+        "Imports ClassCard from molecules",
+        "Creates organisms/index.ts barrel if it doesn't exist",
+        "Does not import from templates"
+      ]
+    }
+  ]
+}

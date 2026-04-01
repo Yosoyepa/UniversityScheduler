@@ -1,0 +1,42 @@
+{
+  "skill_name": "backend-hexagonal-module",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to add a new 'semesters' module to the backend. It should have a Semester entity with name, start_date, end_date, and an is_active boolean. I need CRUD endpoints and an ActivateSemesterUseCase that emits a SemesterActivatedEvent when a semester is marked active.",
+      "expected_output": "A full module under backend/app/modules/semesters/ with domain/entities.py, port/repository.py, application/use_cases.py + schemas.py, adapter/router.py + postgres_repository.py, and infrastructure/models.py, all following hexagonal architecture with proper import boundaries.",
+      "files": [],
+      "expectations": [
+        "Creates domain/entities.py with a Semester dataclass inheriting from Entity",
+        "Creates port/repository.py with ISemesterRepository ABC interface",
+        "Creates application/use_cases.py with ActivateSemesterUseCase that uses event bus",
+        "Creates adapter/router.py with /api/v1/semesters prefix",
+        "Domain layer has no imports from FastAPI, SQLAlchemy or infrastructure"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Add a 'complete' method to the Task entity in the tasks module. When a task is completed, it should raise InvalidEntityStateException if the task is already in 'ARCHIVED' state. Also emit a TaskCompletedEvent.",
+      "expected_output": "The domain entity gains a complete() method with proper state validation and event emission, without importing any infrastructure or framework code.",
+      "files": [],
+      "expectations": [
+        "Modifies domain/entities.py only for the business logic change",
+        "Uses InvalidEntityStateException from app.shared.domain.exceptions",
+        "Does not import FastAPI or SQLAlchemy in the domain layer",
+        "The complete() method calls self.touch() to update timestamps"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Hey I need to create a new endpoint GET /api/v1/subjects?semester_id=xxx that returns all subjects for a given semester. Where should I put the code and how should it be structured?",
+      "expected_output": "Guidance and code spread across the correct hexagonal layers: a new method in the port interface, implementation in the adapter repository, a use case in application layer, and a route in the adapter router.",
+      "files": [],
+      "expectations": [
+        "Adds find_by_semester_id to the port repository interface",
+        "Implements find_by_semester_id in the postgres adapter repository",
+        "Creates a ListSubjectsBySemesterUseCase in application layer",
+        "Adds GET endpoint in adapter/router.py with query parameter"
+      ]
+    }
+  ]
+}
