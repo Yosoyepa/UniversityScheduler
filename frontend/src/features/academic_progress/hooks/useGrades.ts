@@ -91,7 +91,9 @@ export function useGrades(activeSubjectId: string | null): UseGradesReturn {
         }
 
         // Filter tasks that belong to this subject
-        const subjectTasks = (tasksResult.value || []).filter(t => t.subject_id === activeSubjectId);
+        const subjectTasks = tasksResult.ok 
+            ? (tasksResult.value || []).filter(t => t.subject_id === activeSubjectId)
+            : [];
 
         setState({
             grades: gradesResult.value ?? [],
