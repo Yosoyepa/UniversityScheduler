@@ -29,6 +29,7 @@ from app.shared.infrastructure.database import Base
 if TYPE_CHECKING:
     from app.modules.users.infrastructure.models import UserModel
     from app.modules.academic_planning.infrastructure.models import SubjectModel
+    from app.modules.academic_progress.infrastructure.models import GradeModel
 
 
 def utc_now() -> datetime:
@@ -155,6 +156,10 @@ class TaskModel(Base):
     subject: Mapped[Optional["SubjectModel"]] = relationship(
         "SubjectModel",
         back_populates="tasks",
+    )
+    grades: Mapped[list["GradeModel"]] = relationship(
+        "GradeModel",
+        back_populates="task",
     )
     
     def __repr__(self) -> str:

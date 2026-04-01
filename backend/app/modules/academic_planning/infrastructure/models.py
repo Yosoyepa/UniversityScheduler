@@ -33,6 +33,7 @@ from app.shared.infrastructure.database import Base
 if TYPE_CHECKING:
     from app.modules.users.infrastructure.models import UserModel
     from app.modules.tasks.infrastructure.models import TaskModel
+    from app.modules.academic_progress.infrastructure.models import GradeModel, EvaluationCriteriaModel
 
 
 def utc_now() -> datetime:
@@ -203,7 +204,17 @@ class SubjectModel(Base):
         "TaskModel",
         back_populates="subject",
     )
-    
+    grades: Mapped[List["GradeModel"]] = relationship(
+        "GradeModel",
+        back_populates="subject",
+        cascade="all, delete-orphan",
+    )
+    evaluation_criteria: Mapped[List["EvaluationCriteriaModel"]] = relationship(
+        "EvaluationCriteriaModel",
+        back_populates="subject",
+        cascade="all, delete-orphan",
+    )
+
     def __repr__(self) -> str:
         return f"<Subject(id={self.id}, name={self.name})>"
 

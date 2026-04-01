@@ -11,7 +11,11 @@ from uuid import UUID
 from pydantic import BaseModel, Field, ConfigDict
 
 from app.modules.tasks.domain.entities import TaskStatus, TaskPriority, TaskCategory
-from app.shared.domain.value_objects import MessageResponse
+
+class MessageResponse(BaseModel):
+    """Generic message response."""
+    message: str
+    success: bool = True
 
 
 # =============================================================================

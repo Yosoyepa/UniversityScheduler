@@ -147,3 +147,40 @@ export interface Task {
 export interface TaskWithSubject extends Task {
     subject: Pick<Subject, "id" | "name" | "color"> | null;
 }
+
+// =============================================================================
+// Academic Progress Types (Phase 3)
+// =============================================================================
+
+export interface EvaluationCriteria {
+    id: UUID;
+    subject_id: UUID;
+    name: string;
+    weight: number;
+    category: TaskCategory | null;
+    created_at: ISODateTime;
+    updated_at: ISODateTime;
+}
+
+export interface Grade {
+    id: UUID;
+    user_id: UUID;
+    subject_id: UUID;
+    criteria_id: UUID | null;
+    task_id: UUID | null;
+    score: number;
+    max_score: number;
+    normalized_score: number;
+    graded_at: ISODateTime | null;
+    notes: string | null;
+    created_at: ISODateTime;
+    updated_at: ISODateTime;
+}
+
+export interface SubjectAverage {
+    subject_id: UUID;
+    average: number;
+    grades_count: number;
+    criteria_count: number;
+    is_complete: boolean;
+}

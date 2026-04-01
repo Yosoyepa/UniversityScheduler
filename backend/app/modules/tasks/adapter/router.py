@@ -17,6 +17,7 @@ from app.modules.tasks.adapter.schemas import (
     TaskResponse,
     UpdateTaskRequest,
     UpdateTaskStatusRequest,
+    MessageResponse,
 )
 from app.modules.tasks.application.use_cases import (
     CreateTaskDTO,
@@ -30,7 +31,6 @@ from app.modules.tasks.application.use_cases import (
 from app.modules.tasks.domain.entities import TaskStatus, TaskPriority, TaskCategory
 from app.modules.users.adapter.router import get_current_user
 from app.modules.users.domain.entities import User
-from app.shared.domain.value_objects import MessageResponse
 from app.shared.infrastructure.database import get_async_session
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
