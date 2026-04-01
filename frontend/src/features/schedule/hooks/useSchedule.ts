@@ -195,7 +195,9 @@ export function useSchedule(): UseScheduleReturn {
 
     // Load schedule on mount
     useEffect(() => {
-        refreshSchedule();
+        (async () => {
+            await refreshSchedule();
+        })();
     }, [refreshSchedule]);
 
     return {
