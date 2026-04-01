@@ -106,3 +106,48 @@ CREATE INDEX idx_subjects_semester ON subjects(semester_id);
 CREATE INDEX idx_sessions_subject ON class_sessions(subject_id);
 CREATE INDEX idx_tasks_user_status ON tasks(user_id, status); -- Kanban Board
 CREATE INDEX idx_tasks_due_date ON tasks(due_date); -- Calendar View
+
+-- ============================================
+-- 7. Evaluation Criteria Table (Phase 3)
+-- Defines the grading rubric per subject:
+-- e.g. "Parcial 1" = 30%, "Proyecto Final" = 40%, "Talleres" = 30%
+-- ============================================
+CREATE TABLE evaluation_criteria (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    subject_id UUID NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
+    name VARCHAR(200) NOT NULL,           -- e.g. "Parcial 1", "Proyecto Final"
+    weight NUMERIC(5,2) NOT NULL,         -- percentage value e.g. 30.00
+    category task_category,              -- optional: link to task category filter
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT check_weight CHECK (weight > 0 AND weight <= 100)
+);
+
+-- ============================================
+-- 8. Grades Table (Phase 3)
+-- Records the score obtained per evaluation criterion.
+-- Links to a task (exam/project) for traceability.
+-- ============================================
+CREATE TABLE grades (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    subject_id UUID NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
+    criteria_id UUID REFERENCES evaluation_criteria(id) ON DELETE SET NULL,
+    task_id UUID REFERENCES tasks(id) ON DELETE SET NULL, -- nullable: linked exam task
+    score NUMERIC(5,2) NOT NULL,          -- e.g. 4.5 on a 0.0-5.0 scale
+    max_score NUMERIC(5,2) NOT NULL DEFAULT 5.0,
+    graded_at TIMESTAMP WITH TIME ZONE,
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT check_score CHECK (score >= 0 AND score <= max_score),
+    CONSTRAINT check_max_score CHECK (max_score > 0)
+);
+
+-- ============================================
+-- Indexes for Phase 3 tables
+-- ============================================
+CREATE INDEX idx_grades_user ON grades(user_id);
+CREATE INDEX idx_grades_subject ON grades(subject_id);
+CREATE INDEX idx_grades_criteria ON grades(criteria_id);
+CREATE INDEX idx_evaluation_criteria_subject ON evaluation_criteria(subject_id);
