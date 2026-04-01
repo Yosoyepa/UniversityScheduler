@@ -27,6 +27,7 @@ from app.shared.infrastructure.database import Base
 if TYPE_CHECKING:
     from app.modules.academic_planning.infrastructure.models import SemesterModel
     from app.modules.tasks.infrastructure.models import TaskModel
+    from app.modules.academic_progress.infrastructure.models import GradeModel
 
 
 def utc_now() -> datetime:
@@ -91,6 +92,11 @@ class UserModel(Base):
     )
     tasks: Mapped[List["TaskModel"]] = relationship(
         "TaskModel",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+    grades: Mapped[List["GradeModel"]] = relationship(
+        "GradeModel",
         back_populates="user",
         cascade="all, delete-orphan",
     )
