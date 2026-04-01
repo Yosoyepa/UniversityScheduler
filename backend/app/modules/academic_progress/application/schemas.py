@@ -128,3 +128,8 @@ class SubjectAverageResponse(BaseModel):
     is_complete: bool = Field(
         description="True if all criteria have at least one grade"
     )
+
+class MessageResponse(BaseModel):
+    """Generic message response."""
+    message: str
+    success: bool = True

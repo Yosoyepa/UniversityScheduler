@@ -25,6 +25,7 @@ from app.modules.academic_progress.application.schemas import (
     SubjectAverageResponse,
     UpdateEvaluationCriteriaRequest,
     UpdateGradeRequest,
+    MessageResponse,
 )
 from app.modules.academic_progress.application.use_cases import (
     CalculateSubjectAverageUseCase,
@@ -44,7 +45,6 @@ from app.modules.academic_progress.application.use_cases import (
 )
 from app.modules.users.adapter.router import get_current_user
 from app.modules.users.domain.entities import User
-from app.shared.domain.value_objects import MessageResponse
 from app.shared.infrastructure.database import get_async_session
 
 router = APIRouter(tags=["Academic Progress"])
