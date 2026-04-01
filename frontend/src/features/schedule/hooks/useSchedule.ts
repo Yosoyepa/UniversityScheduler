@@ -78,7 +78,7 @@ export function useSchedule(): UseScheduleReturn {
             return;
         }
 
-        const activeSemester = semesterResult.data?.[0] || null;
+        const activeSemester = semesterResult.value?.[0] || null;
 
         if (!activeSemester) {
             setState({
@@ -108,7 +108,7 @@ export function useSchedule(): UseScheduleReturn {
         }
 
         // 3. Flatten sessions with subject info for the grid
-        const subjects = subjectsResult.data || [];
+        const subjects = subjectsResult.value || [];
         const sessions: ClassSessionWithSubject[] = subjects.flatMap(
             (subject) =>
                 (subject.class_sessions || []).map((session) => ({
