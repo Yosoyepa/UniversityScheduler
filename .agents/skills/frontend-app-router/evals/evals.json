@@ -1,0 +1,41 @@
+{
+  "skill_name": "frontend-app-router",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need a new page at /dashboard/schedule that displays the weekly schedule. It should use the DashboardLayout template and render a ScheduleGrid organism. Make it a server component.",
+      "expected_output": "A page.tsx in frontend/src/app/dashboard/schedule/ that imports DashboardLayout from templates and ScheduleGrid from organisms.",
+      "files": [],
+      "expectations": [
+        "Creates frontend/src/app/dashboard/schedule/page.tsx",
+        "Does not include 'use client' directive (server component)",
+        "Imports ScheduleGrid from @/components",
+        "Exports metadata with title and description"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Create a login page at /login using the AuthLayout template. It should be a client component because it needs useState for form handling.",
+      "expected_output": "A page.tsx in frontend/src/app/(auth)/login/ with 'use client' directive, using AuthLayout template.",
+      "files": [],
+      "expectations": [
+        "Creates page.tsx inside an (auth) route group",
+        "Includes 'use client' directive at the top",
+        "Uses AuthLayout from @/components/templates",
+        "Uses useState or a form handling hook"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I want to add a loading skeleton and error boundary for the tasks page at /dashboard/tasks.",
+      "expected_output": "loading.tsx and error.tsx files in frontend/src/app/dashboard/tasks/ following Next.js conventions.",
+      "files": [],
+      "expectations": [
+        "Creates loading.tsx in the tasks route directory",
+        "Creates error.tsx with 'use client' directive",
+        "error.tsx accepts error and reset props",
+        "loading.tsx returns a skeleton/placeholder UI"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "skill_name": "backend-cross-cutting",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to add CORS middleware to my FastAPI app so the Next.js frontend on localhost:3000 can call the API during development. Where should I put this and how?",
+      "expected_output": "A new file or addition in cross_cutting/ with a CORSMiddleware configuration and a registration function called from main.py.",
+      "files": [],
+      "expectations": [
+        "Creates or modifies a file in backend/app/cross_cutting/",
+        "Uses FastAPI/Starlette CORSMiddleware with allow_origins for localhost:3000",
+        "Provides a register function following the existing pattern",
+        "Does not put CORS config inside any module"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to add a request ID header to every response so I can trace errors. Every request should get a UUID in the X-Request-ID header.",
+      "expected_output": "A new ASGI middleware in cross_cutting/request_id_middleware.py that generates a UUID and sets it on the response headers.",
+      "files": [],
+      "expectations": [
+        "Creates a new middleware file in cross_cutting/",
+        "Uses ASGI or Starlette BaseHTTPMiddleware pattern",
+        "Generates a UUID for each request",
+        "Provides a registration function for main.py"
+      ]
+    }
+  ]
+}
