@@ -56,24 +56,23 @@ class UserResponse(BaseModel):
 
 
 class TokenResponse(BaseModel):
-    """Response schema for successful authentication."""
+    """Response schema for token pair (access + refresh)."""
     access_token: str
+    refresh_token: str = ""
     token_type: str = "bearer"
     expires_in: int
-    user: UserResponse
 
 
 class AuthResponse(BaseModel):
-    """Response schema for auth operations (login/register)."""
-    access_token: str
-    token_type: str = "bearer"
-    expires_in: int
+    """Response schema for auth operations (login/register). Wraps user + tokens."""
     user: UserResponse
+    tokens: TokenResponse
 
 
 class MessageResponse(BaseModel):
     """Generic message response."""
     message: str
+    success: bool = True
 
 
 class UpdateProfileRequest(BaseModel):
