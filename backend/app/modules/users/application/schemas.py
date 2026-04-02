@@ -28,10 +28,19 @@ class RegisterRequest(BaseModel):
     password: str = Field(..., min_length=8, max_length=128)
 
 
+# Alias kept for backward compatibility with existing auth router
+RegisterUserRequest = RegisterRequest
+
+
 class LoginRequest(BaseModel):
     """Request schema for user login."""
     email: EmailStr
     password: str = Field(..., min_length=1)
+
+
+class RefreshTokenRequest(BaseModel):
+    """Request schema for token refresh."""
+    refresh_token: str
 
 
 class UserResponse(BaseModel):
@@ -54,9 +63,23 @@ class TokenResponse(BaseModel):
     user: UserResponse
 
 
+class AuthResponse(BaseModel):
+    """Response schema for auth operations (login/register)."""
+    access_token: str
+    token_type: str = "bearer"
+    expires_in: int
+    user: UserResponse
+
+
+class MessageResponse(BaseModel):
+    """Generic message response."""
+    message: str
+
+
 class UpdateProfileRequest(BaseModel):
     """Request schema for updating user profile."""
     full_name: Optional[str] = Field(None, min_length=2, max_length=100)
+
 
 
 # =============================================================================
