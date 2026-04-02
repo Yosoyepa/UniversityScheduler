@@ -1,110 +1,134 @@
 """
-Authentication Pydantic Schemas (DTOs).
+Application Schemas (DTOs) for User Module.
 
-Data Transfer Objects for API request/response validation.
-These are the "contract" between the API and the outside world.
+Pydantic models for request/response validation and serialization.
+These are used in the adapter layer (routers) and application layer (use cases).
 
-Following defensive_programming skill:
-    - Validate input immediately (Pydantic does this)
-    - Fail-fast with clear error messages
+Following hexagonal architecture:
+    - Schemas belong to the application/adapter boundary
+    - Domain entities are converted to/from schemas at the adapter layer
+    - Never expose domain entities directly from the API
 """
 from datetime import datetime
-from typing import Optional
+from typing import Any, Dict, List, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, EmailStr, Field
 
 
 # =============================================================================
-# Request Schemas (Input)
+# User Schemas
 # =============================================================================
 
-class RegisterUserRequest(BaseModel):
-    """Request body for user registration."""
+
+class RegisterRequest(BaseModel):
+    """Request schema for user registration."""
     email: EmailStr
+    full_name: str = Field(..., min_length=2, max_length=100)
     password: str = Field(..., min_length=8, max_length=128)
-    full_name: str = Field(..., min_length=2, max_length=255)
-    
-    @field_validator('password')
-    @classmethod
-    def password_strength(cls, v: str) -> str:
-        """Validate password has minimum complexity."""
-        if not any(c.isupper() for c in v):
-            raise ValueError('Password must contain at least one uppercase letter')
-        if not any(c.islower() for c in v):
-            raise ValueError('Password must contain at least one lowercase letter')
-        if not any(c.isdigit() for c in v):
-            raise ValueError('Password must contain at least one digit')
-        return v
 
 
 class LoginRequest(BaseModel):
-    """Request body for user login."""
+    """Request schema for user login."""
     email: EmailStr
-    password: str
+    password: str = Field(..., min_length=1)
 
-
-class RefreshTokenRequest(BaseModel):
-    """Request body for token refresh."""
-    refresh_token: str
-
-
-class UpdateProfileRequest(BaseModel):
-    """Request body for profile update."""
-    full_name: Optional[str] = Field(None, min_length=2, max_length=255)
-
-
-# =============================================================================
-# Response Schemas (Output)
-# =============================================================================
 
 class UserResponse(BaseModel):
-    """User data returned in API responses."""
+    """Response schema for user data."""
     id: UUID
     email: str
     full_name: str
     is_active: bool
     created_at: datetime
-    updated_at: datetime
-    
-    model_config = {"from_attributes": True}
+
+    class Config:
+        from_attributes = True
 
 
 class TokenResponse(BaseModel):
-    """JWT tokens returned after login/register."""
+    """Response schema for successful authentication."""
     access_token: str
-    refresh_token: str
     token_type: str = "bearer"
-    expires_in: int = Field(description="Access token expiry in seconds")
-
-
-class AuthResponse(BaseModel):
-    """Full response after login/register including user and tokens."""
+    expires_in: int
     user: UserResponse
-    tokens: TokenResponse
 
 
-class MessageResponse(BaseModel):
-    """Generic message response."""
-    message: str
-    success: bool = True
+class UpdateProfileRequest(BaseModel):
+    """Request schema for updating user profile."""
+    full_name: Optional[str] = Field(None, min_length=2, max_length=100)
 
 
 # =============================================================================
-# Settings Schemas
+# Settings Schemas — Aligned with API spec and mockups
 # =============================================================================
+
 
 class SettingsResponse(BaseModel):
-    """User settings response."""
+    """
+    Response schema for user settings.
+
+    Aligned with API spec: GET /api/v1/settings response structure.
+    Includes all notification channels and reminder timing fields.
+    """
     dark_mode: bool
     email_notifications: bool
-    alert_preferences: dict
-    
-    model_config = {"from_attributes": True}
+    push_notifications: bool
+    sms_alerts: bool
+    class_reminder_minutes: int
+    exam_reminder_days: int
+    assignment_reminder_hours: int
+    alert_preferences: Dict[str, Any]
+
+    class Config:
+        from_attributes = True
 
 
 class UpdateSettingsRequest(BaseModel):
-    """Request to update user settings."""
+    """
+    Request schema for partial settings update.
+
+    All fields optional — PATCH semantics.
+    Constraint ranges match the mockup dropdown options.
+    """
     dark_mode: Optional[bool] = None
     email_notifications: Optional[bool] = None
-    alert_preferences: Optional[dict] = None
+    push_notifications: Optional[bool] = None
+    sms_alerts: Optional[bool] = None
+    # Class Reminders: 5min, 10min, 15min, 30min, 60min
+    class_reminder_minutes: Optional[int] = Field(None, ge=5, le=1440)
+    # Exam Reminders: 1–30 days before
+    exam_reminder_days: Optional[int] = Field(None, ge=1, le=30)
+    # Assignment Reminders: 1–72 hours before
+    assignment_reminder_hours: Optional[int] = Field(None, ge=1, le=72)
+    alert_preferences: Optional[Dict[str, Any]] = None
+
+
+# =============================================================================
+# Notification Schemas
+# =============================================================================
+
+
+class NotificationResponse(BaseModel):
+    """Response schema for a single user notification."""
+    id: UUID
+    type: str
+    title: str
+    message: str
+    is_read: bool
+    related_entity_id: Optional[UUID]
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class NotificationListResponse(BaseModel):
+    """Response schema for a list of notifications."""
+    data: List[NotificationResponse]
+    unread_count: int
+
+
+class UnreadCountResponse(BaseModel):
+    """Response schema for the bell badge count."""
+    unread_count: int
