@@ -8,7 +8,7 @@ Following defensive_programming skill:
     - Validate input immediately (Pydantic does this)
     - Fail-fast with clear error messages
 """
-from datetime import date, time
+from datetime import date, time, datetime
 from typing import List, Optional
 from uuid import UUID
 
@@ -140,8 +140,8 @@ class ClassSessionResponse(ClassSessionBase):
     """Class session data returned in API responses."""
     id: UUID
     subject_id: UUID
-    created_at: Optional[date] = None
-    updated_at: Optional[date] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
     
     model_config = {"from_attributes": True}
 
@@ -152,8 +152,8 @@ class SubjectResponse(SubjectBase):
     semester_id: UUID
     user_id: UUID
     class_sessions: List[ClassSessionResponse] = []
-    created_at: Optional[date] = None
-    updated_at: Optional[date] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
     
     model_config = {"from_attributes": True}
 
@@ -164,8 +164,8 @@ class SemesterResponse(SemesterBase):
     user_id: UUID
     is_active: bool
     subjects: List[SubjectResponse] = []
-    created_at: Optional[date] = None
-    updated_at: Optional[date] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
     
     model_config = {"from_attributes": True}
 
