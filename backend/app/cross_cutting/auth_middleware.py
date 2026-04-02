@@ -27,12 +27,12 @@ class AuthenticatedUser:
     
     Extracted from a valid JWT token.
     """
-    def __init__(self, user_id: UUID, email: str):
-        self.user_id = user_id
+    def __init__(self, id: UUID, email: str):
+        self.id = id
         self.email = email
     
     def __repr__(self) -> str:
-        return f"<AuthenticatedUser(id={self.user_id}, email={self.email})>"
+        return f"<AuthenticatedUser(id={self.id}, email={self.email})>"
 
 
 async def get_current_user(
@@ -78,7 +78,7 @@ async def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    return AuthenticatedUser(user_id=user_id, email=email)
+    return AuthenticatedUser(id=user_id, email=email)
 
 
 async def get_current_user_optional(
@@ -101,6 +101,6 @@ async def get_current_user_optional(
     try:
         user_id = UUID(payload.get("sub"))
         email = payload.get("email", "")
-        return AuthenticatedUser(user_id=user_id, email=email)
+        return AuthenticatedUser(id=user_id, email=email)
     except (ValueError, TypeError):
         return None

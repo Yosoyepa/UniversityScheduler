@@ -20,6 +20,31 @@ export type ISODateTime = string;
 /** ISO 8601 date string (YYYY-MM-DD) */
 export type ISODate = string;
 
+// =============================================================================
+// Auth Types
+// =============================================================================
+
+export interface User {
+    id: UUID;
+    email: string;
+    full_name: string;
+    is_active: boolean;
+    created_at: ISODateTime;
+    updated_at: ISODateTime;
+}
+
+export interface TokenResponse {
+    access_token: string;
+    refresh_token: string;
+    token_type: string;
+    expires_in: number;
+}
+
+export interface AuthResponse {
+    user: User;
+    tokens: TokenResponse;
+}
+
 /** ISO 8601 time string (HH:MM:SS) */
 export type ISOTime = string;
 
