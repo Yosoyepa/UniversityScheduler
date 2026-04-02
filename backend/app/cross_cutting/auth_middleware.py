@@ -31,6 +31,11 @@ class AuthenticatedUser:
         self.id = id
         self.email = email
     
+    @property
+    def user_id(self) -> UUID:
+        """Alias for id to ensure compatibility with use cases."""
+        return self.id
+    
     def __repr__(self) -> str:
         return f"<AuthenticatedUser(id={self.id}, email={self.email})>"
 

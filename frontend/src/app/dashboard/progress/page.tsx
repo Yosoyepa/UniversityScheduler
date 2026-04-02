@@ -36,11 +36,11 @@ export default function ProgressPage() {
         async function loadSubjects() {
             try {
                 // 1. Get active semester
-                const semResult = await api.get<Semester[]>("/semesters", { is_active: true });
+                const semResult = await api.get<Semester | null>("/semesters/active");
                 if (!semResult.ok) throw new Error(semResult.error.message);
                 
-                if (semResult.value && semResult.value.length > 0) {
-                    const activeSem = semResult.value[0];
+                if (semResult.value) {
+                    const activeSem = semResult.value;
                     // 2. Get subjects for active semester
                     const subjResult = await api.get<Subject[]>("/subjects", { semester_id: activeSem.id });
                     if (!subjResult.ok) throw new Error(subjResult.error.message);

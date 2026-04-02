@@ -111,7 +111,7 @@ def handle_schedule_conflict(exc: ScheduleConflictException) -> HTTPException:
 # =============================================================================
 
 @router.post(
-    "/api/v1/semesters",
+    "/semesters",
     response_model=SemesterResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Create a new semester",
@@ -141,7 +141,7 @@ async def create_semester(
 
 
 @router.get(
-    "/api/v1/semesters",
+    "/semesters",
     response_model=List[SemesterResponse],
     summary="List user semesters",
     description="Get all semesters for the current user.",
@@ -156,7 +156,7 @@ async def list_semesters(
 
 
 @router.get(
-    "/api/v1/semesters/active",
+    "/semesters/active",
     response_model=Optional[SemesterResponse],
     summary="Get active semester",
     description="Get the currently active semester for the current user.",
@@ -171,7 +171,7 @@ async def get_active_semester(
 
 
 @router.get(
-    "/api/v1/semesters/{semester_id}",
+    "/semesters/{semester_id}",
     response_model=SemesterResponse,
     summary="Get semester by ID",
     description="Get a specific semester by its ID.",
@@ -196,7 +196,7 @@ async def get_semester(
 
 
 @router.patch(
-    "/api/v1/semesters/{semester_id}",
+    "/semesters/{semester_id}",
     response_model=SemesterResponse,
     summary="Update semester",
     description="Update semester details.",
@@ -228,7 +228,7 @@ async def update_semester(
 
 
 @router.delete(
-    "/api/v1/semesters/{semester_id}",
+    "/semesters/{semester_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Delete semester",
     description="Delete a semester and all its subjects and sessions.",
@@ -250,7 +250,7 @@ async def delete_semester(
 
 
 @router.post(
-    "/api/v1/semesters/{semester_id}/activate",
+    "/semesters/{semester_id}/activate",
     response_model=SemesterResponse,
     summary="Activate semester",
     description="Activate a semester (emits SemesterActivatedEvent).",
@@ -276,7 +276,7 @@ async def activate_semester(
 # =============================================================================
 
 @router.post(
-    "/api/v1/subjects",
+    "/subjects",
     response_model=SubjectResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Create a new subject",
@@ -317,7 +317,7 @@ async def create_subject(
 
 
 @router.get(
-    "/api/v1/subjects",
+    "/subjects",
     response_model=List[SubjectResponse],
     summary="List subjects",
     description="Get all subjects for the current user, optionally filtered by semester.",
@@ -337,7 +337,7 @@ async def list_subjects(
 
 
 @router.get(
-    "/api/v1/subjects/{subject_id}",
+    "/subjects/{subject_id}",
     response_model=SubjectResponse,
     summary="Get subject by ID",
     description="Get a specific subject by its ID.",
@@ -362,7 +362,7 @@ async def get_subject(
 
 
 @router.patch(
-    "/api/v1/subjects/{subject_id}",
+    "/subjects/{subject_id}",
     response_model=SubjectResponse,
     summary="Update subject",
     description="Update subject details.",
@@ -397,7 +397,7 @@ async def update_subject(
 
 
 @router.delete(
-    "/api/v1/subjects/{subject_id}",
+    "/subjects/{subject_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Delete subject",
     description="Delete a subject and all its class sessions.",
@@ -423,7 +423,7 @@ async def delete_subject(
 # =============================================================================
 
 @router.post(
-    "/api/v1/subjects/{subject_id}/sessions",
+    "/subjects/{subject_id}/sessions",
     response_model=ClassSessionResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Add class session",
@@ -463,7 +463,7 @@ async def add_class_session(
 
 
 @router.get(
-    "/api/v1/sessions",
+    "/sessions",
     response_model=List[ClassSessionResponse],
     summary="List all user sessions",
     description="Get all class sessions for the current user (for schedule view).",
@@ -478,7 +478,7 @@ async def list_class_sessions(
 
 
 @router.get(
-    "/api/v1/sessions/{session_id}",
+    "/sessions/{session_id}",
     response_model=ClassSessionResponse,
     summary="Get session by ID",
     description="Get a specific class session by its ID.",
@@ -506,7 +506,7 @@ async def get_class_session(
 
 
 @router.patch(
-    "/api/v1/sessions/{session_id}",
+    "/sessions/{session_id}",
     response_model=ClassSessionResponse,
     summary="Update session",
     description="Update class session details.",
@@ -543,7 +543,7 @@ async def update_class_session(
 
 
 @router.delete(
-    "/api/v1/sessions/{session_id}",
+    "/sessions/{session_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Delete session",
     description="Remove a class session from a subject.",
@@ -569,7 +569,7 @@ async def delete_class_session(
 # =============================================================================
 
 @router.get(
-    "/api/v1/schedule",
+    "/schedule",
     response_model=ScheduleResponse,
     summary="Get weekly schedule",
     description="Get full weekly schedule (aggregated view of all class sessions).",

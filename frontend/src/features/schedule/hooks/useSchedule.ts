@@ -65,9 +65,7 @@ export function useSchedule(): UseScheduleReturn {
         setState((prev) => ({ ...prev, loading: true, error: null }));
 
         // 1. Get active semester
-        const semesterResult = await api.get<Semester[]>("/semesters", {
-            is_active: true,
-        });
+        const semesterResult = await api.get<Semester | null>("/semesters/active");
 
         if (!semesterResult.ok) {
             setState((prev) => ({
@@ -78,7 +76,7 @@ export function useSchedule(): UseScheduleReturn {
             return;
         }
 
-        const activeSemester = semesterResult.value?.[0] || null;
+        const activeSemester = semesterResult.value;
 
         if (!activeSemester) {
             setState({
