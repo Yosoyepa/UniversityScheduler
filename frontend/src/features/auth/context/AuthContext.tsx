@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                         clearTokens();
                     }
                 }
-            } catch (err) {
+            } catch {
                 if (isMounted) setUser(null);
             } finally {
                 if (isMounted) setLoading(false);

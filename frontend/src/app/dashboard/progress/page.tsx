@@ -7,7 +7,7 @@
 
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { PlusIcon } from "@/components/atoms/Icon";
 import { Button } from "@/components/atoms/Button";
 import { GradesTable } from "@/components/organisms/GradesTable";
@@ -53,8 +53,8 @@ export default function ProgressPage() {
                         }
                     }
                 }
-            } catch (err: any) {
-                if (isMounted) setError(err);
+            } catch (err: unknown) {
+                if (isMounted) setError(err instanceof Error ? err : new Error(String(err)));
             } finally {
                 if (isMounted) setLoadingSubjects(false);
             }
@@ -85,6 +85,7 @@ export default function ProgressPage() {
     // Handlers
     // -------------------------------------------------------------------------
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleCreateGrade = async (data: any) => {
         if (!selectedSubjectId) return;
         
@@ -107,6 +108,7 @@ export default function ProgressPage() {
         }
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleCreateCriteria = async (data: any) => {
         if (!selectedSubjectId) return;
         await createCriteria(data, selectedSubjectId);
