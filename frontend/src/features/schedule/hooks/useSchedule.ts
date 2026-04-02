@@ -32,6 +32,7 @@ interface ScheduleState {
 interface UseScheduleReturn extends ScheduleState {
     createSubject: (data: SubjectFormData) => Promise<boolean>;
     deleteSubject: (subjectId: string) => Promise<boolean>;
+    createSemester: (data: { name: string; start_date: string; end_date: string }) => Promise<boolean>;
     refreshSchedule: () => Promise<void>;
     creating: boolean;
 }
@@ -191,6 +192,38 @@ export function useSchedule(): UseScheduleReturn {
         [refreshSchedule]
     );
 
+    /**
+     * Create a new semester and automatically activate it.
+     */
+    const createSemester = useCallback(
+        async (data: { name: string; start_date: string; end_date: string }): Promise<boolean> => {
+            setCreating(true);
+
+            // 1. Create the semester
+            const result = await api.post<Semester>("/semesters", data);
+
+            if (!result.ok) {
+                setCreating(false);
+                setState((prev) => ({ ...prev, error: result.error.message }));
+                return false;
+            }
+
+            // 2. Activate the semester
+            const activateResult = await api.post<Semester>(`/semesters/${result.value!.id}/activate`, {});
+            
+            setCreating(false);
+
+            if (activateResult.ok) {
+                await refreshSchedule();
+                return true;
+            }
+
+            setState((prev) => ({ ...prev, error: activateResult.error.message }));
+            return false;
+        },
+        [refreshSchedule]
+    );
+
     // Load schedule on mount
     useEffect(() => {
         (async () => {
@@ -202,6 +235,7 @@ export function useSchedule(): UseScheduleReturn {
         ...state,
         createSubject,
         deleteSubject,
+        createSemester,
         refreshSchedule,
         creating,
     };

@@ -8,7 +8,7 @@
  */
 
 import React, { useState } from "react";
-import { DashboardLayout } from "@/components/templates/DashboardLayout";
+
 import { useSettings } from "@/features/settings/hooks/useSettings";
 import { useTheme } from "@/features/theme/context/ThemeContext";
 import {
@@ -375,7 +375,7 @@ export default function SettingsPage() {
     };
 
     return (
-        <DashboardLayout>
+        <>
             <div className="max-w-4xl mx-auto px-4 py-6">
                 {/* Page header */}
                 <div className="flex items-center gap-3 mb-8">
@@ -449,6 +449,6 @@ export default function SettingsPage() {
                     </main>
                 </div>
             </div>
-        </DashboardLayout>
+        </>
     );
 }

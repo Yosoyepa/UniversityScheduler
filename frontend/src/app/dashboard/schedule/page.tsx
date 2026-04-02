@@ -8,10 +8,11 @@
 "use client";
 
 import { useState } from "react";
-import { ScheduleGrid, ClassFormModal } from "@/components";
+import { ScheduleGrid, ClassFormModal, SemesterFormModal } from "@/components";
 import { Button, PlusIcon } from "@/components";
 import { useSchedule } from "@/features/schedule/hooks/useSchedule";
 import type { SubjectFormData } from "@/components/organisms/ClassFormModal";
+import type { SemesterFormData } from "@/components/organisms/SemesterFormModal";
 import type { ClassSessionWithSubject } from "@/types";
 
 // =============================================================================
@@ -26,10 +27,12 @@ export default function SchedulePage() {
         loading,
         error,
         createSubject,
+        createSemester,
         creating,
     } = useSchedule();
 
     const [showForm, setShowForm] = useState(false);
+    const [showSemesterForm, setShowSemesterForm] = useState(false);
     const [selectedSession, setSelectedSession] =
         useState<ClassSessionWithSubject | null>(null);
 
@@ -37,6 +40,17 @@ export default function SchedulePage() {
         const success = await createSubject(data);
         if (success) {
             setShowForm(false);
+        }
+    }
+
+    async function handleCreateSemester(data: SemesterFormData) {
+        const success = await createSemester({
+            name: data.name,
+            start_date: data.start_date,
+            end_date: data.end_date,
+        });
+        if (success) {
+            setShowSemesterForm(false);
         }
     }
 
@@ -62,7 +76,15 @@ export default function SchedulePage() {
                     No tienes un semestre activo. Crea uno para empezar a
                     gestionar tu horario.
                 </p>
-                <Button>Crear Semestre</Button>
+                <Button onClick={() => setShowSemesterForm(true)}>Crear Semestre</Button>
+                
+                {/* Create semester modal */}
+                <SemesterFormModal
+                    open={showSemesterForm}
+                    onClose={() => setShowSemesterForm(false)}
+                    onSubmit={handleCreateSemester}
+                    loading={creating}
+                />
             </div>
         );
     }
