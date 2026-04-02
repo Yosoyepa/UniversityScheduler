@@ -9,7 +9,7 @@
  */
 
 import { useState, useEffect, useCallback } from "react";
-import { apiClient } from "@/lib/api-client";
+import { api } from "@/lib/api-client";
 import { useToast } from "@/features/notifications/context/ToastContext";
 import { useTheme } from "@/features/theme/context/ThemeContext";
 import type { UserSettingsExpanded, UpdateSettingsPayload, UpdateProfilePayload } from "@/types/entities";
@@ -37,7 +37,7 @@ export function useSettings(): UseSettingsReturn {
     const fetchSettings = useCallback(async () => {
         setIsLoading(true);
         try {
-            const result = await apiClient.get<UserSettingsExpanded>("/user/settings");
+            const result = await api.get<UserSettingsExpanded>("/user/settings");
             if (result.ok) {
                 setSettings(result.value);
                 // Sync theme state with backend settings
@@ -53,7 +53,7 @@ export function useSettings(): UseSettingsReturn {
     const updateSettings = useCallback(async (payload: UpdateSettingsPayload) => {
         setIsSaving(true);
         try {
-            const result = await apiClient.patch<UserSettingsExpanded>("/user/settings", payload);
+            const result = await api.patch<UserSettingsExpanded>("/user/settings", payload);
             if (result.ok) {
                 setSettings(result.value);
                 // Sync dark mode if it changed
@@ -73,7 +73,7 @@ export function useSettings(): UseSettingsReturn {
     const updateProfile = useCallback(async (payload: UpdateProfilePayload) => {
         setIsSaving(true);
         try {
-            const result = await apiClient.put<{ full_name: string }>("/user/profile", payload);
+            const result = await api.put<{ full_name: string }>("/user/profile", payload);
             if (result.ok) {
                 toast.success("Perfil actualizado", "Tu nombre ha sido guardado");
             } else {

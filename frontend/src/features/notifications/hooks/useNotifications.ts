@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { apiClient } from "@/lib/api-client";
+import { api } from "@/lib/api-client";
 import type { AppNotification, NotificationListResponse, UnreadCountResponse } from "@/types/entities";
 
 const POLL_INTERVAL_MS = 30_000; // 30 seconds polling for bell badge
@@ -29,7 +29,7 @@ export function useNotifications(): UseNotificationsReturn {
     const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     const refreshCount = useCallback(async () => {
-        const result = await apiClient.get<UnreadCountResponse>("/user/notifications/count");
+        const result = await api.get<UnreadCountResponse>("/user/notifications/count");
         if (result.ok) {
             setUnreadCount(result.value.unread_count);
         }
@@ -41,7 +41,7 @@ export function useNotifications(): UseNotificationsReturn {
             const url = unreadOnly
                 ? "/user/notifications?unread_only=true"
                 : "/user/notifications";
-            const result = await apiClient.get<NotificationListResponse>(url);
+            const result = await api.get<NotificationListResponse>(url);
             if (result.ok) {
                 setNotifications(result.value.data);
                 setUnreadCount(result.value.unread_count);
@@ -52,7 +52,7 @@ export function useNotifications(): UseNotificationsReturn {
     }, []);
 
     const markAsRead = useCallback(async (notificationId: string) => {
-        const result = await apiClient.patch(`/user/notifications/${notificationId}/read`, {});
+        const result = await api.patch(`/user/notifications/${notificationId}/read`, {});
         if (result.ok) {
             setNotifications((prev) =>
                 prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n))
@@ -62,7 +62,7 @@ export function useNotifications(): UseNotificationsReturn {
     }, []);
 
     const markAllAsRead = useCallback(async () => {
-        const result = await apiClient.patch("/user/notifications/read-all", {});
+        const result = await api.patch("/user/notifications/read-all", {});
         if (result.ok) {
             setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
             setUnreadCount(0);

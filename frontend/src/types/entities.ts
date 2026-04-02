@@ -67,11 +67,17 @@ export interface User {
 export interface UserSettings {
     dark_mode: boolean;
     email_notifications: boolean;
+    push_notifications: boolean;
+    sms_alerts: boolean;
+    class_reminder_minutes: number;
+    exam_reminder_days: number;
+    assignment_reminder_hours: number;
     alert_preferences: {
         days_before: number[];
         hours_before: number[];
     };
 }
+
 
 export interface AuthTokens {
     access_token: string;
@@ -214,26 +220,11 @@ export interface SubjectAverage {
 // Phase 5 Types — Settings (expanded) & Notifications
 // =============================================================================
 
-/** Expanded UserSettings — aligned with API spec and mockups */
-export interface UserSettingsExpanded {
-    dark_mode: boolean;
-    // Notification channels
-    email_notifications: boolean;
-    push_notifications: boolean;
-    sms_alerts: boolean;
-    // Reminder timing
-    class_reminder_minutes: number;
-    exam_reminder_days: number;
-    assignment_reminder_hours: number;
-    // Legacy
-    alert_preferences: {
-        days_before: number[];
-        hours_before: number[];
-    };
-}
 
-// Update alias so existing code using UserSettings still compiles
-export type { UserSettingsExpanded as UserSettings };
+// UserSettingsExpanded is a deprecated alias — UserSettings is now fully expanded
+export type UserSettingsExpanded = UserSettings;
+
+
 
 export type NotificationType = "TASK_COMPLETED" | "TASK_OVERDUE" | "SYSTEM";
 
