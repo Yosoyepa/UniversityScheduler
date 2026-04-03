@@ -553,23 +553,27 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
         # Attach subjects if they were eagerly loaded
         if 'subjects' in model.__dict__ and model.subjects is not None:
             for subject_model in model.subjects:
-                subject = self._subject_to_entity(subject_model)
+                subject = self._subject_to_entity(subject_model, user_id=model.user_id)
                 semester._subjects.append(subject)
         
         return semester
     
-    def _subject_to_entity(self, model: SubjectModel) -> Subject:
+    def _subject_to_entity(self, model: SubjectModel, user_id: Optional[UUID] = None) -> Subject:
         """
         Map SubjectModel ORM model to Subject domain entity.
         
         Args:
             model: The SubjectModel from database
+            user_id: Optional explicit user_id (used when called from
+                     _semester_to_entity where the semester relationship
+                     on SubjectModel isn't eagerly loaded)
             
         Returns:
             Subject domain entity
         """
-        # Extract user_id only if semester relationship was eagerly loaded
-        user_id = model.semester.user_id if 'semester' in model.__dict__ and model.semester is not None else None
+        # Use explicit user_id if provided, otherwise try the eagerly loaded semester
+        if user_id is None:
+            user_id = model.semester.user_id if 'semester' in model.__dict__ and model.semester is not None else None
         
         # Create base subject entity
         subject = Subject(
