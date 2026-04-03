@@ -294,7 +294,14 @@ class ActivateSemesterUseCase:
                 message="You don't have permission to activate this semester",
             )
         
-        # Activate (this emits SemesterActivatedEvent)
+        # Ensure only one semester is active at a time
+        all_semesters = await self.repository.get_semesters_by_user(user_id)
+        for other in all_semesters:
+            if other.id != semester_id and other.is_active:
+                other.deactivate()
+                await self.repository.save_semester(other)
+        
+        # Activate target semester (this emits SemesterActivatedEvent)
         semester.activate()
         
         return await self.repository.save_semester(semester)

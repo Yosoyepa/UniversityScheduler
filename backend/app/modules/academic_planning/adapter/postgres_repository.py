@@ -181,8 +181,9 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
                 SemesterModel.is_active == True
             )
             .options(selectinload(SemesterModel.subjects))
+            .order_by(SemesterModel.start_date.desc())
         )
-        model = result.scalar_one_or_none()
+        model = result.scalars().first()
         return self._semester_to_entity(model) if model else None
     
     async def delete_semester(self, semester_id: UUID) -> None:
