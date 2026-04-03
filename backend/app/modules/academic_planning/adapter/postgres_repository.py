@@ -541,7 +541,7 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
         )
         
         # Attach subjects if they were eagerly loaded
-        if hasattr(model, 'subjects') and model.subjects is not None:
+        if 'subjects' in model.__dict__ and model.subjects is not None:
             for subject_model in model.subjects:
                 subject = self._subject_to_entity(subject_model)
                 semester._subjects.append(subject)
@@ -558,11 +558,14 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
         Returns:
             Subject domain entity
         """
+        # Extract user_id only if semester relationship was eagerly loaded
+        user_id = model.semester.user_id if 'semester' in model.__dict__ and model.semester is not None else None
+        
         # Create base subject entity
         subject = Subject(
             id=model.id,
             semester_id=model.semester_id,
-            user_id=model.semester.user_id if model.semester else None,
+            user_id=user_id,
             name=model.name,
             credits=model.credits,
             difficulty=model.difficulty,
@@ -574,7 +577,7 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
         )
         
         # Attach class sessions if they were eagerly loaded
-        if hasattr(model, 'class_sessions') and model.class_sessions is not None:
+        if 'class_sessions' in model.__dict__ and model.class_sessions is not None:
             for session_model in model.class_sessions:
                 session = self._class_session_to_entity(session_model)
                 subject._class_sessions.append(session)
