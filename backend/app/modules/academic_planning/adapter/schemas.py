@@ -9,10 +9,10 @@ Following defensive_programming skill:
     - Fail-fast with clear error messages
 """
 from datetime import date, time, datetime
-from typing import List, Optional
+from typing import List, Optional, Annotated
 from uuid import UUID
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, BeforeValidator
 
 from app.modules.academic_planning.domain.entities import (
     DifficultyLevel,
@@ -24,6 +24,14 @@ from app.shared.domain.value_objects import DayOfWeek
 # =============================================================================
 # Base Schemas (Shared fields)
 # =============================================================================
+
+def parse_color(v: any) -> str:
+    """Extract string value from HexColor object if necessary."""
+    if hasattr(v, 'value'):
+        return str(v.value)
+    return str(v)
+
+HexColorStr = Annotated[str, BeforeValidator(parse_color)]
 
 class SemesterBase(BaseModel):
     """Base schema with shared semester fields."""
@@ -38,7 +46,7 @@ class SubjectBase(BaseModel):
     credits: int = Field(default=3, ge=1, le=20)
     difficulty: DifficultyLevel = DifficultyLevel.MEDIUM
     subject_type: SubjectType = SubjectType.DISCIPLINAR_OBLIGATORIA
-    color: str = Field(default="#3B82F6", pattern=r"^#[0-9A-Fa-f]{6}$")
+    color: HexColorStr = Field(default="#3B82F6", pattern=r"^#[0-9A-Fa-f]{6}$")
     professor_name: Optional[str] = Field(None, max_length=255)
 
 
