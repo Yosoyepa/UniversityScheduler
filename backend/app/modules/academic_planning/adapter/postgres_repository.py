@@ -21,7 +21,7 @@ from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, joinedload
 
 from app.modules.academic_planning.domain.entities import (
     ClassSession,
@@ -285,7 +285,10 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
         result = await self.session.execute(
             select(SubjectModel)
             .where(SubjectModel.id == subject_id)
-            .options(selectinload(SubjectModel.class_sessions))
+            .options(
+                joinedload(SubjectModel.semester),
+                selectinload(SubjectModel.class_sessions)
+            )
         )
         model = result.scalar_one_or_none()
         return self._subject_to_entity(model) if model else None
@@ -308,7 +311,10 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
         result = await self.session.execute(
             select(SubjectModel)
             .where(SubjectModel.semester_id == semester_id)
-            .options(selectinload(SubjectModel.class_sessions))
+            .options(
+                joinedload(SubjectModel.semester),
+                selectinload(SubjectModel.class_sessions)
+            )
             .order_by(SubjectModel.name)
         )
         models = result.scalars().all()
@@ -333,7 +339,10 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
             select(SubjectModel)
             .join(SemesterModel)
             .where(SemesterModel.user_id == user_id)
-            .options(selectinload(SubjectModel.class_sessions))
+            .options(
+                joinedload(SubjectModel.semester),
+                selectinload(SubjectModel.class_sessions)
+            )
             .order_by(SubjectModel.name)
         )
         models = result.scalars().all()
