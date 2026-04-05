@@ -126,29 +126,35 @@ export function SubjectDetailsModal({
                                     )}
                                 </p>
                             </div>
-                            <div className="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50">
-                                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider mb-1">Profesor</p>
+                            <div className={`bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50 ${subject.id === "tutoring" ? "col-span-2" : ""}`}>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider mb-1">
+                                    {subject.id === "tutoring" ? "Tutor" : "Profesor"}
+                                </p>
                                 <p className="text-sm font-semibold text-gray-900 dark:text-white">
                                     {professor ? professor.name : "Sin asignar"}
                                 </p>
                             </div>
-                            <div className="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50">
-                                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider mb-1">Créditos</p>
-                                <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                                    {subject.credits}
-                                </p>
-                            </div>
+                            {subject.id !== "tutoring" && (
+                                <div className="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider mb-1">Créditos</p>
+                                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                                        {subject.credits}
+                                    </p>
+                                </div>
+                            )}
                         </div>
 
                         {/* Badges / Extras */}
-                        <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100 dark:border-gray-700/50">
-                            <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs font-semibold">
-                                {subject.subject_type.replace(/_/g, ' ')}
-                            </span>
-                            <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs font-semibold">
-                                {subject.difficulty}
-                            </span>
-                        </div>
+                        {subject.id !== "tutoring" && (
+                            <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100 dark:border-gray-700/50">
+                                <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs font-semibold">
+                                    {subject.subject_type.replace(/_/g, ' ')}
+                                </span>
+                                <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs font-semibold">
+                                    {subject.difficulty}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
