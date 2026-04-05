@@ -101,9 +101,23 @@ export function SubjectDetailsModal({
                                 </p>
                             </div>
                             <div className="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50">
-                                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider mb-1">Salón</p>
-                                <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                                    {classroom || "Sin asignar"}
+                                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider mb-1">
+                                    {classroom?.startsWith('http') ? "Enlace de Reunión" : "Salón"}
+                                </p>
+                                <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                                    {classroom?.startsWith('http') ? (
+                                        <a 
+                                            href={classroom} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer" 
+                                            className="text-blue-500 hover:text-blue-400 hover:underline"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            {classroom}
+                                        </a>
+                                    ) : (
+                                        classroom || "Sin asignar"
+                                    )}
                                 </p>
                             </div>
                             <div className="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50">

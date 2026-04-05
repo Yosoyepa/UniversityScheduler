@@ -69,8 +69,18 @@ export function ClassCard({
 
             {/* Classroom (if not compact) */}
             {!compact && classroom && (
-                <p className="text-gray-500 dark:text-gray-500 truncate mt-1">
-                    📍 {classroom}
+                <p className="flex items-center gap-1 text-gray-500 dark:text-gray-500 truncate mt-1">
+                    {classroom.startsWith('http') ? (
+                        <>
+                            <span className="text-[10px]">🔗</span>
+                            <span>Virtual</span>
+                        </>
+                    ) : (
+                        <>
+                            <span className="text-[10px]">📍</span>
+                            <span>{classroom}</span>
+                        </>
+                    )}
                 </p>
             )}
         </div>
