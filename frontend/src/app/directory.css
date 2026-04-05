@@ -1,0 +1,310 @@
+/* === Phase 6 Directory & Tutoring CSS (Mockup BEM Map) === */
+
+/* Base Layout */
+.directory-page {
+  @apply flex flex-col gap-6 md:gap-8 mx-auto max-w-[1280px] w-full;
+}
+
+.directory-page__header {
+  @apply flex flex-col md:flex-row md:items-center justify-between gap-4;
+}
+
+.directory-page__title {
+  @apply text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight;
+}
+
+.directory-page__subtitle {
+  @apply text-slate-500 dark:text-slate-400 text-base md:text-lg mt-2 max-w-2xl;
+}
+
+/* Stats */
+.directory-stats {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-4;
+}
+
+.directory-stat {
+  @apply bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-center justify-center text-center gap-2;
+}
+
+.directory-stat .material-symbols-outlined {
+  @apply text-indigo-500 text-3xl;
+}
+
+.directory-stat--available .material-symbols-outlined {
+  @apply text-emerald-500;
+}
+
+.directory-stat__value {
+  @apply text-2xl font-bold text-gray-900 dark:text-white;
+}
+
+.directory-stat__label {
+  @apply text-sm text-gray-500 font-medium;
+}
+
+/* Tabs */
+.directory-tabs {
+  @apply flex gap-2 border-b border-gray-200 dark:border-gray-700;
+}
+
+.directory-tab {
+  @apply flex items-center gap-2 px-6 py-3 font-medium text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-t-lg transition-colors border-b-2 border-transparent;
+}
+
+.directory-tab--active {
+  @apply text-indigo-600 dark:text-indigo-400 border-indigo-600 dark:border-indigo-400 bg-indigo-50/50 dark:bg-indigo-900/20;
+}
+
+.directory-tab__badge {
+  @apply ml-2 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 text-xs py-0.5 px-2 rounded-full font-bold;
+}
+
+/* Search */
+.directory-search-wrap {
+  @apply flex w-full items-center rounded-xl h-14 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500/50;
+}
+
+.directory-search__icon {
+  @apply text-gray-400 pl-4 pr-3;
+}
+
+.directory-search__input {
+  @apply flex-1 h-full bg-transparent border-0 text-gray-900 dark:text-white focus:ring-0 placeholder:text-gray-400 text-base;
+}
+
+/* Grid & Cards */
+.professor-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.professor-grid__item {
+  @apply relative;
+}
+
+.professor-card {
+  @apply flex flex-col bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all duration-300 h-full p-6;
+}
+
+.professor-card--skeleton {
+  @apply animate-pulse bg-gray-200 dark:bg-gray-700 min-h-[300px];
+}
+
+.professor-card__header {
+  @apply flex items-start justify-between mb-4;
+}
+
+.professor-card__avatar-wrap {
+  @apply relative;
+}
+
+.professor-card__avatar {
+  @apply w-16 h-16 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-2xl font-bold uppercase ring-4 ring-white dark:ring-gray-800;
+}
+
+.professor-card__status-dot {
+  @apply absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-white dark:border-gray-800 rounded-full;
+}
+
+.professor-card__info {
+  @apply ml-4 flex-1 min-w-0;
+}
+
+.professor-card__name {
+  @apply text-slate-900 dark:text-white text-lg font-bold truncate;
+}
+
+.professor-card__dept {
+  @apply text-indigo-600 dark:text-indigo-400 text-sm font-medium mt-0.5 truncate;
+}
+
+.professor-card__email {
+  @apply text-slate-500 text-xs mt-1 truncate;
+}
+
+.professor-card__delete {
+  @apply text-gray-400 hover:text-red-500 p-1 transition-colors;
+}
+
+.professor-card__body {
+  @apply flex-1 flex flex-col gap-3 mb-6;
+}
+
+.professor-card__hours-section {
+  @apply flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-gray-700/50;
+}
+
+.professor-card__hours-section .material-symbols-outlined {
+  @apply text-gray-400 mt-0.5;
+}
+
+.professor-card__day {
+  @apply text-slate-700 dark:text-slate-200 text-sm font-semibold mb-1;
+}
+
+.professor-card__time {
+  @apply text-slate-500 dark:text-gray-400 text-sm;
+}
+
+.professor-card__actions {
+  @apply mt-auto;
+}
+
+/* Empty State */
+.directory-empty {
+  @apply flex flex-col items-center justify-center text-center p-12 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700;
+}
+
+.directory-empty__icon {
+  @apply text-6xl text-gray-300 dark:text-gray-600 mb-4;
+}
+
+.directory-empty__title {
+  @apply text-xl font-bold text-gray-900 dark:text-white mb-2;
+}
+
+.directory-empty__hint {
+  @apply text-gray-500 dark:text-gray-400 mb-6 max-w-md;
+}
+
+/* Buttons */
+.btn {
+  @apply inline-flex justify-center items-center gap-2 rounded-lg font-medium transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2;
+}
+
+.btn--primary {
+  @apply bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2;
+}
+
+.btn--secondary {
+  @apply bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700;
+}
+
+.btn--success {
+  @apply bg-emerald-600 text-white hover:bg-emerald-700;
+}
+
+.btn--danger {
+  @apply bg-red-600 text-white hover:bg-red-700;
+}
+
+.btn--ghost {
+  @apply bg-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white;
+}
+
+.btn--sm {
+  @apply px-3 py-1.5 text-sm;
+}
+
+.btn--w-full {
+  @apply w-full;
+}
+
+/* Sessions List */
+.sessions-list {
+  @apply flex flex-col gap-4;
+}
+
+.session-row {
+  @apply flex flex-col md:flex-row md:items-center gap-4 bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm;
+}
+
+.session-row__meta {
+  @apply min-w-[200px];
+}
+
+.session-row__date {
+  @apply text-slate-900 dark:text-white font-bold;
+}
+
+.session-row__time {
+  @apply text-indigo-600 dark:text-indigo-400 text-sm font-medium mt-1;
+}
+
+.session-row__info {
+  @apply flex-1;
+}
+
+.session-row__professor {
+  @apply text-slate-700 dark:text-slate-200 font-semibold;
+}
+
+.session-row__notes {
+  @apply text-slate-500 dark:text-gray-400 text-sm mt-1;
+}
+
+.session-status {
+  @apply px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full self-start md:self-center shrink-0 border;
+}
+
+.session-status--scheduled {
+  @apply bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800/50;
+}
+
+.session-status--completed {
+  @apply bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800/50;
+}
+
+.session-status--cancelled {
+  @apply bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50;
+}
+
+.session-row__actions {
+  @apply flex items-center gap-2 mt-4 md:mt-0;
+}
+
+/* Modals */
+.modal-overlay {
+  @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto;
+}
+
+.modal-content {
+  @apply bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800;
+}
+
+.modal-title {
+  @apply text-xl font-bold text-gray-900 dark:text-white;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors bg-transparent border-0 cursor-pointer;
+}
+
+.modal-body {
+  @apply p-6 flex flex-col gap-4 overflow-y-auto max-h-[60vh] bg-gray-50/50 dark:bg-gray-900/50;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900;
+}
+
+/* Form Groups (Internal for modals) */
+.form-group {
+  @apply flex flex-col gap-1.5;
+}
+
+.form-label {
+  @apply text-sm font-semibold text-gray-700 dark:text-gray-300;
+}
+
+.form-input, .form-textarea, .form-select {
+  @apply w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2.5 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500;
+}
+
+.form-textarea {
+  @apply min-h-[100px] resize-y;
+}
+
+/* Delete Confirm Popover */
+.professor-delete-confirm {
+  @apply absolute inset-0 z-10 bg-white/95 dark:bg-gray-800/95 flex flex-col items-center justify-center text-center p-6 rounded-xl border border-red-200 dark:border-red-900/50 backdrop-blur-sm;
+}
+.professor-delete-confirm p {
+  @apply text-slate-800 dark:text-white font-bold mb-4;
+}
+.professor-delete-confirm__actions {
+  @apply flex gap-3;
+}

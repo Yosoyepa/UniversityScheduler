@@ -18,6 +18,7 @@ import type {
     DayOfWeek,
     HexColor,
 } from "@/types";
+import { useProfessors } from "@/features/professors/hooks/useProfessors";
 
 // =============================================================================
 // Types
@@ -38,7 +39,7 @@ export interface SubjectFormData {
     credits: number;
     difficulty: DifficultyLevel;
     subject_type: SubjectType;
-    professor_name: string;
+    professor_id: string | null;
     color: HexColor;
     sessions: ClassSessionFormData[];
 }
@@ -114,7 +115,7 @@ export function ClassFormModal({
         credits: initialData?.credits || 3,
         difficulty: initialData?.difficulty || "MEDIUM",
         subject_type: initialData?.subject_type || "DISCIPLINAR_OBLIGATORIA",
-        professor_name: initialData?.professor_name || "",
+        professor_id: initialData?.professor_id || null,
         color: initialData?.color || DEFAULT_COLORS[0],
         sessions: initialData?.sessions || [{ ...EMPTY_SESSION }],
     });
@@ -126,12 +127,15 @@ export function ClassFormModal({
                 credits: initialData?.credits || 3,
                 difficulty: initialData?.difficulty || "MEDIUM",
                 subject_type: initialData?.subject_type || "DISCIPLINAR_OBLIGATORIA",
-                professor_name: initialData?.professor_name || "",
+                professor_id: initialData?.professor_id || null,
                 color: initialData?.color || DEFAULT_COLORS[0],
                 sessions: initialData?.sessions || [{ ...EMPTY_SESSION }],
             });
         }
     }, [open, initialData]);
+
+    // Fetch professors for the dropdown
+    const { professors, loading: loadingProfessors } = useProfessors();
 
     if (!open) return null;
 
@@ -209,17 +213,29 @@ export function ClassFormModal({
                                 placeholder="Ej: Cálculo Diferencial"
                                 required
                             />
-                            <FormField
-                                label="Profesor"
-                                value={formData.professor_name}
-                                onChange={(e) =>
-                                    setFormData((prev) => ({
-                                        ...prev,
-                                        professor_name: e.target.value,
-                                    }))
-                                }
-                                placeholder="Ej: Dr. García"
-                            />
+                            <div className="w-full">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Profesor
+                                </label>
+                                <select
+                                    value={formData.professor_id || ""}
+                                    onChange={(e) =>
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            professor_id: e.target.value || null,
+                                        }))
+                                    }
+                                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">Sin asignar</option>
+                                    {!loadingProfessors &&
+                                        professors.map((prof) => (
+                                            <option key={prof.id} value={prof.id}>
+                                                {prof.name}
+                                            </option>
+                                        ))}
+                                </select>
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
