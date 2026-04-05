@@ -21,7 +21,7 @@ from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, joinedload
 
 from app.modules.academic_planning.domain.entities import (
     ClassSession,
@@ -181,8 +181,9 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
                 SemesterModel.is_active == True
             )
             .options(selectinload(SemesterModel.subjects))
+            .order_by(SemesterModel.start_date.desc())
         )
-        model = result.scalar_one_or_none()
+        model = result.scalars().first()
         return self._semester_to_entity(model) if model else None
     
     async def delete_semester(self, semester_id: UUID) -> None:
@@ -284,7 +285,10 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
         result = await self.session.execute(
             select(SubjectModel)
             .where(SubjectModel.id == subject_id)
-            .options(selectinload(SubjectModel.class_sessions))
+            .options(
+                joinedload(SubjectModel.semester),
+                selectinload(SubjectModel.class_sessions)
+            )
         )
         model = result.scalar_one_or_none()
         return self._subject_to_entity(model) if model else None
@@ -307,7 +311,10 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
         result = await self.session.execute(
             select(SubjectModel)
             .where(SubjectModel.semester_id == semester_id)
-            .options(selectinload(SubjectModel.class_sessions))
+            .options(
+                joinedload(SubjectModel.semester),
+                selectinload(SubjectModel.class_sessions)
+            )
             .order_by(SubjectModel.name)
         )
         models = result.scalars().all()
@@ -332,7 +339,10 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
             select(SubjectModel)
             .join(SemesterModel)
             .where(SemesterModel.user_id == user_id)
-            .options(selectinload(SubjectModel.class_sessions))
+            .options(
+                joinedload(SubjectModel.semester),
+                selectinload(SubjectModel.class_sessions)
+            )
             .order_by(SubjectModel.name)
         )
         models = result.scalars().all()
@@ -397,7 +407,6 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
             existing.start_time = session.start_time
             existing.end_time = session.end_time
             existing.location = session.classroom
-            existing.updated_at = session.updated_at
         else:
             # Create new
             model = ClassSessionModel(
@@ -407,8 +416,6 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
                 start_time=session.start_time,
                 end_time=session.end_time,
                 location=session.classroom,
-                created_at=session.created_at,
-                updated_at=session.updated_at,
             )
             self.session.add(model)
         
@@ -541,28 +548,35 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
         )
         
         # Attach subjects if they were eagerly loaded
-        if hasattr(model, 'subjects') and model.subjects is not None:
+        if 'subjects' in model.__dict__ and model.subjects is not None:
             for subject_model in model.subjects:
-                subject = self._subject_to_entity(subject_model)
+                subject = self._subject_to_entity(subject_model, user_id=model.user_id)
                 semester._subjects.append(subject)
         
         return semester
     
-    def _subject_to_entity(self, model: SubjectModel) -> Subject:
+    def _subject_to_entity(self, model: SubjectModel, user_id: Optional[UUID] = None) -> Subject:
         """
         Map SubjectModel ORM model to Subject domain entity.
         
         Args:
             model: The SubjectModel from database
+            user_id: Optional explicit user_id (used when called from
+                     _semester_to_entity where the semester relationship
+                     on SubjectModel isn't eagerly loaded)
             
         Returns:
             Subject domain entity
         """
+        # Use explicit user_id if provided, otherwise try the eagerly loaded semester
+        if user_id is None:
+            user_id = model.semester.user_id if 'semester' in model.__dict__ and model.semester is not None else None
+        
         # Create base subject entity
         subject = Subject(
             id=model.id,
             semester_id=model.semester_id,
-            user_id=model.semester.user_id if model.semester else None,
+            user_id=user_id,
             name=model.name,
             credits=model.credits,
             difficulty=model.difficulty,
@@ -574,7 +588,7 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
         )
         
         # Attach class sessions if they were eagerly loaded
-        if hasattr(model, 'class_sessions') and model.class_sessions is not None:
+        if 'class_sessions' in model.__dict__ and model.class_sessions is not None:
             for session_model in model.class_sessions:
                 session = self._class_session_to_entity(session_model)
                 subject._class_sessions.append(session)
@@ -598,6 +612,4 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
             start_time=model.start_time,
             end_time=model.end_time,
             classroom=model.location,
-            created_at=model.created_at,
-            updated_at=model.updated_at,
         )

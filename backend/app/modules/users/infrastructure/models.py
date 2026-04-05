@@ -17,7 +17,9 @@ from sqlalchemy import (
     Boolean,
     DateTime,
     ForeignKey,
+    Integer,
     String,
+    Text,
 )
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -28,6 +30,8 @@ if TYPE_CHECKING:
     from app.modules.academic_planning.infrastructure.models import SemesterModel
     from app.modules.tasks.infrastructure.models import TaskModel
     from app.modules.academic_progress.infrastructure.models import GradeModel
+
+import uuid
 
 
 def utc_now() -> datetime:
@@ -85,6 +89,12 @@ class UserModel(Base):
         uselist=False,
         cascade="all, delete-orphan",
     )
+    notifications: Mapped[List["NotificationModel"]] = relationship(
+        "NotificationModel",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        order_by="NotificationModel.created_at.desc()",
+    )
     semesters: Mapped[List["SemesterModel"]] = relationship(
         "SemesterModel",
         back_populates="user",
@@ -108,38 +118,133 @@ class UserModel(Base):
 class SettingsModel(Base):
     """
     User settings/preferences model.
-    
+
     Maps to 'settings' table in database.
-    1:1 relationship with users.
+    1:1 relationship with users. Extended with notification channels
+    and reminder timing fields to match mockups and API spec.
     """
     __tablename__ = "settings"
-    
+
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
         primary_key=True,
     )
+    # Appearance
     dark_mode: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
         nullable=False,
     )
+    # Notification channels
     email_notifications: Mapped[bool] = mapped_column(
         Boolean,
         default=True,
         nullable=False,
     )
+    push_notifications: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True,
+        nullable=False,
+    )
+    sms_alerts: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+    )
+    # Reminder timing
+    class_reminder_minutes: Mapped[int] = mapped_column(
+        Integer,
+        default=15,
+        nullable=False,
+    )
+    exam_reminder_days: Mapped[int] = mapped_column(
+        Integer,
+        default=1,
+        nullable=False,
+    )
+    assignment_reminder_hours: Mapped[int] = mapped_column(
+        Integer,
+        default=2,
+        nullable=False,
+    )
+    # Legacy JSONB field for backward compatibility
     alert_preferences: Mapped[dict] = mapped_column(
         JSONB,
         server_default='{"days_before": [1], "hours_before": [1]}',
         nullable=False,
     )
-    
+
     # Relationships
     user: Mapped["UserModel"] = relationship(
         "UserModel",
         back_populates="settings",
     )
-    
+
     def __repr__(self) -> str:
         return f"<Settings(user_id={self.user_id})>"
+
+
+class NotificationModel(Base):
+    """
+    Persistent notification for a user.
+
+    Maps to 'notifications' table in database.
+    Created by domain event listeners (on TaskCompletedEvent, TaskOverdueEvent).
+    Displayed in the header bell dropdown.
+    """
+    __tablename__ = "notifications"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    type: Mapped[str] = mapped_column(
+        String(50),
+        nullable=False,
+    )
+    title: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+    message: Mapped[str] = mapped_column(
+        Text,
+        nullable=False,
+    )
+    is_read: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+        index=True,
+    )
+    related_entity_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        nullable=True,
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        nullable=False,
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=False,
+    )
+
+    # Relationships
+    user: Mapped["UserModel"] = relationship(
+        "UserModel",
+        back_populates="notifications",
+    )
+
+    def __repr__(self) -> str:
+        return f"<Notification(id={self.id}, type={self.type}, user={self.user_id})>"

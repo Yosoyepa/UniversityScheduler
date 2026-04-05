@@ -39,12 +39,12 @@ export function ClassCard({
     onClick,
     compact = false,
 }: ClassCardProps) {
-    const { subject, start_time, end_time, location } = session;
+    const { subject, start_time, end_time, classroom } = session;
 
     return (
         <div
             className={`
-        rounded-lg border-l-4 p-2 cursor-pointer
+        h-full flex flex-col overflow-hidden rounded-lg border-l-4 p-2 cursor-pointer
         hover:opacity-90 transition-opacity
         ${compact ? "text-xs" : "text-sm"}
       `}
@@ -67,10 +67,20 @@ export function ClassCard({
                 {formatTime(start_time)} - {formatTime(end_time)}
             </p>
 
-            {/* Location (if not compact) */}
-            {!compact && location && (
-                <p className="text-gray-500 dark:text-gray-500 truncate mt-1">
-                    📍 {location}
+            {/* Classroom (if not compact) */}
+            {!compact && classroom && (
+                <p className="flex items-center gap-1 text-gray-500 dark:text-gray-500 truncate mt-1">
+                    {classroom.startsWith('http') ? (
+                        <>
+                            <span className="text-[10px]">🔗</span>
+                            <span>Virtual</span>
+                        </>
+                    ) : (
+                        <>
+                            <span className="text-[10px]">📍</span>
+                            <span>{classroom}</span>
+                        </>
+                    )}
                 </p>
             )}
         </div>
