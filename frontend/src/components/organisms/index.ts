@@ -13,3 +13,6 @@ export * from "./GradeFormModal";
 export * from "./EvaluationCriteriaForm";
 export * from "./SemesterFormModal";
 export * from "./SubjectDetailsModal";
+export * from "./ProfessorCard";
+export * from "./BookTutoringModal";
+export * from "./AddProfessorModal";

@@ -123,7 +123,7 @@ export function SubjectDetailsModal({
                             <div className="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50">
                                 <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider mb-1">Profesor</p>
                                 <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                                    {subject.professor_name || "Sin asignar"}
+                                    {subject.professor_id ? `ID: ${subject.professor_id}` : "Sin asignar"}
                                 </p>
                             </div>
                             <div className="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50">
