@@ -156,7 +156,7 @@ class Subject(Entity):
     difficulty: DifficultyLevel = field(default=DifficultyLevel.MEDIUM)
     subject_type: SubjectType = field(default=SubjectType.DISCIPLINAR_OBLIGATORIA)
     color: HexColor = field(default_factory=lambda: HexColor(HexColor.DEFAULT))
-    professor_name: Optional[str] = None
+    professor_id: Optional[UUID] = None
     semester_id: Optional[UUID] = None
     user_id: Optional[UUID] = None
     _class_sessions: List[ClassSession] = field(default_factory=list, repr=False)
@@ -268,14 +268,14 @@ class Subject(Entity):
             expected_states=["session exists"],
         )
     
-    def update_professor(self, professor_name: Optional[str]) -> None:
+    def update_professor(self, professor_id: Optional[UUID]) -> None:
         """
-        Update the professor name.
-        
+        Update the linked professor by ID.
+
         Args:
-            professor_name: New professor name, or None to clear
+            professor_id: UUID of the professor entity, or None to clear.
         """
-        self.professor_name = professor_name
+        self.professor_id = professor_id
         self.touch()
     
     def update_color(self, color: HexColor) -> None:

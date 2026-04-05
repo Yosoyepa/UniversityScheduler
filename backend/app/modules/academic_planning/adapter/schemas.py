@@ -47,7 +47,7 @@ class SubjectBase(BaseModel):
     difficulty: DifficultyLevel = DifficultyLevel.MEDIUM
     subject_type: SubjectType = SubjectType.DISCIPLINAR_OBLIGATORIA
     color: HexColorStr = Field(default="#3B82F6", pattern=r"^#[0-9A-Fa-f]{6}$")
-    professor_name: Optional[str] = Field(None, max_length=255)
+    professor_id: Optional[UUID] = None
 
 
 class ClassSessionBase(BaseModel):
@@ -119,7 +119,7 @@ class UpdateSubjectRequest(BaseModel):
     difficulty: Optional[DifficultyLevel] = None
     subject_type: Optional[SubjectType] = None
     color: Optional[str] = Field(None, pattern=r"^#[0-9A-Fa-f]{6}$")
-    professor_name: Optional[str] = Field(None, max_length=255)
+    professor_id: Optional[UUID] = None
 
 
 class UpdateClassSessionRequest(BaseModel):
@@ -189,7 +189,7 @@ class ScheduleItemResponse(BaseModel):
     start_time: time
     end_time: time
     classroom: Optional[str] = None
-    professor_name: Optional[str] = None
+    professor_id: Optional[UUID] = None
 
 
 class ScheduleResponse(BaseModel):

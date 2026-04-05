@@ -174,8 +174,9 @@ class SubjectModel(Base):
         Enum(SubjectType, name="subject_type"),
         nullable=False,
     )
-    professor_name: Mapped[Optional[str]] = mapped_column(
-        String(200),
+    professor_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("professors.id", ondelete="SET NULL"),
         nullable=True,
     )
     created_at: Mapped[datetime] = mapped_column(

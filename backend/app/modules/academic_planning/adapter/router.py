@@ -303,7 +303,7 @@ async def create_subject(
         difficulty=request.difficulty,
         subject_type=request.subject_type,
         color=request.color,
-        professor_name=request.professor_name,
+        professor_id=request.professor_id,
         class_sessions=[
             CreateClassSessionDTO(
                 subject_id=UUID(int=0),  # Placeholder, set properly in use case
@@ -390,7 +390,7 @@ async def update_subject(
         difficulty=request.difficulty,
         subject_type=request.subject_type,
         color=request.color,
-        professor_name=request.professor_name,
+        professor_id=request.professor_id,
     )
     
     try:
@@ -607,7 +607,7 @@ async def get_schedule(
                 start_time=session.start_time,
                 end_time=session.end_time,
                 classroom=session.classroom,
-                professor_name=subject.professor_name,
+                professor_id=subject.professor_id,
             ))
             
             # Calculate duration
