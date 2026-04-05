@@ -1,6 +1,6 @@
 # Use Cases Document (UC)
 
-Este documento define los casos de uso principales del sistema University Scheduler siguiendo el formato Larman.
+Este documento define los casos de uso principales del sistema University Scheduler siguiendo el formato Larman. Representa la lógica de negocio **real y verificable** implementada actualmente en el código base (v1.0.0-beta.1).
 
 ---
 
@@ -14,14 +14,14 @@ Este documento define los casos de uso principales del sistema University Schedu
 1. Usuario selecciona "Crear Semestre"
 2. Sistema solicita: nombre, fecha inicio, fecha fin
 3. Usuario completa el formulario
-4. Sistema valida que fecha_fin > fecha_inicio
+4. Sistema valida que fecha_fin > fecha_inicio (`CreateSemesterUseCase`)
 5. Sistema persiste el semestre
-6. Sistema marca este semestre como activo (desactiva el anterior si existe)
+6. Sistema marca este semestre como activo (desactiva el anterior si existe emitiendo `SemesterActivatedEvent`)
 
 **Flujo Alternativo (Fechas Inválidas)**:
 - 4a. Si fecha_fin <= fecha_inicio:
-  - Sistema muestra error "La fecha de fin debe ser posterior a la de inicio"
-  - Volver al paso 3
+  - Sistema arroja `ValidationException` indicando rango de fechas inválido.
+  - El frontend muestra error y el usuario vuelve al paso 3.
 
 **Postcondiciones**: Semestre creado y marcado como activo
 
@@ -33,18 +33,16 @@ Este documento define los casos de uso principales del sistema University Schedu
 
 **Flujo Principal**:
 1. Usuario selecciona "Agregar Materia"
-2. Sistema solicita: nombre, créditos, tipo, profesor, color
-3. Usuario completa el formulario
-4. Usuario confirma
-5. Sistema ejecuta UC-003 (Detectar Conflictos) para las sesiones
-6. Sistema persiste la materia
-7. Sistema retorna ID de materia
+2. Sistema solicita: nombre, créditos, tipo, profesor, color, sesiones (DayOfWeek, start_time, end_time)
+3. Usuario completa el formulario y confirma.
+4. Sistema ejecuta UC-003 (Detectar Conflictos) para las clases usando el `ConflictDetectionService`.
+5. Sistema persiste la materia (`CreateSubjectUseCase`)
+6. Sistema retorna ID de materia.
 
 **Flujo Alternativo (Conflicto Detectado)**:
-- 5a. Si hay solapamiento de horarios:
-  - Sistema muestra conflicto con detalles (materia, horario)
-  - Usuario puede descartar o modificar horario
-  - Reintentar desde paso 4
+- 5a. Si hay solapamiento de horarios con otra materia inscrita:
+  - Sistema arroja un error con detalles del conflicto (materia, horario).
+  - Usuario debe modificar el horario o descartar.
 
 **Postcondiciones**: Materia visible en calendario
 
@@ -52,165 +50,124 @@ Este documento define los casos de uso principales del sistema University Schedu
 
 ### UC-003: Detectar Conflictos de Horario
 **Actores**: Sistema  
-**Precondiciones**: Materia A existe, Usuario intenta agregar Materia B
+**Precondiciones**: Existen materias con sesiones. Usuario intenta agregar otra sesión.
 
 **Flujo**:
-1. Para cada sesión de B:
-   - Buscar sesiones existentes en el mismo día
-   - Comparar rangos de tiempo (start_time, end_time)
-   - Si hay intersección > 0 minutos: registrar CONFLICTO
-2. Retornar lista de conflictos (vacía si no hay)
+1. El `ConflictDetectionService` toma la nueva sesión.
+2. Para cada sesión existente en el mismo día, evalúa la instersección matemática:
+   - Compara rangos (`max(start1, start2) < min(end1, end2)`).
+   - Si hay intersección de tiempo: levanta excepción de Validación con los datos del conflicto.
+3. El servicio retorna silencio si está limpio, aprobando la transacción.
 
-**Postcondiciones**: Lista de conflictos disponible para el llamador
-
----
-
-### UC-004: Editar Materia
-**Actores**: Estudiante  
-**Precondiciones**: Materia existe
-
-**Flujo Principal**:
-1. Usuario selecciona una materia del calendario
-2. Sistema muestra modal con datos actuales
-3. Usuario modifica campos (nombre, créditos, profesor, sesiones)
-4. Usuario confirma
-5. Sistema ejecuta UC-003 para validar nuevas sesiones
-6. Sistema actualiza la materia
-
-**Postcondiciones**: Materia actualizada en BD y calendario
+**Postcondiciones**: Operador sabe con 100% de certeza que no se le cruzan las clases.
 
 ---
 
-### UC-005: Eliminar Materia
+### UC-004: Eliminar Materia
 **Actores**: Estudiante  
-**Precondiciones**: Materia existe
+**Precondiciones**: Materia existe y es propiedad del usuario (`user_id` match)
 
 **Flujo Principal**:
-1. Usuario selecciona "Eliminar" en una materia
-2. Sistema solicita confirmación
-3. Usuario confirma
-4. Sistema elimina materia y sus sesiones (CASCADE)
-5. Sistema actualiza calendario
+1. Usuario selecciona "Eliminar" en una materia o desde modal.
+2. Sistema solicita confirmación UI.
+3. Usuario confirma.
+4. Sistema ejecuta `DeleteSubjectUseCase`.
+5. Repositorio Postgres elimina la materia y dispara el borrado en cascada (CASCADE) de las Tareas (`Tasks`) y Sesiones (`ClassSessions`) vinculadas.
 
-**Postcondiciones**: Materia y sesiones eliminadas
+**Postcondiciones**: Entidades erradicadas y calendario liberado.
 
 ---
 
 ## Contexto: Gestión de Tareas (Tasks)
 
-### UC-006: Crear Tarea
+### UC-005: Crear Tarea
 **Actores**: Estudiante  
 **Precondiciones**: Usuario autenticado
 
 **Flujo Principal**:
 1. Usuario selecciona "Nueva Tarea"
-2. Sistema solicita: título, descripción, fecha límite, prioridad, categoría, materia (opcional)
-3. Usuario completa el formulario
-4. Usuario confirma
-5. Sistema persiste tarea con estado TODO
-6. Si prioridad = HIGH y usuario tiene GCal vinculado, ejecutar UC-008
+2. Sistema solicita: título, descripción, fecha límite, prioridad, categoría, materia (opcional).
+3. Usuario completa y persiste la tarea con estado `TODO`.
+4. Si hubiese GCal (Pospuesto a Fase 7), se dispararía la sincronía. Hoy solo se almacena localmente.
 
-**Postcondiciones**: Tarea visible en tablero Kanban
+**Postcondiciones**: Tarea visible en Kanban
 
 ---
 
-### UC-007: Cambiar Estado de Tarea (Kanban)
+### UC-006: Cambiar Estado de Tarea (Kanban)
 **Actores**: Estudiante  
-**Precondiciones**: Tarea existe
+**Precondiciones**: Tarea existe y pertenece al usuario.
 
 **Flujo Principal**:
-1. Usuario arrastra tarea a nueva columna (TODO → IN_PROGRESS → DONE)
-2. Sistema actualiza estado de la tarea
-3. Si nuevo estado = DONE:
-   - Sistema registra fecha de completado
-   - Sistema emite evento TaskCompletedEvent
+1. Usuario arrastra tarea usando DragAndDrop HTML5.
+2. Sistema intercepta el payload y dispara PATCH del estado (`ChangeTaskStatusUseCase`).
+3. Si el estado nuevo es `DONE`:
+   - Sistema lo persiste y dispara internamente el `publish(TaskCompletedEvent)` mediante el `SyncEventBus`.
+   - Nuestro `NotificationListener` oye el evento y envía una in-app Notification asíncrona de completitud.
 
-**Postcondiciones**: Estado actualizado, listeners notificados
+**Postcondiciones**: Estado de Kanban sincronizado con Base de Datos y Notificaciones creadas.
 
 ---
 
-### UC-008: Sincronizar con Google Calendar
-**Actores**: Sistema  
-**Precondiciones**: Cuenta de Google vinculada, tarea de alta prioridad
+## Contexto: Seguimiento Académico (Grades)
+
+### UC-007: Configurar y Registrar Calificaciones
+**Actores**: Estudiante
+**Precondiciones**: Materia existe.
 
 **Flujo Principal**:
-1. Sistema obtiene credenciales OAuth del usuario
-2. Sistema construye evento con datos de la tarea
-3. Sistema envía POST a Google Calendar API
-4. Google retorna ID de evento
-5. Sistema guarda external_id en la tarea
-6. Sistema marca is_synced_gcal = true
+1. Usuario abre sección de "Progreso".
+2. Usuario agrega Criterios de Evaluación (`EvaluationCriteria` por Materia).
+   - Sistema valida que la sumatoria de los Pesos (`Weight`) no supere el 100%.
+3. Usuario introduce su nota obtenida en el rango 0 a 100 (configurable).
+4. El dominio recalcula ponderadamente cuánto ha progresado.
 
-**Flujo Alternativo (Token Expirado)**:
-- 1a. Si token expirado:
-  - Intentar refresh token
-  - Si falla, notificar al usuario para re-autenticar
-
-**Postcondiciones**: Evento creado en Google Calendar
+**Postcondiciones**: Predicción de aprobación generada.
 
 ---
 
-## Contexto: Configuración de Usuario (Users/Settings)
+## Contexto: Interacción de Usuarios, Settings y Tutorías
 
-### UC-009: Configurar Preferencias de Alertas
+### UC-008: Configurar App y Alertas
 **Actores**: Estudiante  
 **Precondiciones**: Usuario autenticado
 
 **Flujo Principal**:
-1. Usuario accede a "Configuración"
-2. Sistema muestra preferencias actuales
-3. Usuario modifica:
-   - Notificaciones por email (on/off)
-   - Tiempos de alerta (ej. 1 día antes, 1 hora antes)
-   - Modo oscuro
-4. Usuario guarda cambios
-5. Sistema persiste en tabla `settings`
+1. Usuario accede a `/dashboard/settings`.
+2. Sistema muestra el Contexto de React actual hidratado con el GET de la API.
+3. Usuario elige el Modo (Claro/Oscuro) y tiempos de alerta.
+4. Se envían mutaciones a la base de datos (Entidad `Settings`).
 
-**Postcondiciones**: Preferencias actualizadas
+**Postcondiciones**: Apariencia y respuestas del sistema alteradas inmediatamente.
 
 ---
 
-### UC-010: Ver Progreso Académico
-**Actores**: Estudiante  
-**Precondiciones**: Usuario autenticado, tareas existen
+### UC-009: Bookear Tutoría con Profesor
+**Actores**: Estudiante
+**Precondiciones**: Existe un Profesor con Horario de Oficina disponible (`OfficeHour`).
 
 **Flujo Principal**:
-1. Usuario accede a "Progreso Académico"
-2. Sistema calcula métricas:
-   - Tareas completadas vs pendientes por materia
-   - Porcentaje de avance del semestre
-3. Sistema muestra gráficos y estadísticas
+1. Usuario en Directorio selecciona "Book Session".
+2. Usuario escoge la Hora de Oficina y de cuál asignatura consultará dudas.
+3. El frontend envía la postulación.
+4. El backend verifica (`CreateTutoringSessionUseCase`) que el estudiante no tenga ninguna sesión de clase matriculada (cruce conflictivo) justo a la hora de esa asesoría.
+5. Se aprueba la sesión si el horario está libre.
 
-**Postcondiciones**: Dashboard de progreso visible
-
----
-
-### UC-011: Consultar Directorio de Profesores
-**Actores**: Estudiante  
-**Precondiciones**: Materias con profesores asignados
-
-**Flujo Principal**:
-1. Usuario accede a "Profesores"
-2. Sistema lista profesores únicos de las materias del usuario
-3. Usuario puede filtrar por nombre
-4. Usuario selecciona un profesor para ver detalles (materias que imparte)
-
-**Postcondiciones**: Información del profesor visible
+**Postcondiciones**: Aparece la Tutoría en el ScheduleGrid de la semana.
 
 ---
 
-## Matriz de Casos de Uso
+## Matriz de Casos de Uso (Estado Real)
 
-| ID | Nombre | Módulo | Prioridad | Estado |
-|---|---|---|---|---|
-| UC-001 | Crear Semestre | academic_planning | Alta | ⏳ |
-| UC-002 | Crear Materia | academic_planning | Alta | ⏳ |
-| UC-003 | Detectar Conflictos | academic_planning | Alta | ⏳ |
-| UC-004 | Editar Materia | academic_planning | Media | ⏳ |
-| UC-005 | Eliminar Materia | academic_planning | Media | ⏳ |
-| UC-006 | Crear Tarea | tasks | Alta | ⏳ |
-| UC-007 | Cambiar Estado Kanban | tasks | Alta | ⏳ |
-| UC-008 | Sincronizar GCal | tasks | Baja | ⏳ |
-| UC-009 | Configurar Alertas | users | Media | ⏳ |
-| UC-010 | Ver Progreso | users | Baja | ⏳ |
-| UC-011 | Directorio Profesores | users | Baja | ⏳ |
+| ID | Nombre | Módulo / Fase | Estado | Implementado En Código |
+|---|---|---|:---:|:---:|
+| UC-001 | Crear y Manejar Semestres | academic_planning (F1) | ✅ | Sí |
+| UC-002 | CRUD Materias | academic_planning (F1) | ✅ | Sí |
+| UC-003 | Detectar Conflictos | academic_planning (F1) | ✅ | Sí (`ConflictDetectionService`) |
+| UC-004 | Eliminar Materia & Cascada | academic_planning (F1) | ✅ | Sí (Postgres CASCADE) |
+| UC-005 | Crear Tarea | tasks (F2) | ✅ | Sí |
+| UC-006 | Cambiar Estado Kanban (Drag) | tasks (F2) | ✅ | Sí (`EventBus` acoplado) |
+| UC-007 | Progreso y Notas | grades (F3) | ✅ | Sí |
+| UC-008 | Configurar Alertas & Tema | settings (F5) | ✅ | Sí |
+| UC-009 | Programar Tutoría Validando | professors (F6) | ✅ | Sí |
+| UC-010 | *Sincronizar GCal* | *tasks externa* (F7) | ⏳ | *Pospuesto Post-MVP* |
