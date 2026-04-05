@@ -67,6 +67,11 @@ const navItems: NavItem[] = [
         href: "/dashboard/progress",
         icon: <ChartIcon size="md" />,
     },
+    {
+        label: "Directorio",
+        href: "/dashboard/directory",
+        icon: <UserIcon size="md" />,
+    },
 ];
 
 // Bottom secondary nav

@@ -127,7 +127,7 @@ export interface Subject {
     color: HexColor;
     difficulty: DifficultyLevel;
     subject_type: SubjectType;
-    professor_name: string | null;
+    professor_id: UUID | null;
     created_at: ISODateTime;
     updated_at: ISODateTime;
 }
@@ -259,4 +259,80 @@ export interface UpdateSettingsPayload {
 
 export interface UpdateProfilePayload {
     full_name?: string;
+}
+
+// =============================================================================
+// Phase 6 Types — Professors Directory & Tutoring
+// =============================================================================
+
+export type OfficeHourLocationType = "OFFICE" | "LAB" | "VIRTUAL";
+
+export type TutoringSessionStatus = "SCHEDULED" | "CANCELLED" | "COMPLETED";
+
+export interface OfficeHour {
+    id: UUID;
+    professor_id: UUID;
+    day_of_week: DayOfWeek; // 1=Mon, 7=Sun
+    start_time: ISOTime;
+    end_time: ISOTime;
+    location_type: OfficeHourLocationType;
+    location_details: string | null;
+}
+
+export interface Professor {
+    id: UUID;
+    user_id: UUID;
+    name: string;
+    email: string | null;
+    department: string | null;
+    office_hours: OfficeHour[];
+    is_available_now: boolean;
+    created_at: ISODateTime;
+    updated_at: ISODateTime;
+}
+
+export interface TutoringSession {
+    id: UUID;
+    professor_id: UUID;
+    user_id: UUID;
+    date: ISODate;
+    start_time: ISOTime;
+    end_time: ISOTime;
+    notes: string | null;
+    meeting_link: string | null;
+    status: TutoringSessionStatus;
+    created_at: ISODateTime;
+    updated_at: ISODateTime;
+}
+
+// -- Request payloads --
+
+export interface CreateOfficeHourPayload {
+    day_of_week: number;
+    start_time: ISOTime;
+    end_time: ISOTime;
+    location_type?: OfficeHourLocationType;
+    location_details?: string | null;
+}
+
+export interface CreateProfessorPayload {
+    name: string;
+    email?: string | null;
+    department?: string | null;
+    office_hours?: CreateOfficeHourPayload[];
+}
+
+export interface UpdateProfessorPayload {
+    name?: string;
+    email?: string | null;
+    department?: string | null;
+}
+
+export interface ScheduleTutoringPayload {
+    professor_id: UUID;
+    date: ISODate;
+    start_time: ISOTime;
+    end_time: ISOTime;
+    notes?: string | null;
+    meeting_link?: string | null;
 }

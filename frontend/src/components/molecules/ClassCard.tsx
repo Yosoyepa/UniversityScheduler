@@ -68,7 +68,7 @@ export function ClassCard({
             </p>
 
             {/* Classroom (if not compact) */}
-            {!compact && classroom && (
+            {!compact && classroom ? (
                 <p className="flex items-center gap-1 text-gray-500 dark:text-gray-500 truncate mt-1">
                     {classroom.startsWith('http') ? (
                         <>
@@ -82,7 +82,7 @@ export function ClassCard({
                         </>
                     )}
                 </p>
-            )}
+            ) : null}
         </div>
     );
 }

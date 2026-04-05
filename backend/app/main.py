@@ -9,6 +9,7 @@ from app.modules.users.adapter.user_router import router as user_router
 from app.modules.academic_planning.adapter.router import router as academic_planning_router
 from app.modules.tasks.adapter.router import router as tasks_router
 from app.modules.academic_progress.adapter.router import router as academic_progress_router
+from app.modules.professors.adapter.router import router as professors_router
 
 settings = get_settings()
 
@@ -24,7 +25,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="University Scheduler API",
     description="Backend for University Scheduler Application using Hexagonal Architecture",
-    version="0.5.0",
+    version="0.6.0",
     docs_url="/docs",
     redoc_url="/redoc",
     lifespan=lifespan,
@@ -58,6 +59,10 @@ app.include_router(
     academic_progress_router,
     prefix="/api/v1",
     tags=["academic-progress"]
+)
+app.include_router(
+    professors_router,
+    prefix="/api/v1",
 )
 
 

@@ -246,7 +246,7 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
             existing.difficulty = subject.difficulty
             existing.type = subject.subject_type
             existing.color = str(subject.color)
-            existing.professor_name = subject.professor_name
+            existing.professor_id = subject.professor_id
             existing.updated_at = subject.updated_at
         else:
             # Create new
@@ -258,7 +258,7 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
                 difficulty=subject.difficulty,
                 type=subject.subject_type,
                 color=str(subject.color),
-                professor_name=subject.professor_name,
+                professor_id=subject.professor_id,
                 created_at=subject.created_at,
                 updated_at=subject.updated_at,
             )
@@ -582,7 +582,7 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
             difficulty=model.difficulty,
             subject_type=model.type,
             color=HexColor(model.color),
-            professor_name=model.professor_name,
+            professor_id=model.professor_id,
             created_at=model.created_at,
             updated_at=model.updated_at,
         )

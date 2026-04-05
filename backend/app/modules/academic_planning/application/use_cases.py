@@ -59,7 +59,7 @@ class CreateSubjectDTO:
     difficulty: DifficultyLevel = DifficultyLevel.MEDIUM
     subject_type: SubjectType = SubjectType.DISCIPLINAR_OBLIGATORIA
     color: str = HexColor.DEFAULT
-    professor_name: Optional[str] = None
+    professor_id: Optional[UUID] = None
     class_sessions: list['CreateClassSessionDTO'] = field(default_factory=list)
 
 
@@ -71,7 +71,7 @@ class UpdateSubjectDTO:
     difficulty: Optional[DifficultyLevel] = None
     subject_type: Optional[SubjectType] = None
     color: Optional[str] = None
-    professor_name: Optional[str] = None
+    professor_id: Optional[UUID] = None
 
 
 @dataclass
@@ -353,7 +353,7 @@ class CreateSubjectUseCase:
             difficulty=dto.difficulty,
             subject_type=dto.subject_type,
             color=HexColor(dto.color),
-            professor_name=dto.professor_name,
+            professor_id=dto.professor_id,
             semester_id=dto.semester_id,
             user_id=user_id,
         )
@@ -477,8 +477,8 @@ class UpdateSubjectUseCase:
             subject.subject_type = dto.subject_type
         if dto.color is not None:
             subject.color = HexColor(dto.color)
-        if dto.professor_name is not None:
-            subject.professor_name = dto.professor_name
+        if dto.professor_id is not None:
+            subject.professor_id = dto.professor_id
         
         subject.touch()
         return await self.repository.save_subject(subject)
@@ -571,7 +571,7 @@ class AddClassSessionUseCase:
             difficulty=subject.difficulty,
             subject_type=subject.subject_type,
             color=subject.color,
-            professor_name=subject.professor_name,
+            professor_id=subject.professor_id,
             semester_id=subject.semester_id,
             user_id=subject.user_id,
             _class_sessions=list(subject.class_sessions) + [session],
