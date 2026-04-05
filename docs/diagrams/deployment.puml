@@ -1,0 +1,27 @@
+@startuml Deployment Topology
+!theme plain
+node "Client Devices" {
+  [Web Browser] as browser
+}
+
+cloud "Vercel Edge Network" {
+  [Next.js App Router] as nextjs
+  note right: Frontend & B.F.F.
+}
+
+cloud "Render / AWS EC2" as cloudhost {
+  node "Docker Container" {
+    [FastAPI Application] as fastapi
+    [Uvicorn ASGI] as uvicorn
+  }
+}
+
+database "Managed Database" {
+  [PostgreSQL 15+] as postgres
+}
+
+browser --> nextjs : HTTPS / REST
+nextjs --> fastapi : HTTPS / Internal REST (Proxy)
+fastAPI --> postgres : SQLAlchemy Core (TCP 5432)
+
+@enduml

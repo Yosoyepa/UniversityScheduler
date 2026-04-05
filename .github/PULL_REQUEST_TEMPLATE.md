@@ -2,11 +2,18 @@
 
 ## 📋 Descripción
 
-{{ Breve descripción de lo que implementa esta PR y la fase del proyecto a la que corresponde. }}
+{{ Breve descripción de lo que implementa esta PR y la fase del proyecto a la que corresponde. Relacionando esto a la especificación de Larman Use Cases si aplica. }}
 
-### Problema que resuelve
-- {{ Problema o requerimiento principal }}
-- {{ Otro problema o requerimiento }}
+Fixes # (issue)
+
+## Tipo de cambio
+
+Por favor, borra las opciones que no sean relevantes.
+
+- [ ] 🐛 Bug fix (cambio sin ruptura que arregla un problema)
+- [ ] ✨ New feature (cambio sin ruptura que añade funcionalidad)
+- [ ] 💥 Breaking change (fix o feature que causaría que la funcionalidad existente no funcione según lo esperado)
+- [ ] 📝 Cambio en la documentación
 
 ---
 
@@ -16,13 +23,13 @@
 
 | Módulo         | Descripción                                  |
 | -------------- | -------------------------------------------- |
-| **{{ Módulo }}** | {{ Qué se implementó }}                    |
+| **{{ Módulo }}** | {{ Qué se implementó e.g., Puertos, Adaptadores, EventBus emit }} |
 
 ### Frontend (Next.js + TypeScript + Tailwind)
 
 | Módulo         | Descripción                                 |
 | -------------- | ------------------------------------------- |
-| **{{ Módulo }}** | {{ Qué se implementó }}                   |
+| **{{ Módulo }}** | {{ Qué se implementó e.g., Atom, Organism, Hook }}                   |
 
 ---
 
@@ -34,28 +41,18 @@
 
 ---
 
-## 🧪 Verificación
+## 🧪 Verificación Obligatoria y Checklist (Pre-Commit Workflow)
 
-```bash
-# Backend
-cd backend && python -c "from app.main import app; print('✅ OK')"
+Por favor, describe y verifica las pruebas estáticas realizadas ANTES del commit.
 
-# Database
-docker-compose up -d && alembic upgrade head
-
-# Frontend
-cd frontend && npm run build  # ✅ Success
-```
-
----
-
-## 📝 Checklist
-
-- [ ] Código compila sin errores
-- [ ] Migraciones funcionan
-- [ ] Tests manuales pasan
-- [ ] Sigue convenciones del proyecto
-- [ ] Sin secrets en código
+- [ ] He revisado mi código según la regla Clean Code y **Atomic Design/Hexagonal Architecture**.
+- [ ] Backend: `python -c "import app.main"` ejecutado correctamente (No hay imports sueltos). ✅
+- [ ] Base de Datos: Verifiqué si hace falta un `alembic upgrade head`.
+- [ ] Frontend Types: `npx tsc --noEmit` superado. ✅
+- [ ] Frontend Build: `npm run build` genera la build de Next.js sin errores de React Hydration ni rutas muertas. ✅
+- [ ] Frontend E2E: Ejecuté `npx playwright test` de haber impactado flujos de UI troncales.
+- [ ] Todo el tracking `.implementation_tasks` fue actualizado con las casillas `[x]`.
+- [ ] El commit se generó via el entorno automatizado (Skill `git-commit`).
 
 ---
 
@@ -64,7 +61,5 @@ cd frontend && npm run build  # ✅ Success
 - **Source**: `{{ branch_name }}`
 - **Target**: `develop`
 - **Commits**: {{ N }}
-
----
 
 **Labels**: `feature`, `phase-{{ N }}`, `{{ label }}`

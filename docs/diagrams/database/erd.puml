@@ -1,80 +1,132 @@
-@startuml ER_Diagram
-hide circle
+@startuml Entity Relationship Diagram
+!theme plain
 skinparam linetype ortho
 
-title Entity-Relationship Diagram - University Scheduler
-
-' Entities
 entity "users" as users {
-  *id : UUID <<PK>>
+  * id : UUID [PK]
   --
-  *email : VARCHAR(255) <<U>>
-  *full_name : VARCHAR(255)
-  created_at : TIMESTAMP
-  updated_at : TIMESTAMP
+  * email : VARCHAR(255)
+  * hashed_password : VARCHAR(255)
+  * created_at : TIMESTAMP
 }
 
 entity "settings" as settings {
-  *user_id : UUID <<PK, FK>>
+  * id : UUID [PK]
   --
-  dark_mode : BOOLEAN
-  email_notifications : BOOLEAN
-  alert_preferences : JSONB
+  * user_id : UUID [FK -> users.id]
+  theme_preference : VARCHAR
+  notification_preferences : JSON
+}
+
+entity "notifications" as notifications {
+  * id : UUID [PK]
+  --
+  * user_id : UUID [FK -> users.id]
+  * title : VARCHAR
+  * message : TEXT
+  * is_read : BOOLEAN
+  * created_at : TIMESTAMP
 }
 
 entity "semesters" as semesters {
-  *id : UUID <<PK>>
+  * id : UUID [PK]
   --
-  *user_id : UUID <<FK>>
-  *name : VARCHAR(100)
-  *start_date : DATE
-  *end_date : DATE
-  is_active : BOOLEAN
+  * user_id : UUID [FK -> users.id]
+  * name : VARCHAR
+  * start_date : DATE
+  * end_date : DATE
+  * is_active : BOOLEAN
+}
+
+entity "professors" as professors {
+  * id : UUID [PK]
+  --
+  * user_id : UUID [FK -> users.id]
+  * name : VARCHAR
+  email : VARCHAR
+  department : VARCHAR
 }
 
 entity "subjects" as subjects {
-  *id : UUID <<PK>>
+  * id : UUID [PK]
   --
-  *semester_id : UUID <<FK>>
-  *name : VARCHAR(200)
-  group_code : VARCHAR(50)
-  credits : INTEGER
-  color : VARCHAR(7)
-  difficulty : difficulty_level
-  type : subject_type
-  professor_name : VARCHAR(200)
+  * semester_id : UUID [FK -> semesters.id]
+  professor_id : UUID [FK -> professors.id]
+  * name : VARCHAR
+  * code : VARCHAR
+  * credits : INTEGER
+  * color : VARCHAR
 }
 
 entity "class_sessions" as class_sessions {
-  *id : UUID <<PK>>
+  * id : UUID [PK]
   --
-  *subject_id : UUID <<FK>>
-  *day_of_week : INTEGER
-  *start_time : TIME
-  *end_time : TIME
-  location : VARCHAR(255)
-  attendance_required : BOOLEAN
+  * subject_id : UUID [FK -> subjects.id]
+  * day_of_week : INTEGER
+  * start_time : TIME
+  * end_time : TIME
+  room : VARCHAR
 }
 
 entity "tasks" as tasks {
-  *id : UUID <<PK>>
+  * id : UUID [PK]
   --
-  *user_id : UUID <<FK>>
-  subject_id : UUID <<FK>>
-  *title : VARCHAR(255)
+  * subject_id : UUID [FK -> subjects.id]
+  * title : VARCHAR
+  * status : VARCHAR (TODO, IN_PROGRESS, DONE)
   description : TEXT
   due_date : TIMESTAMP
-  status : task_status
-  priority : task_priority
-  category : task_category
-  is_synced_gcal : BOOLEAN
 }
 
-' Relations
-users ||..|| settings : "has (1:1)"
-users ||..o{ semesters : "manages (1:N)"
-users ||..o{ tasks : "owns (1:N)"
-semesters ||..o{ subjects : "contains (1:N)"
-subjects ||..o{ class_sessions : "has (1:N)"
-subjects ||..o{ tasks : "related to (1:N)"
+entity "evaluation_criteria" as eval_criteria {
+  * id : UUID [PK]
+  --
+  * subject_id : UUID [FK -> subjects.id]
+  * name : VARCHAR
+  * weight : FLOAT
+}
+
+entity "grades" as grades {
+  * id : UUID [PK]
+  --
+  * evaluation_criteria_id : UUID [FK -> eval_criteria.id]
+  * value : FLOAT
+}
+
+entity "office_hours" as office_hours {
+  * id : UUID [PK]
+  --
+  * professor_id : UUID [FK -> professors.id]
+  * day_of_week : INTEGER
+  * start_time : TIME
+  * end_time : TIME
+}
+
+entity "tutoring_sessions" as tutoring_sessions {
+  * id : UUID [PK]
+  --
+  * professor_id : UUID [FK -> professors.id]
+  * subject_id : UUID [FK -> subjects.id]
+  * date_time : TIMESTAMP
+  * status : VARCHAR
+}
+
+users ||--o{ semesters : "has"
+users ||--o| settings : "configures"
+users ||--o{ notifications : "receives"
+users ||--o{ professors : "manages"
+
+semesters ||--o{ subjects : "contains"
+professors ||--o{ subjects : "teaches (optional)"
+
+subjects ||--o{ class_sessions : "has sessions"
+subjects ||--o{ tasks : "has tasks"
+subjects ||--o{ eval_criteria : "has criteria"
+
+eval_criteria ||--o{ grades : "has"
+
+professors ||--o{ office_hours : "has"
+professors ||--o{ tutoring_sessions : "hosts"
+subjects ||--o{ tutoring_sessions : "for subject"
+
 @enduml
