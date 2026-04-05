@@ -19,38 +19,40 @@ export interface SubjectDetailsModalProps {
     onEdit?: (subjectId: string) => void;
 }
 
+// =term========================================================================
+// Helpers
+// =============================================================================
+
+const daysMap: Record<number, string> = {
+    1: "Lunes",
+    2: "Martes",
+    3: "Miércoles",
+    4: "Jueves",
+    5: "Viernes",
+    6: "Sábado",
+    7: "Domingo"
+};
+
+const formatTime = (timeStr: string) => {
+    if (!timeStr) return "";
+    const [h, m] = timeStr.split(':');
+    const hour = parseInt(h, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${m} ${ampm}`;
+};
+
 export function SubjectDetailsModal({
     open,
     session,
     onClose,
     onEdit,
 }: SubjectDetailsModalProps) {
+    const { professors } = useProfessors();
+    
     if (!open || !session) return null;
 
     const { subject, classroom, start_time, end_time, day_of_week } = session;
-
-    // Helper map for days
-    const daysMap: Record<number, string> = {
-        1: "Lunes",
-        2: "Martes",
-        3: "Miércoles",
-        4: "Jueves",
-        5: "Viernes",
-        6: "Sábado",
-        7: "Domingo"
-    };
-    
-    // Helper format for time "08:00:00" -> "08:00 AM"
-    const formatTime = (timeStr: string) => {
-        if (!timeStr) return "";
-        const [h, m] = timeStr.split(':');
-        const hour = parseInt(h, 10);
-        const ampm = hour >= 12 ? 'PM' : 'AM';
-        const formattedHour = hour % 12 || 12;
-        return `${formattedHour}:${m} ${ampm}`;
-    };
-
-    const { professors } = useProfessors();
     const professor = professors.find((p) => p.id === subject.professor_id);
 
     return (

@@ -63,7 +63,7 @@ export function BookTutoringModal({
             aria-labelledby="book-modal-title"
             onClick={(e) => e.target === e.currentTarget && onClose()}
         >
-            <div className="modal-panel !max-w-xl">
+            <div className="modal-panel modal-panel--wide">
                 {/* Header */}
                 <div className="modal-header">
                     <div>
@@ -96,85 +96,87 @@ export function BookTutoringModal({
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="modal-form" id="book-tutoring-form">
-                    <div className="form-field">
-                        <label htmlFor="session-date" className="form-label">
-                            Fecha
-                        </label>
-                        <input
-                            id="session-date"
-                            type="date"
-                            value={date}
-                            min={today}
-                            onChange={(e) => setDate(e.target.value)}
-                            required
-                            className="form-input"
-                        />
-                    </div>
-
-                    <div className="form-row">
+                    <div className="modal-body">
                         <div className="form-field">
-                            <label htmlFor="session-start" className="form-label">
-                                Hora de Inicio
+                            <label htmlFor="session-date" className="form-label">
+                                Fecha
                             </label>
                             <input
-                                id="session-start"
-                                type="time"
-                                value={startTime}
-                                onChange={(e) => setStartTime(e.target.value)}
+                                id="session-date"
+                                type="date"
+                                value={date}
+                                min={today}
+                                onChange={(e) => setDate(e.target.value)}
                                 required
                                 className="form-input"
                             />
                         </div>
+
+                        <div className="form-row">
+                            <div className="form-field">
+                                <label htmlFor="session-start" className="form-label">
+                                    Hora de Inicio
+                                </label>
+                                <input
+                                    id="session-start"
+                                    type="time"
+                                    value={startTime}
+                                    onChange={(e) => setStartTime(e.target.value)}
+                                    required
+                                    className="form-input"
+                                />
+                            </div>
+                            <div className="form-field">
+                                <label htmlFor="session-end" className="form-label">
+                                    Hora de Fin
+                                </label>
+                                <input
+                                    id="session-end"
+                                    type="time"
+                                    value={endTime}
+                                    onChange={(e) => setEndTime(e.target.value)}
+                                    required
+                                    className="form-input"
+                                />
+                            </div>
+                        </div>
+
                         <div className="form-field">
-                            <label htmlFor="session-end" className="form-label">
-                                Hora de Fin
+                            <label htmlFor="session-notes" className="form-label">
+                                Notas{" "}
+                                <span className="form-label-optional">(opcional)</span>
+                            </label>
+                            <textarea
+                                id="session-notes"
+                                value={notes}
+                                onChange={(e) => setNotes(e.target.value)}
+                                placeholder="Temas a discutir, preguntas específicas..."
+                                rows={3}
+                                className="form-input form-input--textarea"
+                            />
+                        </div>
+
+                        <div className="form-field">
+                            <label htmlFor="session-link" className="form-label">
+                                Enlace de Reunión{" "}
+                                <span className="form-label-optional">(opcional)</span>
                             </label>
                             <input
-                                id="session-end"
-                                type="time"
-                                value={endTime}
-                                onChange={(e) => setEndTime(e.target.value)}
-                                required
+                                id="session-link"
+                                type="url"
+                                value={meetingLink}
+                                onChange={(e) => setMeetingLink(e.target.value)}
+                                placeholder="https://meet.google.com/..."
                                 className="form-input"
                             />
                         </div>
-                    </div>
 
-                    <div className="form-field">
-                        <label htmlFor="session-notes" className="form-label">
-                            Notas{" "}
-                            <span className="form-label-optional">(opcional)</span>
-                        </label>
-                        <textarea
-                            id="session-notes"
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
-                            placeholder="Temas a discutir, preguntas específicas..."
-                            rows={3}
-                            className="form-input form-input--textarea"
-                        />
+                        {error ? (
+                            <p className="form-error" role="alert">
+                                {error}
+                            </p>
+                        ) : null}
                     </div>
-
-                    <div className="form-field">
-                        <label htmlFor="session-link" className="form-label">
-                            Enlace de Reunión{" "}
-                            <span className="form-label-optional">(opcional)</span>
-                        </label>
-                        <input
-                            id="session-link"
-                            type="url"
-                            value={meetingLink}
-                            onChange={(e) => setMeetingLink(e.target.value)}
-                            placeholder="https://meet.google.com/..."
-                            className="form-input"
-                        />
-                    </div>
-
-                    {error ? (
-                        <p className="form-error" role="alert">
-                            {error}
-                        </p>
-                    ) : null}
 
                     {/* Actions */}
                     <div className="modal-actions">
