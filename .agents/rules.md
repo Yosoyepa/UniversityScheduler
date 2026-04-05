@@ -8,6 +8,14 @@ This is NON-NEGOTIABLE and applies to every single file change.
 
 ---
 
+## ⚠️ MANDATORY: Pre-Commit Build Protocol
+
+**Before executing ANY Git Commit**, you MUST follow the `/implementation` workflow.
+
+This is NON-NEGOTIABLE. You are strictly forbidden from committing code that has not passed compilation checks (e.g., `npm run build` or `npx tsc`). Never commit blindly.
+
+---
+
 ## Rule 1: Always Read Layer Rules Before Implementing
 
 Every major directory in this project has a `.rules/layer-rules.md` file that specifies:
