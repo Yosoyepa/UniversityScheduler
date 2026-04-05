@@ -91,21 +91,21 @@ export function ScheduleGrid({
                 {/* Empty top-left corner */}
                 <div className="p-3 border-r border-gray-200 dark:border-gray-700" />
 
-                {DAYS_TO_SHOW.map((day) => (
+                <>{DAYS_TO_SHOW.map((day) => (
                     <div
                         key={day}
                         className="p-3 text-center font-semibold text-gray-900 dark:text-white border-r border-gray-200 dark:border-gray-700 last:border-r-0"
                     >
                         {DAY_LABELS[day]}
                     </div>
-                ))}
+                ))}</>
             </div>
 
             {/* Body: time column + session columns */}
             <div className="grid grid-cols-[80px_repeat(6,1fr)]">
                 {/* Time labels column */}
                 <div className="border-r border-gray-200 dark:border-gray-700">
-                    {hours.map((hour) => (
+                    <>{hours.map((hour) => (
                         <div
                             key={hour}
                             className="h-16 flex items-start justify-end pr-3 pt-1 border-b border-gray-100 dark:border-gray-700/50"
@@ -114,25 +114,25 @@ export function ScheduleGrid({
                                 {formatHour(hour)}
                             </span>
                         </div>
-                    ))}
+                    ))}</>
                 </div>
 
                 {/* Day columns with positioned session cards */}
-                {DAYS_TO_SHOW.map((day) => (
+                <>{DAYS_TO_SHOW.map((day) => (
                     <div
                         key={day}
                         className="relative border-r border-gray-200 dark:border-gray-700 last:border-r-0"
                     >
                         {/* Hour grid lines */}
-                        {hours.map((hour) => (
+                        <>{hours.map((hour) => (
                             <div
                                 key={hour}
                                 className="h-16 border-b border-gray-100 dark:border-gray-700/50"
                             />
-                        ))}
+                        ))}</>
 
                         {/* Absolutely positioned session cards */}
-                        {(sessionsByDay.get(day) || []).map((session) => {
+                        <>{(sessionsByDay.get(day) || []).map((session) => {
                             const startMin =
                                 timeToMinutes(session.start_time) -
                                 startHour * 60;
@@ -161,9 +161,9 @@ export function ScheduleGrid({
                                     />
                                 </div>
                             );
-                        })}
+                        })}</>
                     </div>
-                ))}
+                ))}</>
             </div>
         </div>
     );
