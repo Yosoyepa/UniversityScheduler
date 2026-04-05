@@ -26,7 +26,7 @@ from sqlalchemy.dialects import postgresql
 # Revision identifiers
 # ---------------------------------------------------------------------------
 revision: str = '002_phase6_professors'
-down_revision: Union[str, Sequence[str], None] = '7af1d399f392'
+down_revision: Union[str, Sequence[str], None] = '71ca7aa7ad17'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
