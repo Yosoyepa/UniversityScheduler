@@ -112,11 +112,7 @@ export function useSchedule(): UseScheduleReturn {
             (subject) =>
                 (subject.class_sessions || []).map((session) => ({
                     ...session,
-                    subject: {
-                        id: subject.id,
-                        name: subject.name,
-                        color: subject.color,
-                    },
+                    subject: subject,
                 }))
         );
 

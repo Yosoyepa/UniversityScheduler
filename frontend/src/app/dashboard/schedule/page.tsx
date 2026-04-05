@@ -8,7 +8,7 @@
 "use client";
 
 import { useState } from "react";
-import { ScheduleGrid, ClassFormModal, SemesterFormModal } from "@/components";
+import { ScheduleGrid, ClassFormModal, SemesterFormModal, SubjectDetailsModal } from "@/components";
 import { Button, PlusIcon } from "@/components";
 import { useSchedule } from "@/features/schedule/hooks/useSchedule";
 import type { SubjectFormData } from "@/components/organisms/ClassFormModal";
@@ -138,34 +138,11 @@ export default function SchedulePage() {
                 </div>
             )}
 
-            {/* Selected session detail */}
-            {selectedSession && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h3
-                                className="font-semibold"
-                                style={{
-                                    color: selectedSession.subject.color,
-                                }}
-                            >
-                                {selectedSession.subject.name}
-                            </h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                                {selectedSession.location &&
-                                    `📍 ${selectedSession.location}`}
-                            </p>
-                        </div>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setSelectedSession(null)}
-                        >
-                            Cerrar
-                        </Button>
-                    </div>
-                </div>
-            )}
+            <SubjectDetailsModal
+                open={!!selectedSession}
+                session={selectedSession}
+                onClose={() => setSelectedSession(null)}
+            />
 
             {/* Create subject modal */}
             <ClassFormModal

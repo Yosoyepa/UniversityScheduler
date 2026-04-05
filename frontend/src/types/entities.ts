@@ -144,7 +144,7 @@ export interface ClassSession {
 
 // Extended type with subject info for calendar display
 export interface ClassSessionWithSubject extends ClassSession {
-    subject: Pick<Subject, "id" | "name" | "color">;
+    subject: Subject;
 }
 
 // =============================================================================
