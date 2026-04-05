@@ -30,6 +30,10 @@ from app.modules.academic_planning.infrastructure.models import (  # noqa: F401
     ClassSessionModel,
 )
 from app.modules.tasks.infrastructure.models import TaskModel  # noqa: F401
+from app.modules.academic_progress.infrastructure.models import (  # noqa: F401
+    EvaluationCriteriaModel,
+    GradeModel,
+)
 
 # Alembic Config object
 config = context.config

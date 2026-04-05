@@ -17,6 +17,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase
 
 from app.config import get_settings
@@ -31,6 +32,18 @@ engine = create_async_engine(
     pool_size=5,
     max_overflow=10,
     pool_pre_ping=True,  # Check connection health before use
+)
+
+# Synchronous engine — used by NotificationListener (sync event handlers)
+# Replace 'postgresql+asyncpg://' with 'postgresql+psycopg2://'
+_sync_db_url = settings.ASYNC_DATABASE_URL.replace(
+    "postgresql+asyncpg://", "postgresql+psycopg2://"
+)
+sync_engine = create_engine(
+    _sync_db_url,
+    pool_pre_ping=True,
+    pool_size=2,
+    max_overflow=5,
 )
 
 # Session factory - creates new sessions for each request

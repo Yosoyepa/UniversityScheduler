@@ -97,12 +97,10 @@ export function useTasks(): UseTasksReturn {
 
         // Fetch subjects for the active semester (to enrich tasks + populate form)
         let subjects: Subject[] = [];
-        const semesterResult = await api.get<Semester[]>("/semesters", {
-            is_active: true,
-        });
+        const semesterResult = await api.get<Semester | null>("/semesters/active");
 
-        if (semesterResult.ok && semesterResult.value?.[0]) {
-            const activeSemId = semesterResult.value[0].id;
+        if (semesterResult.ok && semesterResult.value) {
+            const activeSemId = semesterResult.value.id;
             const subjectsResult = await api.get<SubjectWithSessions[]>(
                 "/subjects",
                 { semester_id: activeSemId }

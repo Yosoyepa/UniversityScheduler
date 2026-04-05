@@ -12,7 +12,7 @@ Following architecture-patterns skill:
     - Business rules live in domain entities
     - Input DTOs are dataclasses for type safety
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, time
 from typing import List, Optional
 from uuid import UUID, uuid4
@@ -60,6 +60,7 @@ class CreateSubjectDTO:
     subject_type: SubjectType = SubjectType.DISCIPLINAR_OBLIGATORIA
     color: str = HexColor.DEFAULT
     professor_name: Optional[str] = None
+    class_sessions: list['CreateClassSessionDTO'] = field(default_factory=list)
 
 
 @dataclass
@@ -294,7 +295,14 @@ class ActivateSemesterUseCase:
                 message="You don't have permission to activate this semester",
             )
         
-        # Activate (this emits SemesterActivatedEvent)
+        # Ensure only one semester is active at a time
+        all_semesters = await self.repository.get_semesters_by_user(user_id)
+        for other in all_semesters:
+            if other.id != semester_id and other.is_active:
+                other.deactivate()
+                await self.repository.save_semester(other)
+        
+        # Activate target semester (this emits SemesterActivatedEvent)
         semester.activate()
         
         return await self.repository.save_semester(semester)
@@ -350,12 +358,30 @@ class CreateSubjectUseCase:
             user_id=user_id,
         )
         
+        # Add class sessions
+        for session_dto in dto.class_sessions:
+            session = ClassSession(
+                id=uuid4(),
+                subject_id=subject.id,
+                day_of_week=session_dto.day_of_week,
+                start_time=session_dto.start_time,
+                end_time=session_dto.end_time,
+                classroom=session_dto.classroom,
+            )
+            subject.add_session(session)
+        
         # Check for conflicts with existing subjects in the same semester
         existing_subjects = await self.repository.get_subjects_by_semester(dto.semester_id)
         self.conflict_service.validate_no_conflicts(subject, existing_subjects)
         
         # Persist
-        return await self.repository.save_subject(subject)
+        saved_subject = await self.repository.save_subject(subject)
+        
+        # Also persist all class sessions
+        for session in subject.class_sessions:
+            await self.repository.save_class_session(session)
+            
+        return saved_subject
 
 
 @dataclass

@@ -67,11 +67,17 @@ export interface User {
 export interface UserSettings {
     dark_mode: boolean;
     email_notifications: boolean;
+    push_notifications: boolean;
+    sms_alerts: boolean;
+    class_reminder_minutes: number;
+    exam_reminder_days: number;
+    assignment_reminder_hours: number;
     alert_preferences: {
         days_before: number[];
         hours_before: number[];
     };
 }
+
 
 export interface AuthTokens {
     access_token: string;
@@ -120,7 +126,7 @@ export interface Subject {
     credits: number;
     color: HexColor;
     difficulty: DifficultyLevel;
-    type: SubjectType;
+    subject_type: SubjectType;
     professor_name: string | null;
     created_at: ISODateTime;
     updated_at: ISODateTime;
@@ -132,13 +138,13 @@ export interface ClassSession {
     day_of_week: DayOfWeek;
     start_time: ISOTime;
     end_time: ISOTime;
-    location: string | null;
+    classroom: string | null;
     attendance_required: boolean;
 }
 
 // Extended type with subject info for calendar display
 export interface ClassSessionWithSubject extends ClassSession {
-    subject: Pick<Subject, "id" | "name" | "color">;
+    subject: Subject;
 }
 
 // =============================================================================
@@ -208,4 +214,49 @@ export interface SubjectAverage {
     grades_count: number;
     criteria_count: number;
     is_complete: boolean;
+}
+
+// =============================================================================
+// Phase 5 Types — Settings (expanded) & Notifications
+// =============================================================================
+
+
+// UserSettingsExpanded is a deprecated alias — UserSettings is now fully expanded
+export type UserSettingsExpanded = UserSettings;
+
+
+
+export type NotificationType = "TASK_COMPLETED" | "TASK_OVERDUE" | "SYSTEM";
+
+export interface AppNotification {
+    id: UUID;
+    type: NotificationType;
+    title: string;
+    message: string;
+    is_read: boolean;
+    related_entity_id: UUID | null;
+    created_at: ISODateTime;
+}
+
+export interface NotificationListResponse {
+    data: AppNotification[];
+    unread_count: number;
+}
+
+export interface UnreadCountResponse {
+    unread_count: number;
+}
+
+export interface UpdateSettingsPayload {
+    dark_mode?: boolean;
+    email_notifications?: boolean;
+    push_notifications?: boolean;
+    sms_alerts?: boolean;
+    class_reminder_minutes?: number;
+    exam_reminder_days?: number;
+    assignment_reminder_hours?: number;
+}
+
+export interface UpdateProfilePayload {
+    full_name?: string;
 }

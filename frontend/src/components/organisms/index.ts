@@ -11,3 +11,5 @@ export * from "./TaskFormModal";
 export * from "./GradesTable";
 export * from "./GradeFormModal";
 export * from "./EvaluationCriteriaForm";
+export * from "./SemesterFormModal";
+export * from "./SubjectDetailsModal";

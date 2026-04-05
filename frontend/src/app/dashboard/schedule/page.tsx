@@ -8,11 +8,12 @@
 "use client";
 
 import { useState } from "react";
-import { ScheduleGrid, ClassFormModal } from "@/components";
+import { ScheduleGrid, ClassFormModal, SemesterFormModal, SubjectDetailsModal } from "@/components";
 import { Button, PlusIcon } from "@/components";
 import { useSchedule } from "@/features/schedule/hooks/useSchedule";
 import type { SubjectFormData } from "@/components/organisms/ClassFormModal";
-import type { ClassSessionWithSubject } from "@/types";
+import type { SemesterFormData } from "@/components/organisms/SemesterFormModal";
+import type { ClassSessionWithSubject, Subject } from "@/types";
 
 // =============================================================================
 // Component
@@ -26,22 +27,55 @@ export default function SchedulePage() {
         loading,
         error,
         createSubject,
+        updateSubject,
+        createSemester,
         creating,
     } = useSchedule();
 
     const [showForm, setShowForm] = useState(false);
+    const [subjectToEdit, setSubjectToEdit] = useState<Subject | null>(null);
+    const [showSemesterForm, setShowSemesterForm] = useState(false);
     const [selectedSession, setSelectedSession] =
         useState<ClassSessionWithSubject | null>(null);
 
-    async function handleCreateSubject(data: SubjectFormData) {
-        const success = await createSubject(data);
+    async function handleSubjectSubmit(data: SubjectFormData) {
+        if (subjectToEdit) {
+            const success = await updateSubject(subjectToEdit.id, data);
+            if (success) {
+                setShowForm(false);
+                setSubjectToEdit(null);
+            }
+        } else {
+            const success = await createSubject(data);
+            if (success) {
+                setShowForm(false);
+            }
+        }
+    }
+
+    async function handleCreateSemester(data: SemesterFormData) {
+        const success = await createSemester({
+            name: data.name,
+            start_date: data.start_date,
+            end_date: data.end_date,
+        });
         if (success) {
-            setShowForm(false);
+            setShowSemesterForm(false);
         }
     }
 
     function handleSessionClick(session: ClassSessionWithSubject) {
         setSelectedSession(session);
+    }
+
+    function handleEditSubject(subjectId: string) {
+        // Find subject to edit and its sessions
+        const subject = subjects.find(s => s.id === subjectId);
+        if (subject) {
+            setSelectedSession(null);
+            setSubjectToEdit(subject);
+            setShowForm(true);
+        }
     }
 
     // Loading state
@@ -62,7 +96,15 @@ export default function SchedulePage() {
                     No tienes un semestre activo. Crea uno para empezar a
                     gestionar tu horario.
                 </p>
-                <Button>Crear Semestre</Button>
+                <Button onClick={() => setShowSemesterForm(true)}>Crear Semestre</Button>
+                
+                {/* Create semester modal */}
+                <SemesterFormModal
+                    open={showSemesterForm}
+                    onClose={() => setShowSemesterForm(false)}
+                    onSubmit={handleCreateSemester}
+                    loading={creating}
+                />
             </div>
         );
     }
@@ -80,7 +122,10 @@ export default function SchedulePage() {
                         {subjects.length !== 1 ? "s" : ""}
                     </p>
                 </div>
-                <Button onClick={() => setShowForm(true)}>
+                <Button onClick={() => {
+                    setSubjectToEdit(null);
+                    setShowForm(true);
+                }}>
                     <PlusIcon size="sm" />
                     <span className="ml-2">Agregar Materia</span>
                 </Button>
@@ -116,40 +161,39 @@ export default function SchedulePage() {
                 </div>
             )}
 
-            {/* Selected session detail */}
-            {selectedSession && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h3
-                                className="font-semibold"
-                                style={{
-                                    color: selectedSession.subject.color,
-                                }}
-                            >
-                                {selectedSession.subject.name}
-                            </h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                                {selectedSession.location &&
-                                    `📍 ${selectedSession.location}`}
-                            </p>
-                        </div>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setSelectedSession(null)}
-                        >
-                            Cerrar
-                        </Button>
-                    </div>
-                </div>
-            )}
+            <SubjectDetailsModal
+                open={!!selectedSession}
+                session={selectedSession}
+                onClose={() => setSelectedSession(null)}
+                onEdit={handleEditSubject}
+            />
 
             {/* Create subject modal */}
             <ClassFormModal
                 open={showForm}
+                initialData={subjectToEdit ? {
+                    name: subjectToEdit.name,
+                    credits: subjectToEdit.credits,
+                    difficulty: subjectToEdit.difficulty,
+                    subject_type: subjectToEdit.subject_type,
+                    professor_name: subjectToEdit.professor_name || "",
+                    color: subjectToEdit.color,
+                    sessions: sessions
+                        .filter(s => s.subject.id === subjectToEdit.id)
+                        .map(s => {
+                            const isVirtual = !!(s.classroom && s.classroom.startsWith('http'));
+                            return {
+                                id: s.id,
+                                day_of_week: s.day_of_week,
+                                start_time: s.start_time.substring(0, 5),
+                                end_time: s.end_time.substring(0, 5),
+                                classroom: s.classroom || "",
+                                is_virtual: isVirtual
+                            };
+                        })
+                } : undefined}
                 onClose={() => setShowForm(false)}
-                onSubmit={handleCreateSubject}
+                onSubmit={handleSubjectSubmit}
                 loading={creating}
             />
         </div>

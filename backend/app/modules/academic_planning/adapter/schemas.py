@@ -8,11 +8,11 @@ Following defensive_programming skill:
     - Validate input immediately (Pydantic does this)
     - Fail-fast with clear error messages
 """
-from datetime import date, time
-from typing import List, Optional
+from datetime import date, time, datetime
+from typing import List, Optional, Annotated
 from uuid import UUID
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, BeforeValidator
 
 from app.modules.academic_planning.domain.entities import (
     DifficultyLevel,
@@ -24,6 +24,14 @@ from app.shared.domain.value_objects import DayOfWeek
 # =============================================================================
 # Base Schemas (Shared fields)
 # =============================================================================
+
+def parse_color(v: any) -> str:
+    """Extract string value from HexColor object if necessary."""
+    if hasattr(v, 'value'):
+        return str(v.value)
+    return str(v)
+
+HexColorStr = Annotated[str, BeforeValidator(parse_color)]
 
 class SemesterBase(BaseModel):
     """Base schema with shared semester fields."""
@@ -38,7 +46,7 @@ class SubjectBase(BaseModel):
     credits: int = Field(default=3, ge=1, le=20)
     difficulty: DifficultyLevel = DifficultyLevel.MEDIUM
     subject_type: SubjectType = SubjectType.DISCIPLINAR_OBLIGATORIA
-    color: str = Field(default="#3B82F6", pattern=r"^#[0-9A-Fa-f]{6}$")
+    color: HexColorStr = Field(default="#3B82F6", pattern=r"^#[0-9A-Fa-f]{6}$")
     professor_name: Optional[str] = Field(None, max_length=255)
 
 
@@ -85,21 +93,6 @@ class UpdateSemesterRequest(BaseModel):
         return v
 
 
-class CreateSubjectRequest(SubjectBase):
-    """Request body for creating a subject."""
-    semester_id: UUID
-
-
-class UpdateSubjectRequest(BaseModel):
-    """Request body for updating a subject."""
-    name: Optional[str] = Field(None, min_length=1, max_length=255)
-    credits: Optional[int] = Field(None, ge=1, le=20)
-    difficulty: Optional[DifficultyLevel] = None
-    subject_type: Optional[SubjectType] = None
-    color: Optional[str] = Field(None, pattern=r"^#[0-9A-Fa-f]{6}$")
-    professor_name: Optional[str] = Field(None, max_length=255)
-
-
 class CreateClassSessionRequest(ClassSessionBase):
     """Request body for creating a class session."""
     
@@ -111,6 +104,22 @@ class CreateClassSessionRequest(ClassSessionBase):
         if 'start_time' in values and v <= values['start_time']:
             raise ValueError('end_time must be after start_time')
         return v
+
+
+class CreateSubjectRequest(SubjectBase):
+    """Request body for creating a subject."""
+    semester_id: UUID
+    class_sessions: List[CreateClassSessionRequest] = Field(default_factory=list)
+
+
+class UpdateSubjectRequest(BaseModel):
+    """Request body for updating a subject."""
+    name: Optional[str] = Field(None, min_length=1, max_length=255)
+    credits: Optional[int] = Field(None, ge=1, le=20)
+    difficulty: Optional[DifficultyLevel] = None
+    subject_type: Optional[SubjectType] = None
+    color: Optional[str] = Field(None, pattern=r"^#[0-9A-Fa-f]{6}$")
+    professor_name: Optional[str] = Field(None, max_length=255)
 
 
 class UpdateClassSessionRequest(BaseModel):
@@ -140,8 +149,8 @@ class ClassSessionResponse(ClassSessionBase):
     """Class session data returned in API responses."""
     id: UUID
     subject_id: UUID
-    created_at: Optional[date] = None
-    updated_at: Optional[date] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
     
     model_config = {"from_attributes": True}
 
@@ -152,8 +161,8 @@ class SubjectResponse(SubjectBase):
     semester_id: UUID
     user_id: UUID
     class_sessions: List[ClassSessionResponse] = []
-    created_at: Optional[date] = None
-    updated_at: Optional[date] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
     
     model_config = {"from_attributes": True}
 
@@ -164,8 +173,8 @@ class SemesterResponse(SemesterBase):
     user_id: UUID
     is_active: bool
     subjects: List[SubjectResponse] = []
-    created_at: Optional[date] = None
-    updated_at: Optional[date] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
     
     model_config = {"from_attributes": True}
 

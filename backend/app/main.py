@@ -1,21 +1,33 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 
 from app.config import get_settings
 from app.cross_cutting import register_exception_handlers
 from app.modules.users.adapter.router import router as auth_router
+from app.modules.users.adapter.user_router import router as user_router
 from app.modules.academic_planning.adapter.router import router as academic_planning_router
 from app.modules.tasks.adapter.router import router as tasks_router
 from app.modules.academic_progress.adapter.router import router as academic_progress_router
 
 settings = get_settings()
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan: register event listeners on startup."""
+    from app.cross_cutting.event_registration import register_event_listeners
+    register_event_listeners()
+    yield
+
+
 app = FastAPI(
     title="University Scheduler API",
     description="Backend for University Scheduler Application using Hexagonal Architecture",
-    version="0.3.0-alpha.1",
+    version="0.5.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 # Configure CORS
@@ -32,6 +44,7 @@ register_exception_handlers(app)
 
 # Register API routers with versioned prefix
 app.include_router(auth_router, prefix=settings.API_V1_STR)
+app.include_router(user_router, prefix="/api/v1")
 app.include_router(
     academic_planning_router,
     prefix="/api/v1",
