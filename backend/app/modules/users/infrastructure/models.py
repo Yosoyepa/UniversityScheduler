@@ -30,6 +30,7 @@ if TYPE_CHECKING:
     from app.modules.academic_planning.infrastructure.models import SemesterModel
     from app.modules.tasks.infrastructure.models import TaskModel
     from app.modules.academic_progress.infrastructure.models import GradeModel
+    from app.modules.professors.infrastructure.models import ProfessorModel
 
 import uuid
 
@@ -107,6 +108,11 @@ class UserModel(Base):
     )
     grades: Mapped[List["GradeModel"]] = relationship(
         "GradeModel",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+    professors: Mapped[List["ProfessorModel"]] = relationship(
+        "ProfessorModel",
         back_populates="user",
         cascade="all, delete-orphan",
     )
