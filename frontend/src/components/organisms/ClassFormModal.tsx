@@ -8,7 +8,7 @@
 
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState, type FormEvent, useEffect } from "react";
 import { FormField } from "../molecules/FormField";
 import { Button } from "../atoms/Button";
 import { XIcon, PlusIcon } from "../atoms/Icon";
@@ -118,6 +118,20 @@ export function ClassFormModal({
         color: initialData?.color || DEFAULT_COLORS[0],
         sessions: initialData?.sessions || [{ ...EMPTY_SESSION }],
     });
+
+    useEffect(() => {
+        if (open) {
+            setFormData({
+                name: initialData?.name || "",
+                credits: initialData?.credits || 3,
+                difficulty: initialData?.difficulty || "MEDIUM",
+                subject_type: initialData?.subject_type || "DISCIPLINAR_OBLIGATORIA",
+                professor_name: initialData?.professor_name || "",
+                color: initialData?.color || DEFAULT_COLORS[0],
+                sessions: initialData?.sessions || [{ ...EMPTY_SESSION }],
+            });
+        }
+    }, [open, initialData]);
 
     if (!open) return null;
 
@@ -400,14 +414,26 @@ export function ClassFormModal({
                                                 <label className="block text-xs text-gray-500 dark:text-gray-400">
                                                     {session.is_virtual ? "Link de reunión" : "Salón"}
                                                 </label>
-                                                <label className="flex items-center gap-1.5 text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 cursor-pointer">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={session.is_virtual}
-                                                        onChange={(e) => updateSession(index, "is_virtual", e.target.checked)}
-                                                        className="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 h-3 w-3"
-                                                    />
-                                                    Virtual
+                                                <label className="flex items-center gap-2 cursor-pointer">
+                                                    <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400">
+                                                        Clase Virtual
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        role="switch"
+                                                        aria-checked={session.is_virtual}
+                                                        onClick={() => updateSession(index, "is_virtual", !session.is_virtual)}
+                                                        className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${
+                                                            session.is_virtual ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-600'
+                                                        }`}
+                                                    >
+                                                        <span
+                                                            aria-hidden="true"
+                                                            className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                                                session.is_virtual ? 'translate-x-4' : 'translate-x-0'
+                                                            }`}
+                                                        />
+                                                    </button>
                                                 </label>
                                             </div>
                                             <input
