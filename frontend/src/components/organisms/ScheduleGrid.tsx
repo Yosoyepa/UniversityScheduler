@@ -155,7 +155,7 @@ export function ScheduleGrid({
                                         onClick={() =>
                                             onSessionClick?.(session)
                                         }
-                                        compact={endMin - startMin < 60}
+                                        compact={endMin - startMin <= 60}
                                     />
                                 </div>
                             );
