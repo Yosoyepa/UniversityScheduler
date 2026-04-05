@@ -8,19 +8,21 @@
 "use client";
 
 import { Button } from "../atoms/Button";
-import { XIcon } from "../atoms/Icon";
+import { XIcon, EditIcon } from "../atoms/Icon";
 import type { ClassSessionWithSubject } from "@/types";
 
 export interface SubjectDetailsModalProps {
     open: boolean;
     session: ClassSessionWithSubject | null;
     onClose: () => void;
+    onEdit?: (subjectId: string) => void;
 }
 
 export function SubjectDetailsModal({
     open,
     session,
     onClose,
+    onEdit,
 }: SubjectDetailsModalProps) {
     if (!open || !session) return null;
 
@@ -69,12 +71,22 @@ export function SubjectDetailsModal({
                         <h2 className="text-2xl font-bold text-white relative z-10 drop-shadow-md">
                             {subject.name}
                         </h2>
-                        <button
-                            onClick={onClose}
-                            className="relative z-10 p-2 text-white/80 hover:text-white bg-black/10 hover:bg-black/20 rounded-full transition-colors"
-                        >
-                            <XIcon size="md" />
-                        </button>
+                        <div className="flex gap-2">
+                            {onEdit && (
+                                <button
+                                    onClick={() => onEdit(subject.id)}
+                                    className="relative z-10 p-2 text-white/80 hover:text-white bg-black/10 hover:bg-black/20 rounded-full transition-colors"
+                                >
+                                    <EditIcon size="sm" />
+                                </button>
+                            )}
+                            <button
+                                onClick={onClose}
+                                className="relative z-10 p-2 text-white/80 hover:text-white bg-black/10 hover:bg-black/20 rounded-full transition-colors"
+                            >
+                                <XIcon size="sm" />
+                            </button>
+                        </div>
                     </div>
 
                     {/* Body */}

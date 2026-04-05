@@ -13,7 +13,7 @@ import { Button, PlusIcon } from "@/components";
 import { useSchedule } from "@/features/schedule/hooks/useSchedule";
 import type { SubjectFormData } from "@/components/organisms/ClassFormModal";
 import type { SemesterFormData } from "@/components/organisms/SemesterFormModal";
-import type { ClassSessionWithSubject } from "@/types";
+import type { ClassSessionWithSubject, Subject } from "@/types";
 
 // =============================================================================
 // Component
@@ -27,19 +27,29 @@ export default function SchedulePage() {
         loading,
         error,
         createSubject,
+        updateSubject,
         createSemester,
         creating,
     } = useSchedule();
 
     const [showForm, setShowForm] = useState(false);
+    const [subjectToEdit, setSubjectToEdit] = useState<Subject | null>(null);
     const [showSemesterForm, setShowSemesterForm] = useState(false);
     const [selectedSession, setSelectedSession] =
         useState<ClassSessionWithSubject | null>(null);
 
-    async function handleCreateSubject(data: SubjectFormData) {
-        const success = await createSubject(data);
-        if (success) {
-            setShowForm(false);
+    async function handleSubjectSubmit(data: SubjectFormData) {
+        if (subjectToEdit) {
+            const success = await updateSubject(subjectToEdit.id, data);
+            if (success) {
+                setShowForm(false);
+                setSubjectToEdit(null);
+            }
+        } else {
+            const success = await createSubject(data);
+            if (success) {
+                setShowForm(false);
+            }
         }
     }
 
@@ -56,6 +66,16 @@ export default function SchedulePage() {
 
     function handleSessionClick(session: ClassSessionWithSubject) {
         setSelectedSession(session);
+    }
+
+    function handleEditSubject(subjectId: string) {
+        // Find subject to edit and its sessions
+        const subject = subjects.find(s => s.id === subjectId);
+        if (subject) {
+            setSelectedSession(null);
+            setSubjectToEdit(subject);
+            setShowForm(true);
+        }
     }
 
     // Loading state
@@ -102,7 +122,10 @@ export default function SchedulePage() {
                         {subjects.length !== 1 ? "s" : ""}
                     </p>
                 </div>
-                <Button onClick={() => setShowForm(true)}>
+                <Button onClick={() => {
+                    setSubjectToEdit(null);
+                    setShowForm(true);
+                }}>
                     <PlusIcon size="sm" />
                     <span className="ml-2">Agregar Materia</span>
                 </Button>
@@ -142,13 +165,35 @@ export default function SchedulePage() {
                 open={!!selectedSession}
                 session={selectedSession}
                 onClose={() => setSelectedSession(null)}
+                onEdit={handleEditSubject}
             />
 
             {/* Create subject modal */}
             <ClassFormModal
                 open={showForm}
+                initialData={subjectToEdit ? {
+                    name: subjectToEdit.name,
+                    credits: subjectToEdit.credits,
+                    difficulty: subjectToEdit.difficulty,
+                    subject_type: subjectToEdit.subject_type,
+                    professor_name: subjectToEdit.professor_name || "",
+                    color: subjectToEdit.color,
+                    sessions: sessions
+                        .filter(s => s.subject.id === subjectToEdit.id)
+                        .map(s => {
+                            const isVirtual = !!(s.classroom && s.classroom.startsWith('http'));
+                            return {
+                                id: s.id,
+                                day_of_week: s.day_of_week,
+                                start_time: s.start_time.substring(0, 5),
+                                end_time: s.end_time.substring(0, 5),
+                                classroom: s.classroom || "",
+                                is_virtual: isVirtual
+                            };
+                        })
+                } : undefined}
                 onClose={() => setShowForm(false)}
-                onSubmit={handleCreateSubject}
+                onSubmit={handleSubjectSubmit}
                 loading={creating}
             />
         </div>

@@ -31,6 +31,7 @@ interface ScheduleState {
 
 interface UseScheduleReturn extends ScheduleState {
     createSubject: (data: SubjectFormData) => Promise<boolean>;
+    updateSubject: (id: string, data: SubjectFormData) => Promise<boolean>;
     deleteSubject: (subjectId: string) => Promise<boolean>;
     createSemester: (data: { name: string; start_date: string; end_date: string }) => Promise<boolean>;
     refreshSchedule: () => Promise<void>;
@@ -167,6 +168,69 @@ export function useSchedule(): UseScheduleReturn {
         [state.activeSemester, refreshSchedule]
     );
 
+    const updateSubject = useCallback(
+        async (id: string, data: SubjectFormData) => {
+            if (!state.activeSemester) return false;
+
+            setCreating(true);
+            setState((prev) => ({ ...prev, error: null }));
+
+            // 1. Update basic subject details
+            const subjectBody = {
+                name: data.name,
+                credits: data.credits,
+                difficulty: data.difficulty,
+                subject_type: data.subject_type,
+                professor_name: data.professor_name || null,
+                color: data.color,
+            };
+
+            const result = await api.patch<Subject>(`/subjects/${id}`, subjectBody);
+            
+            if (!result.ok) {
+                setState((prev) => ({ ...prev, error: result.error.message }));
+                setCreating(false);
+                return false;
+            }
+
+            // 2. Diff and sync sessions
+            const subject = result.value as any;
+            if (subject && subject.class_sessions) {
+                const existingSessionIds = subject.class_sessions.map((s: any) => s.id);
+                const formDataSessionIds = data.sessions.filter((s: any) => s.id).map((s: any) => s.id);
+                
+                // Sessions to delete
+                const toDelete = existingSessionIds.filter((id: string) => !formDataSessionIds.includes(id));
+                for (const delId of toDelete) {
+                    await api.delete(`/sessions/${delId}`);
+                }
+
+                // Sessions to update or create
+                for (const session of data.sessions) {
+                    const sessionBody = {
+                        day_of_week: session.day_of_week,
+                        start_time: session.start_time + (session.start_time.length === 5 ? ":00" : ""),
+                        end_time: session.end_time + (session.end_time.length === 5 ? ":00" : ""),
+                        classroom: session.classroom || null,
+                    };
+
+                    if (session.id) {
+                        // Update existing
+                        await api.patch(`/sessions/${session.id}`, sessionBody);
+                    } else {
+                        // Create new
+                        await api.post(`/subjects/${id}/sessions`, sessionBody);
+                    }
+                }
+            }
+
+            setCreating(false);
+            await refreshSchedule();
+            return true;
+        },
+        [state.activeSemester, refreshSchedule]
+    );
+
     /**
      * Delete a subject.
      */
@@ -230,6 +294,7 @@ export function useSchedule(): UseScheduleReturn {
     return {
         ...state,
         createSubject,
+        updateSubject,
         deleteSubject,
         createSemester,
         refreshSchedule,

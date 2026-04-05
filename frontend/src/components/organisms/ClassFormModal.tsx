@@ -24,13 +24,16 @@ import type {
 // =============================================================================
 
 export interface ClassSessionFormData {
+    id?: string;
     day_of_week: DayOfWeek;
     start_time: string;
     end_time: string;
     classroom: string;
+    is_virtual: boolean;
 }
 
 export interface SubjectFormData {
+    id?: string;
     name: string;
     credits: number;
     difficulty: DifficultyLevel;
@@ -92,6 +95,7 @@ const EMPTY_SESSION: ClassSessionFormData = {
     start_time: "08:00",
     end_time: "10:00",
     classroom: "",
+    is_virtual: false,
 };
 
 // =============================================================================
@@ -136,11 +140,11 @@ export function ClassFormModal({
         }));
     }
 
-    function updateSession(
+    const updateSession = (
         index: number,
         field: keyof ClassSessionFormData,
-        value: string | number
-    ) {
+        value: string | number | boolean
+    ) => {
         setFormData((prev) => ({
             ...prev,
             sessions: prev.sessions.map((s, i) =>
@@ -392,9 +396,20 @@ export function ClassFormModal({
 
                                         {/* Location */}
                                         <div>
-                                            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
-                                                Salón
-                                            </label>
+                                            <div className="flex items-center justify-between mb-1">
+                                                <label className="block text-xs text-gray-500 dark:text-gray-400">
+                                                    {session.is_virtual ? "Link de reunión" : "Salón"}
+                                                </label>
+                                                <label className="flex items-center gap-1.5 text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={session.is_virtual}
+                                                        onChange={(e) => updateSession(index, "is_virtual", e.target.checked)}
+                                                        className="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 h-3 w-3"
+                                                    />
+                                                    Virtual
+                                                </label>
+                                            </div>
                                             <input
                                                 type="text"
                                                 value={session.classroom}
@@ -405,7 +420,7 @@ export function ClassFormModal({
                                                         e.target.value
                                                     )
                                                 }
-                                                placeholder="Ej: 301-B"
+                                                placeholder={session.is_virtual ? "Ej: https://meet.google.com/..." : "Ej: 301-B"}
                                                 className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500"
                                             />
                                         </div>
