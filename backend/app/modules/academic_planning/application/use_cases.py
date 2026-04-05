@@ -60,6 +60,7 @@ class CreateSubjectDTO:
     subject_type: SubjectType = SubjectType.DISCIPLINAR_OBLIGATORIA
     color: str = HexColor.DEFAULT
     professor_name: Optional[str] = None
+    class_sessions: list['CreateClassSessionDTO'] = field(default_factory=list)
 
 
 @dataclass
@@ -357,12 +358,30 @@ class CreateSubjectUseCase:
             user_id=user_id,
         )
         
+        # Add class sessions
+        for session_dto in dto.class_sessions:
+            session = ClassSession(
+                id=uuid4(),
+                subject_id=subject.id,
+                day_of_week=session_dto.day_of_week,
+                start_time=session_dto.start_time,
+                end_time=session_dto.end_time,
+                classroom=session_dto.classroom,
+            )
+            subject.add_session(session)
+        
         # Check for conflicts with existing subjects in the same semester
         existing_subjects = await self.repository.get_subjects_by_semester(dto.semester_id)
         self.conflict_service.validate_no_conflicts(subject, existing_subjects)
         
         # Persist
-        return await self.repository.save_subject(subject)
+        saved_subject = await self.repository.save_subject(subject)
+        
+        # Also persist all class sessions
+        for session in subject.class_sessions:
+            await self.repository.save_class_session(session)
+            
+        return saved_subject
 
 
 @dataclass

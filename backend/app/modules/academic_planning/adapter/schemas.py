@@ -93,21 +93,6 @@ class UpdateSemesterRequest(BaseModel):
         return v
 
 
-class CreateSubjectRequest(SubjectBase):
-    """Request body for creating a subject."""
-    semester_id: UUID
-
-
-class UpdateSubjectRequest(BaseModel):
-    """Request body for updating a subject."""
-    name: Optional[str] = Field(None, min_length=1, max_length=255)
-    credits: Optional[int] = Field(None, ge=1, le=20)
-    difficulty: Optional[DifficultyLevel] = None
-    subject_type: Optional[SubjectType] = None
-    color: Optional[str] = Field(None, pattern=r"^#[0-9A-Fa-f]{6}$")
-    professor_name: Optional[str] = Field(None, max_length=255)
-
-
 class CreateClassSessionRequest(ClassSessionBase):
     """Request body for creating a class session."""
     
@@ -119,6 +104,22 @@ class CreateClassSessionRequest(ClassSessionBase):
         if 'start_time' in values and v <= values['start_time']:
             raise ValueError('end_time must be after start_time')
         return v
+
+
+class CreateSubjectRequest(SubjectBase):
+    """Request body for creating a subject."""
+    semester_id: UUID
+    class_sessions: List[CreateClassSessionRequest] = Field(default_factory=list)
+
+
+class UpdateSubjectRequest(BaseModel):
+    """Request body for updating a subject."""
+    name: Optional[str] = Field(None, min_length=1, max_length=255)
+    credits: Optional[int] = Field(None, ge=1, le=20)
+    difficulty: Optional[DifficultyLevel] = None
+    subject_type: Optional[SubjectType] = None
+    color: Optional[str] = Field(None, pattern=r"^#[0-9A-Fa-f]{6}$")
+    professor_name: Optional[str] = Field(None, max_length=255)
 
 
 class UpdateClassSessionRequest(BaseModel):

@@ -304,6 +304,15 @@ async def create_subject(
         subject_type=request.subject_type,
         color=request.color,
         professor_name=request.professor_name,
+        class_sessions=[
+            CreateClassSessionDTO(
+                subject_id=UUID(int=0),  # Placeholder, set properly in use case
+                day_of_week=s.day_of_week,
+                start_time=s.start_time,
+                end_time=s.end_time,
+                classroom=s.classroom,
+            ) for s in request.class_sessions
+        ],
     )
     
     try:
