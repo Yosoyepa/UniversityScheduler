@@ -228,12 +228,12 @@ export function ClassFormModal({
                                     className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">Sin asignar</option>
-                                    {!loadingProfessors &&
+                                    {!loadingProfessors ?
                                         professors.map((prof) => (
                                             <option key={prof.id} value={prof.id}>
                                                 {prof.name}
                                             </option>
-                                        ))}
+                                        )) : null}
                                 </select>
                             </div>
                         </div>
@@ -468,7 +468,7 @@ export function ClassFormModal({
                                         </div>
 
                                         {/* Remove button */}
-                                        {formData.sessions.length > 1 && (
+                                        {formData.sessions.length > 1 ? (
                                             <button
                                                 type="button"
                                                 onClick={() =>
@@ -478,7 +478,7 @@ export function ClassFormModal({
                                             >
                                                 <XIcon size="sm" />
                                             </button>
-                                        )}
+                                        ) : null}
                                     </div>
                                 ))}
                             </div>

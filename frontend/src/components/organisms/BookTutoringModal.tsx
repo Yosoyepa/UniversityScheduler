@@ -63,7 +63,7 @@ export function BookTutoringModal({
             aria-labelledby="book-modal-title"
             onClick={(e) => e.target === e.currentTarget && onClose()}
         >
-            <div className="modal-panel">
+            <div className="modal-panel modal-panel--wide">
                 {/* Header */}
                 <div className="modal-header">
                     <div>
