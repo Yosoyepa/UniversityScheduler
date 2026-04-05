@@ -132,13 +132,13 @@ export default function SchedulePage() {
             </div>
 
             {/* Error message */}
-            {error && (
+            {error ? (
                 <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
                     <p className="text-red-800 dark:text-red-300 text-sm">
                         {error}
                     </p>
                 </div>
-            )}
+            ) : null}
 
             {/* Schedule grid */}
             {sessions.length > 0 ? (
@@ -176,7 +176,7 @@ export default function SchedulePage() {
                     credits: subjectToEdit.credits,
                     difficulty: subjectToEdit.difficulty,
                     subject_type: subjectToEdit.subject_type,
-                    professor_name: "",
+                    professor_id: subjectToEdit.professor_id || null,
                     color: subjectToEdit.color,
                     sessions: sessions
                         .filter(s => s.subject.id === subjectToEdit.id)

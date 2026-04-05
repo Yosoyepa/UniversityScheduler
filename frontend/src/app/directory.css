@@ -98,14 +98,14 @@
 }
 
 .professor-card__avatar {
-  @apply w-16 h-16 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-2xl font-bold uppercase ring-4 ring-white dark:ring-gray-800;
+  @apply w-16 h-16 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-white flex items-center justify-center text-2xl font-bold uppercase ring-4 ring-white dark:ring-gray-800;
 }
 
-.professor-card__status-dot {
+.professor-card__availability-dot {
   @apply absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-white dark:border-gray-800 rounded-full;
 }
 
-.professor-card__info {
+.professor-card__name-block {
   @apply ml-4 flex-1 min-w-0;
 }
 
@@ -113,40 +113,48 @@
   @apply text-slate-900 dark:text-white text-lg font-bold truncate;
 }
 
-.professor-card__dept {
-  @apply text-indigo-600 dark:text-indigo-400 text-sm font-medium mt-0.5 truncate;
+.professor-card__department {
+  @apply text-indigo-600 dark:text-indigo-400 text-sm font-medium mt-0.5;
 }
 
-.professor-card__email {
-  @apply text-slate-500 text-xs mt-1 truncate;
+.professor-card__email-btn {
+  @apply text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-700 transition-colors flex items-center justify-center;
 }
 
-.professor-card__delete {
-  @apply text-gray-400 hover:text-red-500 p-1 transition-colors;
-}
-
-.professor-card__body {
+.professor-card__schedule {
   @apply flex-1 flex flex-col gap-3 mb-6;
 }
 
-.professor-card__hours-section {
+.professor-card__schedule-row {
   @apply flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-gray-700/50;
 }
 
-.professor-card__hours-section .material-symbols-outlined {
+.professor-card__schedule-row--empty {
+  @apply opacity-60;
+}
+
+.professor-card__schedule-row .material-symbols-outlined {
   @apply text-gray-400 mt-0.5;
 }
 
-.professor-card__day {
+.professor-card__schedule-label {
   @apply text-slate-700 dark:text-slate-200 text-sm font-semibold mb-1;
 }
 
-.professor-card__time {
+.professor-card__schedule-text {
   @apply text-slate-500 dark:text-gray-400 text-sm;
 }
 
-.professor-card__actions {
-  @apply mt-auto;
+.professor-card__cta {
+  @apply mt-auto flex gap-2 w-full;
+}
+
+.professor-card__book-btn {
+  @apply flex-1 inline-flex justify-center items-center gap-2 rounded-lg font-medium transition-colors bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 px-4 py-2;
+}
+
+.professor-card__delete-btn {
+  @apply inline-flex justify-center items-center rounded-lg p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors;
 }
 
 /* Empty State */
@@ -252,50 +260,109 @@
   @apply flex items-center gap-2 mt-4 md:mt-0;
 }
 
-/* Modals */
+/* Modals & Forms */
 .modal-overlay {
   @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto;
 }
 
-.modal-content {
+.modal-panel {
   @apply bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col;
 }
 
+.modal-panel--wide {
+  @apply max-w-2xl;
+}
+
 .modal-header {
-  @apply flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800;
+  @apply flex items-start justify-between p-6 border-b border-gray-200 dark:border-gray-800;
 }
 
 .modal-title {
   @apply text-xl font-bold text-gray-900 dark:text-white;
 }
 
-.modal-close {
-  @apply text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors bg-transparent border-0 cursor-pointer;
+.modal-subtitle {
+  @apply text-sm text-gray-500 dark:text-gray-400 mt-1;
 }
 
-.modal-body {
-  @apply p-6 flex flex-col gap-4 overflow-y-auto max-h-[60vh] bg-gray-50/50 dark:bg-gray-900/50;
+.modal-close-btn {
+  @apply text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors bg-transparent border-0 cursor-pointer p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800;
 }
 
-.modal-footer {
-  @apply flex items-center justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900;
+.book-modal__info-banner {
+  @apply flex items-start gap-3 p-4 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-800 dark:text-indigo-300 text-sm border-b border-indigo-100 dark:border-indigo-800/50;
 }
 
-/* Form Groups (Internal for modals) */
-.form-group {
-  @apply flex flex-col gap-1.5;
+.modal-form {
+  @apply flex flex-col;
+}
+
+.form-fieldset {
+  @apply p-6 border-b border-gray-200 dark:border-gray-800 flex flex-col gap-5;
+}
+
+.form-fieldset__legend {
+  @apply text-base font-bold text-gray-900 dark:text-white pb-4 w-full;
+}
+
+.form-row {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-4 w-full;
+}
+
+.form-field {
+  @apply flex flex-col gap-1.5 w-full;
 }
 
 .form-label {
-  @apply text-sm font-semibold text-gray-700 dark:text-gray-300;
+  @apply text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1;
 }
 
-.form-input, .form-textarea, .form-select {
-  @apply w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2.5 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500;
+.form-label-required {
+  @apply text-red-500;
 }
 
-.form-textarea {
+.form-label-optional {
+  @apply text-gray-400 font-normal text-xs;
+}
+
+.form-input {
+  @apply w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2.5 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none;
+}
+
+.form-input--select {
+  @apply appearance-none bg-no-repeat bg-[position:right_1rem_center] bg-[length:1.2em_1.2em];
+}
+
+.form-input--textarea {
   @apply min-h-[100px] resize-y;
+}
+
+.form-empty-hint {
+  @apply text-sm text-gray-500 dark:text-gray-400 italic bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg text-center border border-dashed border-gray-300 dark:border-gray-700;
+}
+
+.oh-draft-row {
+  @apply bg-slate-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex flex-col gap-4 relative;
+}
+
+.oh-draft-row__bottom {
+  @apply sm:grid-cols-[1fr_2fr_auto] items-end;
+}
+
+.oh-draft-row__remove {
+  @apply p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors h-[46px] flex items-center justify-center border border-transparent hover:border-red-200 dark:hover:border-red-800;
+}
+
+.form-error {
+  @apply text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-4 font-medium text-sm;
+}
+
+.modal-actions {
+  @apply flex items-center justify-end gap-3 p-6 bg-gray-50 dark:bg-gray-900/50;
+}
+
+.btn-spinner {
+  @apply w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin;
 }
 
 /* Delete Confirm Popover */

@@ -189,9 +189,9 @@ export default function DirectoryPage() {
                             calendar_month
                         </span>
                         My Sessions
-                        {scheduledCount > 0 && (
+                        {scheduledCount > 0 ? (
                             <span className="directory-tab__badge">{scheduledCount}</span>
-                        )}
+                        ) : null}
                     </button>
                 </div>
 
