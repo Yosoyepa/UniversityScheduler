@@ -70,8 +70,8 @@ class Task(Entity):
             raise ValueError("Task title must be at least 3 characters long")
 
     def start(self) -> None:
-        """Transition: TODO | DONE → IN_PROGRESS."""
-        valid_from = [TaskStatus.TODO, TaskStatus.DONE]
+        """Transition: TODO | DONE | ARCHIVED → IN_PROGRESS."""
+        valid_from = [TaskStatus.TODO, TaskStatus.DONE, TaskStatus.ARCHIVED]
         if self.status not in valid_from:
             raise InvalidEntityStateException(
                 code="INVALID_ENTITY_STATE",
@@ -87,8 +87,8 @@ class Task(Entity):
         self.touch()
 
     def complete(self) -> None:
-        """Transition: IN_PROGRESS | TODO → DONE."""
-        valid_from = [TaskStatus.IN_PROGRESS, TaskStatus.TODO]
+        """Transition: IN_PROGRESS | TODO | ARCHIVED → DONE."""
+        valid_from = [TaskStatus.IN_PROGRESS, TaskStatus.TODO, TaskStatus.ARCHIVED]
         if self.status not in valid_from:
             raise InvalidEntityStateException(
                 code="INVALID_ENTITY_STATE",
@@ -102,8 +102,8 @@ class Task(Entity):
         self.touch()
 
     def reopen(self) -> None:
-        """Transition: IN_PROGRESS | DONE → TODO."""
-        valid_from = [TaskStatus.IN_PROGRESS, TaskStatus.DONE]
+        """Transition: IN_PROGRESS | DONE | ARCHIVED → TODO."""
+        valid_from = [TaskStatus.IN_PROGRESS, TaskStatus.DONE, TaskStatus.ARCHIVED]
         if self.status not in valid_from:
             raise InvalidEntityStateException(
                 code="INVALID_ENTITY_STATE",

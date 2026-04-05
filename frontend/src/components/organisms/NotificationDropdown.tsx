@@ -13,7 +13,7 @@ import { BellIcon, CheckIcon } from "@/components/atoms/Icon";
 
 export function NotificationDropdown() {
     const [isOpen, setIsOpen] = useState(false);
-    const { notifications, unreadCount, markAsRead, markAllAsRead, isLoading } = useNotifications();
+    const { notifications, unreadCount, markAsRead, markAllAsRead, isLoading, fetchNotifications } = useNotifications();
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     // Close dropdown when clicking outside
@@ -43,7 +43,13 @@ export function NotificationDropdown() {
                 aria-label={`${unreadCount} notificaciones sin leer`}
                 aria-haspopup="true"
                 aria-expanded={isOpen}
-                onClick={() => setIsOpen((prev) => !prev)}
+                onClick={() => {
+                    setIsOpen((prev) => {
+                        const next = !prev;
+                        if (next) fetchNotifications(); // Fetch fresh data when opening
+                        return next;
+                    });
+                }}
                 className="relative p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
                 <BellIcon size="md" />
