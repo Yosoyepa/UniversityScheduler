@@ -36,7 +36,7 @@ const DAY_LABELS: Record<DayOfWeek, string> = {
     7: "Domingo",
 };
 
-const DAYS_TO_SHOW: DayOfWeek[] = [1, 2, 3, 4, 5, 6];
+const DAYS_TO_SHOW: DayOfWeek[] = [1, 2, 3, 4, 5, 6, 7];
 
 // =============================================================================
 // Helpers
@@ -86,8 +86,7 @@ export function ScheduleGrid({
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-            {/* Header row: day labels */}
-            <div className="grid grid-cols-[80px_repeat(6,1fr)] border-b border-gray-200 dark:border-gray-700">
+            <div className="grid grid-cols-[80px_repeat(7,1fr)] border-b border-gray-200 dark:border-gray-700">
                 {/* Empty top-left corner */}
                 <div className="p-3 border-r border-gray-200 dark:border-gray-700" />
 
@@ -101,8 +100,7 @@ export function ScheduleGrid({
                 ))}</>
             </div>
 
-            {/* Body: time column + session columns */}
-            <div className="grid grid-cols-[80px_repeat(6,1fr)]">
+            <div className="grid grid-cols-[80px_repeat(7,1fr)]">
                 {/* Time labels column */}
                 <div className="border-r border-gray-200 dark:border-gray-700">
                     <>{hours.map((hour) => (
