@@ -16,6 +16,8 @@
  *  - Delegates domain state to useProfessors hook
  */
 
+import "@/app/directory.css";
+
 import React, { useMemo, useState } from "react";
 import { useProfessors } from "@/features/professors/hooks/useProfessors";
 import { ProfessorCard } from "@/components/organisms/ProfessorCard";
