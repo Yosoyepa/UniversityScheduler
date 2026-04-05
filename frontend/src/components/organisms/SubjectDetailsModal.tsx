@@ -10,6 +10,7 @@
 import { Button } from "../atoms/Button";
 import { XIcon, EditIcon } from "../atoms/Icon";
 import type { ClassSessionWithSubject } from "@/types";
+import { useProfessors } from "@/features/professors/hooks/useProfessors";
 
 export interface SubjectDetailsModalProps {
     open: boolean;
@@ -18,36 +19,41 @@ export interface SubjectDetailsModalProps {
     onEdit?: (subjectId: string) => void;
 }
 
+// =term========================================================================
+// Helpers
+// =============================================================================
+
+const daysMap: Record<number, string> = {
+    1: "Lunes",
+    2: "Martes",
+    3: "Miércoles",
+    4: "Jueves",
+    5: "Viernes",
+    6: "Sábado",
+    7: "Domingo"
+};
+
+const formatTime = (timeStr: string) => {
+    if (!timeStr) return "";
+    const [h, m] = timeStr.split(':');
+    const hour = parseInt(h, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${m} ${ampm}`;
+};
+
 export function SubjectDetailsModal({
     open,
     session,
     onClose,
     onEdit,
 }: SubjectDetailsModalProps) {
+    const { professors } = useProfessors();
+    
     if (!open || !session) return null;
 
     const { subject, classroom, start_time, end_time, day_of_week } = session;
-
-    // Helper map for days
-    const daysMap: Record<number, string> = {
-        1: "Lunes",
-        2: "Martes",
-        3: "Miércoles",
-        4: "Jueves",
-        5: "Viernes",
-        6: "Sábado",
-        7: "Domingo"
-    };
-    
-    // Helper format for time "08:00:00" -> "08:00 AM"
-    const formatTime = (timeStr: string) => {
-        if (!timeStr) return "";
-        const [h, m] = timeStr.split(':');
-        const hour = parseInt(h, 10);
-        const ampm = hour >= 12 ? 'PM' : 'AM';
-        const formattedHour = hour % 12 || 12;
-        return `${formattedHour}:${m} ${ampm}`;
-    };
+    const professor = professors.find((p) => p.id === subject.professor_id);
 
     return (
         <>
@@ -72,14 +78,14 @@ export function SubjectDetailsModal({
                             {subject.name}
                         </h2>
                         <div className="flex gap-2">
-                            {onEdit && (
+                            {onEdit ? (
                                 <button
                                     onClick={() => onEdit(subject.id)}
                                     className="relative z-10 p-2 text-white/80 hover:text-white bg-black/10 hover:bg-black/20 rounded-full transition-colors"
                                 >
                                     <EditIcon size="sm" />
                                 </button>
-                            )}
+                            ) : null}
                             <button
                                 onClick={onClose}
                                 className="relative z-10 p-2 text-white/80 hover:text-white bg-black/10 hover:bg-black/20 rounded-full transition-colors"
@@ -120,29 +126,35 @@ export function SubjectDetailsModal({
                                     )}
                                 </p>
                             </div>
-                            <div className="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50">
-                                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider mb-1">Profesor</p>
+                            <div className={`bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50 ${subject.id === "tutoring" ? "col-span-2" : ""}`}>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider mb-1">
+                                    {subject.id === "tutoring" ? "Tutor" : "Profesor"}
+                                </p>
                                 <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                                    {subject.professor_id ? `ID: ${subject.professor_id}` : "Sin asignar"}
+                                    {professor ? professor.name : "Sin asignar"}
                                 </p>
                             </div>
-                            <div className="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50">
-                                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider mb-1">Créditos</p>
-                                <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                                    {subject.credits}
-                                </p>
-                            </div>
+                            {subject.id !== "tutoring" && (
+                                <div className="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider mb-1">Créditos</p>
+                                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                                        {subject.credits}
+                                    </p>
+                                </div>
+                            )}
                         </div>
 
                         {/* Badges / Extras */}
-                        <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100 dark:border-gray-700/50">
-                            <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs font-semibold">
-                                {subject.subject_type.replace(/_/g, ' ')}
-                            </span>
-                            <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs font-semibold">
-                                {subject.difficulty}
-                            </span>
-                        </div>
+                        {subject.id !== "tutoring" && (
+                            <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100 dark:border-gray-700/50">
+                                <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs font-semibold">
+                                    {subject.subject_type.replace(/_/g, ' ')}
+                                </span>
+                                <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs font-semibold">
+                                    {subject.difficulty}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

@@ -34,7 +34,7 @@ export function BookTutoringModal({
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (endTime <= startTime) {
-            setError("End time must be after start time.");
+            setError("La hora de fin debe ser posterior a la de inicio.");
             return;
         }
         setLoading(true);
@@ -49,7 +49,7 @@ export function BookTutoringModal({
                 meeting_link: meetingLink || null,
             });
         } catch {
-            setError("Failed to book session. Please try again.");
+            setError("Fallo al agendar la sesión. Intenta de nuevo.");
         } finally {
             setLoading(false);
         }
@@ -63,19 +63,19 @@ export function BookTutoringModal({
             aria-labelledby="book-modal-title"
             onClick={(e) => e.target === e.currentTarget && onClose()}
         >
-            <div className="modal-panel">
+            <div className="modal-panel modal-panel--wide">
                 {/* Header */}
                 <div className="modal-header">
                     <div>
                         <h2 id="book-modal-title" className="modal-title">
-                            Book Tutoring Session
+                            Agendar Tutoría
                         </h2>
-                        <p className="modal-subtitle">with {professor.name}</p>
+                        <p className="modal-subtitle">con {professor.name}</p>
                     </div>
                     <button
                         onClick={onClose}
                         className="modal-close-btn"
-                        aria-label="Close modal"
+                        aria-label="Cerrar modal"
                     >
                         <span className="material-symbols-outlined" aria-hidden="true">
                             close
@@ -89,92 +89,94 @@ export function BookTutoringModal({
                         info
                     </span>
                     <p>
-                        Sessions are recorded as pre-confirmed. Make sure you have already
-                        coordinated with the professor before booking.
+                        Las sesiones se registrarán como pre-confirmadas. Asegúrate de haber 
+                        coordinado con el profesor antes de agendar.
                     </p>
                 </div>
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="modal-form" id="book-tutoring-form">
-                    <div className="form-field">
-                        <label htmlFor="session-date" className="form-label">
-                            Date
-                        </label>
-                        <input
-                            id="session-date"
-                            type="date"
-                            value={date}
-                            min={today}
-                            onChange={(e) => setDate(e.target.value)}
-                            required
-                            className="form-input"
-                        />
-                    </div>
-
-                    <div className="form-row">
+                    <div className="modal-body">
                         <div className="form-field">
-                            <label htmlFor="session-start" className="form-label">
-                                Start Time
+                            <label htmlFor="session-date" className="form-label">
+                                Fecha
                             </label>
                             <input
-                                id="session-start"
-                                type="time"
-                                value={startTime}
-                                onChange={(e) => setStartTime(e.target.value)}
+                                id="session-date"
+                                type="date"
+                                value={date}
+                                min={today}
+                                onChange={(e) => setDate(e.target.value)}
                                 required
                                 className="form-input"
                             />
                         </div>
+
+                        <div className="form-row">
+                            <div className="form-field">
+                                <label htmlFor="session-start" className="form-label">
+                                    Hora de Inicio
+                                </label>
+                                <input
+                                    id="session-start"
+                                    type="time"
+                                    value={startTime}
+                                    onChange={(e) => setStartTime(e.target.value)}
+                                    required
+                                    className="form-input"
+                                />
+                            </div>
+                            <div className="form-field">
+                                <label htmlFor="session-end" className="form-label">
+                                    Hora de Fin
+                                </label>
+                                <input
+                                    id="session-end"
+                                    type="time"
+                                    value={endTime}
+                                    onChange={(e) => setEndTime(e.target.value)}
+                                    required
+                                    className="form-input"
+                                />
+                            </div>
+                        </div>
+
                         <div className="form-field">
-                            <label htmlFor="session-end" className="form-label">
-                                End Time
+                            <label htmlFor="session-notes" className="form-label">
+                                Notas{" "}
+                                <span className="form-label-optional">(opcional)</span>
+                            </label>
+                            <textarea
+                                id="session-notes"
+                                value={notes}
+                                onChange={(e) => setNotes(e.target.value)}
+                                placeholder="Temas a discutir, preguntas específicas..."
+                                rows={3}
+                                className="form-input form-input--textarea"
+                            />
+                        </div>
+
+                        <div className="form-field">
+                            <label htmlFor="session-link" className="form-label">
+                                Enlace de Reunión{" "}
+                                <span className="form-label-optional">(opcional)</span>
                             </label>
                             <input
-                                id="session-end"
-                                type="time"
-                                value={endTime}
-                                onChange={(e) => setEndTime(e.target.value)}
-                                required
+                                id="session-link"
+                                type="url"
+                                value={meetingLink}
+                                onChange={(e) => setMeetingLink(e.target.value)}
+                                placeholder="https://meet.google.com/..."
                                 className="form-input"
                             />
                         </div>
-                    </div>
 
-                    <div className="form-field">
-                        <label htmlFor="session-notes" className="form-label">
-                            Notes{" "}
-                            <span className="form-label-optional">(optional)</span>
-                        </label>
-                        <textarea
-                            id="session-notes"
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
-                            placeholder="Topics to discuss, specific questions..."
-                            rows={3}
-                            className="form-input form-input--textarea"
-                        />
+                        {error ? (
+                            <p className="form-error" role="alert">
+                                {error}
+                            </p>
+                        ) : null}
                     </div>
-
-                    <div className="form-field">
-                        <label htmlFor="session-link" className="form-label">
-                            Meeting Link{" "}
-                            <span className="form-label-optional">(optional)</span>
-                        </label>
-                        <input
-                            id="session-link"
-                            type="url"
-                            value={meetingLink}
-                            onChange={(e) => setMeetingLink(e.target.value)}
-                            placeholder="https://meet.google.com/..."
-                            className="form-input"
-                        />
-                    </div>
-
-                    {error && (
-                        <p className="form-error" role="alert">
-                            {error}
-                        </p>
-                    )}
 
                     {/* Actions */}
                     <div className="modal-actions">
@@ -184,7 +186,7 @@ export function BookTutoringModal({
                             className="btn btn--ghost"
                             disabled={loading}
                         >
-                            Cancel
+                            Cancelar
                         </button>
                         <button
                             type="submit"
@@ -198,7 +200,7 @@ export function BookTutoringModal({
                                         className="btn-spinner"
                                         aria-hidden="true"
                                     />
-                                    Booking…
+                                    Agendando…
                                 </>
                             ) : (
                                 <>
@@ -208,7 +210,7 @@ export function BookTutoringModal({
                                     >
                                         calendar_add_on
                                     </span>
-                                    Confirm Booking
+                                    Confirmar
                                 </>
                             )}
                         </button>

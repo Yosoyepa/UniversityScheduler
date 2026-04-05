@@ -36,7 +36,7 @@ const DAY_LABELS: Record<DayOfWeek, string> = {
     7: "Domingo",
 };
 
-const DAYS_TO_SHOW: DayOfWeek[] = [1, 2, 3, 4, 5, 6];
+const DAYS_TO_SHOW: DayOfWeek[] = [1, 2, 3, 4, 5, 6, 7];
 
 // =============================================================================
 // Helpers
@@ -86,26 +86,24 @@ export function ScheduleGrid({
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-            {/* Header row: day labels */}
-            <div className="grid grid-cols-[80px_repeat(6,1fr)] border-b border-gray-200 dark:border-gray-700">
+            <div className="grid grid-cols-[80px_repeat(7,1fr)] border-b border-gray-200 dark:border-gray-700">
                 {/* Empty top-left corner */}
                 <div className="p-3 border-r border-gray-200 dark:border-gray-700" />
 
-                {DAYS_TO_SHOW.map((day) => (
+                <>{DAYS_TO_SHOW.map((day) => (
                     <div
                         key={day}
                         className="p-3 text-center font-semibold text-gray-900 dark:text-white border-r border-gray-200 dark:border-gray-700 last:border-r-0"
                     >
                         {DAY_LABELS[day]}
                     </div>
-                ))}
+                ))}</>
             </div>
 
-            {/* Body: time column + session columns */}
-            <div className="grid grid-cols-[80px_repeat(6,1fr)]">
+            <div className="grid grid-cols-[80px_repeat(7,1fr)]">
                 {/* Time labels column */}
                 <div className="border-r border-gray-200 dark:border-gray-700">
-                    {hours.map((hour) => (
+                    <>{hours.map((hour) => (
                         <div
                             key={hour}
                             className="h-16 flex items-start justify-end pr-3 pt-1 border-b border-gray-100 dark:border-gray-700/50"
@@ -114,25 +112,25 @@ export function ScheduleGrid({
                                 {formatHour(hour)}
                             </span>
                         </div>
-                    ))}
+                    ))}</>
                 </div>
 
                 {/* Day columns with positioned session cards */}
-                {DAYS_TO_SHOW.map((day) => (
+                <>{DAYS_TO_SHOW.map((day) => (
                     <div
                         key={day}
                         className="relative border-r border-gray-200 dark:border-gray-700 last:border-r-0"
                     >
                         {/* Hour grid lines */}
-                        {hours.map((hour) => (
+                        <>{hours.map((hour) => (
                             <div
                                 key={hour}
                                 className="h-16 border-b border-gray-100 dark:border-gray-700/50"
                             />
-                        ))}
+                        ))}</>
 
                         {/* Absolutely positioned session cards */}
-                        {(sessionsByDay.get(day) || []).map((session) => {
+                        <>{(sessionsByDay.get(day) || []).map((session) => {
                             const startMin =
                                 timeToMinutes(session.start_time) -
                                 startHour * 60;
@@ -157,13 +155,13 @@ export function ScheduleGrid({
                                         onClick={() =>
                                             onSessionClick?.(session)
                                         }
-                                        compact={endMin - startMin < 60}
+                                        compact={endMin - startMin <= 60}
                                     />
                                 </div>
                             );
-                        })}
+                        })}</>
                     </div>
-                ))}
+                ))}</>
             </div>
         </div>
     );

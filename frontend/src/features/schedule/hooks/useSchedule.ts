@@ -140,7 +140,7 @@ export function useSchedule(): UseScheduleReturn {
                 credits: data.credits,
                 difficulty: data.difficulty,
                 subject_type: data.subject_type,
-                professor_id: null,  // Set via directory module if needed
+                professor_id: data.professor_id,
                 color: data.color,
                 semester_id: state.activeSemester.id,
                 class_sessions: data.sessions.map((s) => ({
@@ -181,7 +181,7 @@ export function useSchedule(): UseScheduleReturn {
                 credits: data.credits,
                 difficulty: data.difficulty,
                 subject_type: data.subject_type,
-                professor_id: null,  // Updated separately via directory module
+                professor_id: data.professor_id,
                 color: data.color,
             };
 

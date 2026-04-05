@@ -119,23 +119,20 @@ export default function DirectoryPage() {
                 {/* ---- Page Header ---- */}
                 <div className="directory-page__header">
                     <div>
-                        <h1 className="directory-page__title">
-                            Faculty Directory &amp; Tutoring
-                        </h1>
+                        <h1 className="directory-page__title">Directorio de Profesores y Tutorías</h1>
                         <p className="directory-page__subtitle">
-                            Manage your personal professor directory and book tutoring
-                            sessions.
+                            Gestiona tu directorio personal de profesores y agenda sesiones de tutoría.
                         </p>
                     </div>
                     <button
                         onClick={() => setShowAddModal(true)}
                         className="btn btn--primary"
-                        id="add-professor-btn"
+                        id="header-add-professor-btn"
                     >
                         <span className="material-symbols-outlined" aria-hidden="true">
                             person_add
                         </span>
-                        Add Professor
+                        Añadir Profesor
                     </button>
                 </div>
 
@@ -146,21 +143,21 @@ export default function DirectoryPage() {
                             group
                         </span>
                         <span className="directory-stat__value">{professors.length}</span>
-                        <span className="directory-stat__label">Professors</span>
+                        <span className="directory-stat__label">Profesores</span>
                     </div>
                     <div className="directory-stat directory-stat--available">
                         <span className="material-symbols-outlined" aria-hidden="true">
                             radio_button_checked
                         </span>
                         <span className="directory-stat__value">{availableCount}</span>
-                        <span className="directory-stat__label">Available Now</span>
+                        <span className="directory-stat__label">Disponibles Ahora</span>
                     </div>
                     <div className="directory-stat">
                         <span className="material-symbols-outlined" aria-hidden="true">
                             event
                         </span>
                         <span className="directory-stat__value">{scheduledCount}</span>
-                        <span className="directory-stat__label">Upcoming Sessions</span>
+                        <span className="directory-stat__label">Próximas Sesiones</span>
                     </div>
                 </div>
 
@@ -176,7 +173,7 @@ export default function DirectoryPage() {
                         <span className="material-symbols-outlined" aria-hidden="true">
                             contacts
                         </span>
-                        Directory
+                        Directorio
                     </button>
                     <button
                         role="tab"
@@ -188,20 +185,20 @@ export default function DirectoryPage() {
                         <span className="material-symbols-outlined" aria-hidden="true">
                             calendar_month
                         </span>
-                        My Sessions
-                        {scheduledCount > 0 && (
+                        Mis Sesiones
+                        {scheduledCount > 0 ? (
                             <span className="directory-tab__badge">{scheduledCount}</span>
-                        )}
+                        ) : null}
                     </button>
                 </div>
 
                 {/* ---- Error Banner ---- */}
-                {error && (
+                {error ? (
                     <div className="alert alert--error" role="alert">
                         <span className="material-symbols-outlined">error</span>
                         {error}
                     </div>
-                )}
+                ) : null}
 
                 {/* ---- DIRECTORY TAB ---- */}
                 {activeTab === "directory" && (
@@ -212,7 +209,7 @@ export default function DirectoryPage() {
                                 htmlFor="professor-search"
                                 className="sr-only"
                             >
-                                Search professors
+                                Buscar profesores
                             </label>
                             <span
                                 className="material-symbols-outlined directory-search__icon"
@@ -223,7 +220,7 @@ export default function DirectoryPage() {
                             <input
                                 id="professor-search"
                                 type="search"
-                                placeholder="Search by name, department, or email…"
+                                placeholder="Buscar por nombre, departamento o correo..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="directory-search__input"
@@ -250,13 +247,13 @@ export default function DirectoryPage() {
                                 </span>
                                 <h2 className="directory-empty__title">
                                     {searchQuery
-                                        ? "No professors match your search"
-                                        : "Your directory is empty"}
+                                        ? "Ningún profesor coincide con tu búsqueda"
+                                        : "Tu directorio está vacío"}
                                 </h2>
                                 <p className="directory-empty__hint">
                                     {searchQuery
-                                        ? "Try adjusting your search terms."
-                                        : "Add your first professor to get started."}
+                                        ? "Intenta con otras palabras."
+                                        : "Añade a tu primer profesor para comenzar."}
                                 </p>
                                 {!searchQuery && (
                                     <button
@@ -270,7 +267,7 @@ export default function DirectoryPage() {
                                         >
                                             person_add
                                         </span>
-                                        Add Your First Professor
+                                        Añadir mi primer profesor
                                     </button>
                                 )}
                             </div>
@@ -286,19 +283,19 @@ export default function DirectoryPage() {
                                                 className="professor-delete-confirm"
                                                 role="alert"
                                             >
-                                                <p>Remove {professor.name}?</p>
+                                                <p>¿Eliminar a {professor.name}?</p>
                                                 <div className="professor-delete-confirm__actions">
                                                     <button
                                                         onClick={() => setDeleteConfirm(null)}
                                                         className="btn btn--ghost btn--sm"
                                                     >
-                                                        Cancel
+                                                        Cancelar
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(professor.id)}
                                                         className="btn btn--danger btn--sm"
                                                     >
-                                                        Remove
+                                                        Eliminar
                                                     </button>
                                                 </div>
                                             </div>
@@ -327,11 +324,10 @@ export default function DirectoryPage() {
                                     event_busy
                                 </span>
                                 <h2 className="directory-empty__title">
-                                    No tutoring sessions yet
+                                    Aún no hay sesiones de tutoría
                                 </h2>
                                 <p className="directory-empty__hint">
-                                    Go to the Directory tab and click "Book Meeting" on any
-                                    professor.
+                                    Ve a la pestaña Directorio y haz clic en "Agendar" en algún profesor.
                                 </p>
                             </div>
                         )}
@@ -357,7 +353,7 @@ export default function DirectoryPage() {
 
                                     <div className="session-row__info">
                                         <p className="session-row__professor">
-                                            {professor?.name ?? "Unknown professor"}
+                                            {professor?.name ?? "Profesor desconocido"}
                                         </p>
                                         {session.notes && (
                                             <p className="session-row__notes">
@@ -377,7 +373,7 @@ export default function DirectoryPage() {
                                             <button
                                                 onClick={() => completeSession(session.id)}
                                                 className="btn btn--ghost btn--sm"
-                                                title="Mark as completed"
+                                                title="Marcar como completada"
                                             >
                                                 <span
                                                     className="material-symbols-outlined"
@@ -389,7 +385,7 @@ export default function DirectoryPage() {
                                             <button
                                                 onClick={() => cancelSession(session.id)}
                                                 className="btn btn--ghost btn--sm"
-                                                title="Cancel session"
+                                                title="Cancelar sesión"
                                             >
                                                 <span
                                                     className="material-symbols-outlined"

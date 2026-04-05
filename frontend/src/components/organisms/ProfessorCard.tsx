@@ -160,9 +160,9 @@ export function ProfessorCard({ professor, onBook, onDelete }: ProfessorCardProp
                             schedule
                         </span>
                         <div>
-                            <p className="professor-card__schedule-label">Office Hours</p>
+                            <p className="professor-card__schedule-label">Horario de Atención</p>
                             <p className="professor-card__schedule-text">
-                                No hours configured yet
+                                Aún no hay horarios configurados
                             </p>
                         </div>
                     </div>
@@ -175,7 +175,7 @@ export function ProfessorCard({ professor, onBook, onDelete }: ProfessorCardProp
                                 </span>
                                 <div>
                                     <p className="professor-card__schedule-label">
-                                        Office Hours
+                                        Horario de Atención
                                     </p>
                                     {officeLines.map((line, i) => (
                                         <p
@@ -194,7 +194,7 @@ export function ProfessorCard({ professor, onBook, onDelete }: ProfessorCardProp
                                     science
                                 </span>
                                 <div>
-                                    <p className="professor-card__schedule-label">Lab Hours</p>
+                                    <p className="professor-card__schedule-label">Horas de Laboratorio</p>
                                     {labLines.map((line, i) => (
                                         <p
                                             key={i}
@@ -213,7 +213,7 @@ export function ProfessorCard({ professor, onBook, onDelete }: ProfessorCardProp
                                 </span>
                                 <div>
                                     <p className="professor-card__schedule-label">
-                                        Virtual Hours
+                                        Horas Virtuales
                                     </p>
                                     {virtualLines.map((line, i) => (
                                         <p
@@ -240,20 +240,20 @@ export function ProfessorCard({ professor, onBook, onDelete }: ProfessorCardProp
                     <span className="material-symbols-outlined" aria-hidden="true">
                         calendar_add_on
                     </span>
-                    <span>Book Meeting</span>
+                    <span>Agendar</span>
                 </button>
-                {onDelete && (
+                {onDelete ? (
                     <button
                         onClick={() => onDelete(professor.id)}
                         className="professor-card__delete-btn"
-                        title="Remove professor"
-                        aria-label={`Remove ${professor.name} from directory`}
+                        title="Eliminar profesor"
+                        aria-label={`Eliminar a ${professor.name} del directorio`}
                     >
                         <span className="material-symbols-outlined" aria-hidden="true">
                             delete
                         </span>
                     </button>
-                )}
+                ) : null}
             </div>
         </article>
     );

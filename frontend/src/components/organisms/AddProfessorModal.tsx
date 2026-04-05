@@ -16,18 +16,18 @@ interface AddProfessorModalProps {
 }
 
 const DAYS = [
-    { value: 1, label: "Monday" },
-    { value: 2, label: "Tuesday" },
-    { value: 3, label: "Wednesday" },
-    { value: 4, label: "Thursday" },
-    { value: 5, label: "Friday" },
-    { value: 6, label: "Saturday" },
-    { value: 7, label: "Sunday" },
+    { value: 1, label: "Lunes" },
+    { value: 2, label: "Martes" },
+    { value: 3, label: "Miércoles" },
+    { value: 4, label: "Jueves" },
+    { value: 5, label: "Viernes" },
+    { value: 6, label: "Sábado" },
+    { value: 7, label: "Domingo" },
 ];
 
 const LOCATION_TYPES = [
-    { value: "OFFICE", label: "Office" },
-    { value: "LAB", label: "Lab" },
+    { value: "OFFICE", label: "Oficina" },
+    { value: "LAB", label: "Laboratorio" },
     { value: "VIRTUAL", label: "Virtual / Online" },
 ];
 
@@ -74,7 +74,7 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (!name.trim()) {
-            setError("Professor name is required.");
+            setError("El nombre del profesor es obligatorio.");
             return;
         }
         setLoading(true);
@@ -97,7 +97,7 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
             };
             await onConfirm(payload);
         } catch {
-            setError("Failed to add professor. Please try again.");
+            setError("Fallo al añadir el profesor. Por favor intenta de nuevo.");
         } finally {
             setLoading(false);
         }
@@ -116,16 +116,16 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                 <div className="modal-header">
                     <div>
                         <h2 id="add-professor-title" className="modal-title">
-                            Add Professor
+                            Añadir Profesor
                         </h2>
                         <p className="modal-subtitle">
-                            Add to your personal directory
+                            Añádelo a tu directorio personal
                         </p>
                     </div>
                     <button
                         onClick={onClose}
                         className="modal-close-btn"
-                        aria-label="Close modal"
+                        aria-label="Cerrar modal"
                     >
                         <span className="material-symbols-outlined" aria-hidden="true">
                             close
@@ -136,18 +136,18 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                 <form onSubmit={handleSubmit} className="modal-form" id="add-professor-form">
                     {/* Basic Info */}
                     <fieldset className="form-fieldset">
-                        <legend className="form-fieldset__legend">Basic Information</legend>
+                        <legend className="form-fieldset__legend">Información Básica</legend>
 
                         <div className="form-field">
                             <label htmlFor="prof-name" className="form-label">
-                                Name <span className="form-label-required">*</span>
+                                Nombre <span className="form-label-required">*</span>
                             </label>
                             <input
                                 id="prof-name"
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                placeholder="Dr. Jane Smith"
+                                placeholder="Dr. Juan Pérez"
                                 required
                                 className="form-input"
                             />
@@ -156,8 +156,8 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                         <div className="form-row">
                             <div className="form-field">
                                 <label htmlFor="prof-email" className="form-label">
-                                    Email{" "}
-                                    <span className="form-label-optional">(optional)</span>
+                                    Correo Institucional{" "}
+                                    <span className="form-label-optional">(opcional)</span>
                                 </label>
                                 <input
                                     id="prof-email"
@@ -170,8 +170,8 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                             </div>
                             <div className="form-field">
                                 <label htmlFor="prof-department" className="form-label">
-                                    Department{" "}
-                                    <span className="form-label-optional">(optional)</span>
+                                    Departamento{" "}
+                                    <span className="form-label-optional">(opcional)</span>
                                 </label>
                                 <input
                                     id="prof-department"
@@ -188,15 +188,15 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                     {/* Office Hours */}
                     <fieldset className="form-fieldset">
                         <legend className="form-fieldset__legend">
-                            Office Hours{" "}
-                            <span className="form-label-optional">(optional)</span>
+                            Horario de Atención{" "}
+                            <span className="form-label-optional">(opcional)</span>
                         </legend>
 
-                        {officeHours.length === 0 && (
+                        {officeHours.length === 0 ? (
                             <p className="form-empty-hint">
-                                No office hours added. You can add them later.
+                                No has añadido horarios. Puedes agregarlos después.
                             </p>
-                        )}
+                        ) : null}
 
                         {officeHours.map((oh) => (
                             <div key={oh._id} className="oh-draft-row">
@@ -206,7 +206,7 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                                             htmlFor={`oh-day-${oh._id}`}
                                             className="form-label"
                                         >
-                                            Day
+                                            Día
                                         </label>
                                         <select
                                             id={`oh-day-${oh._id}`}
@@ -230,7 +230,7 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                                             htmlFor={`oh-start-${oh._id}`}
                                             className="form-label"
                                         >
-                                            Start
+                                            Inicio
                                         </label>
                                         <input
                                             id={`oh-start-${oh._id}`}
@@ -249,7 +249,7 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                                             htmlFor={`oh-end-${oh._id}`}
                                             className="form-label"
                                         >
-                                            End
+                                            Fin
                                         </label>
                                         <input
                                             id={`oh-end-${oh._id}`}
@@ -271,7 +271,7 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                                             htmlFor={`oh-type-${oh._id}`}
                                             className="form-label"
                                         >
-                                            Location Type
+                                            Tipo de Lugar
                                         </label>
                                         <select
                                             id={`oh-type-${oh._id}`}
@@ -298,9 +298,9 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                                             htmlFor={`oh-details-${oh._id}`}
                                             className="form-label"
                                         >
-                                            Details{" "}
+                                            Detalles{" "}
                                             <span className="form-label-optional">
-                                                (room / link)
+                                                (salón / link)
                                             </span>
                                         </label>
                                         <input
@@ -312,7 +312,7 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                                                     location_details: e.target.value || null,
                                                 })
                                             }
-                                            placeholder="Room 302 / https://meet.google.com/..."
+                                            placeholder="Bloque 302 / https://meet.google.com/..."
                                             className="form-input"
                                         />
                                     </div>
@@ -339,15 +339,15 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                             <span className="material-symbols-outlined" aria-hidden="true">
                                 add
                             </span>
-                            Add Office Hour Block
+                            Añadir Bloque de Horario
                         </button>
                     </fieldset>
 
-                    {error && (
+                    {error ? (
                         <p className="form-error" role="alert">
                             {error}
                         </p>
-                    )}
+                    ) : null}
 
                     {/* Actions */}
                     <div className="modal-actions">
@@ -357,7 +357,7 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                             className="btn btn--ghost"
                             disabled={loading}
                         >
-                            Cancel
+                            Cancelar
                         </button>
                         <button
                             type="submit"
@@ -368,14 +368,14 @@ export function AddProfessorModal({ onConfirm, onClose }: AddProfessorModalProps
                             {loading ? (
                                 <>
                                     <span className="btn-spinner" aria-hidden="true" />
-                                    Saving…
+                                    Guardando…
                                 </>
                             ) : (
                                 <>
                                     <span className="material-symbols-outlined" aria-hidden="true">
                                         person_add
                                     </span>
-                                    Add Professor
+                                    Añadir Profesor
                                 </>
                             )}
                         </button>
