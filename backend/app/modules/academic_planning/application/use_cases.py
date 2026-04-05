@@ -12,7 +12,7 @@ Following architecture-patterns skill:
     - Business rules live in domain entities
     - Input DTOs are dataclasses for type safety
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, time
 from typing import List, Optional
 from uuid import UUID, uuid4
