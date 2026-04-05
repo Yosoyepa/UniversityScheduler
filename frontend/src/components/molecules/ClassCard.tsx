@@ -1,8 +1,15 @@
+/* 
+ * Design Rule: Always reference the corresponding visual mockup in `docs/mockups/` 
+ * and strictly mirror its precise styling, layout, typography, and color palette 
+ * using Tailwind CSS. Refer to the `frontend-mockup-implementation` skill for guidance. 
+ */
 /**
  * ClassCard Molecule Component.
  *
+ * Mockup reference: university_schedule_dashboard_1 lines 134–164
+ *
  * Card displaying class session information for schedule grid.
- * Following Atomic Design - molecule composed of atoms.
+ * Features shadow, hover elevation, subject color accent bar.
  */
 
 import type { ClassSessionWithSubject } from "@/types";
@@ -22,7 +29,6 @@ export interface ClassCardProps {
 // =============================================================================
 
 function formatTime(time: string): string {
-    // Convert HH:MM:SS to HH:MM
     const [hours, minutes] = time.split(":");
     const h = parseInt(hours, 10);
     const period = h >= 12 ? "PM" : "AM";
@@ -44,45 +50,48 @@ export function ClassCard({
     return (
         <div
             className={`
-        h-full flex flex-col overflow-hidden rounded-lg border-l-4 p-2 cursor-pointer
-        hover:opacity-90 transition-opacity
-        ${compact ? "text-xs" : "text-sm"}
-      `}
+                h-full flex flex-col overflow-hidden rounded-lg border-l-4 cursor-pointer
+                bg-white/80 dark:bg-slate-800/60
+                shadow-sm hover:shadow-md transition-all duration-200
+                hover:scale-[1.02]
+                ${compact ? "p-1.5 text-xs" : "p-3 text-sm"}
+            `}
             style={{
-                backgroundColor: `${subject.color}20`,
                 borderLeftColor: subject.color,
             }}
             onClick={onClick}
         >
-            {/* Subject name */}
+            {/* Time — bold colored */}
             <p
-                className="font-semibold truncate"
+                className={`font-bold ${compact ? "text-[10px]" : "text-xs"} mb-0.5`}
                 style={{ color: subject.color }}
             >
+                {formatTime(start_time)} – {formatTime(end_time)}
+            </p>
+
+            {/* Subject name */}
+            <p className="font-semibold text-gray-900 dark:text-white truncate leading-tight">
                 {subject.name}
             </p>
 
-            {/* Time range */}
-            <p className="text-gray-600 dark:text-gray-400">
-                {formatTime(start_time)} - {formatTime(end_time)}
-            </p>
-
-            {/* Classroom (if not compact) */}
-            {!compact && classroom ? (
-                <p className="flex items-center gap-1 text-gray-500 dark:text-gray-500 truncate mt-1">
-                    {classroom.startsWith('http') ? (
-                        <>
-                            <span className="text-[10px]">🔗</span>
-                            <span>Virtual</span>
-                        </>
-                    ) : (
-                        <>
-                            <span className="text-[10px]">📍</span>
-                            <span>{classroom}</span>
-                        </>
-                    )}
-                </p>
-            ) : null}
+            {/* Group code or classroom */}
+            {!compact && (
+                <div className="flex items-center gap-1 mt-1 text-gray-500 dark:text-gray-400 text-xs truncate">
+                    {classroom ? (
+                        classroom.startsWith("http") ? (
+                            <>
+                                <span className="material-icons-round text-xs text-emerald-500">videocam</span>
+                                <span>Virtual</span>
+                            </>
+                        ) : (
+                            <>
+                                <span className="material-icons-round text-xs">location_on</span>
+                                <span>{classroom}</span>
+                            </>
+                        )
+                    ) : null}
+                </div>
+            )}
         </div>
     );
 }
