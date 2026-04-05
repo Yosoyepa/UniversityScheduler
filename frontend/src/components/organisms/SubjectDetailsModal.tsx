@@ -76,14 +76,14 @@ export function SubjectDetailsModal({
                             {subject.name}
                         </h2>
                         <div className="flex gap-2">
-                            {onEdit && (
+                            {onEdit ? (
                                 <button
                                     onClick={() => onEdit(subject.id)}
                                     className="relative z-10 p-2 text-white/80 hover:text-white bg-black/10 hover:bg-black/20 rounded-full transition-colors"
                                 >
                                     <EditIcon size="sm" />
                                 </button>
-                            )}
+                            ) : null}
                             <button
                                 onClick={onClose}
                                 className="relative z-10 p-2 text-white/80 hover:text-white bg-black/10 hover:bg-black/20 rounded-full transition-colors"
