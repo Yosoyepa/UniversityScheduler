@@ -176,7 +176,7 @@ export default function SchedulePage() {
                     credits: subjectToEdit.credits,
                     difficulty: subjectToEdit.difficulty,
                     subject_type: subjectToEdit.subject_type,
-                    professor_name: subjectToEdit.professor_name || "",
+                    professor_name: "",
                     color: subjectToEdit.color,
                     sessions: sessions
                         .filter(s => s.subject.id === subjectToEdit.id)
