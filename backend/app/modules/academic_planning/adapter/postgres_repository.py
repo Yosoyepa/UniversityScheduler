@@ -407,7 +407,6 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
             existing.start_time = session.start_time
             existing.end_time = session.end_time
             existing.location = session.classroom
-            existing.updated_at = session.updated_at
         else:
             # Create new
             model = ClassSessionModel(
@@ -417,8 +416,6 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
                 start_time=session.start_time,
                 end_time=session.end_time,
                 location=session.classroom,
-                created_at=session.created_at,
-                updated_at=session.updated_at,
             )
             self.session.add(model)
         
@@ -615,6 +612,4 @@ class PostgresAcademicPlanningRepository(IAcademicPlanningRepository):
             start_time=model.start_time,
             end_time=model.end_time,
             classroom=model.location,
-            created_at=model.created_at,
-            updated_at=model.updated_at,
         )
