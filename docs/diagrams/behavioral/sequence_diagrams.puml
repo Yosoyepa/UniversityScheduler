@@ -1,0 +1,42 @@
+@startuml Sequence Diagrams
+!theme plain
+autonumber
+
+title Generación de JWT y Ciclo Tarea
+
+actor "Estudiante" as S
+participant "Frontend (App Router)" as F
+participant "Auth Middleware" as MW
+participant "FastAPI Router" as R
+participant "Task UseCase" as UC
+participant "EventBus" as EB
+database "PostgreSQL" as DB
+participant "Google Calendar API\n(Fase 7 - Stub)" as GCal
+
+== 1. Autenticación ==
+S -> F: Ingresa credenciales /login
+F -> R: POST /api/v1/auth/login
+R -> DB: Verifica Hash de Password
+DB --> R: User Encontrado
+R -> R: Genera JWT (HMAC-SHA256)
+R --> F: Retorna JWT (Session)
+F -> F: Guarda en Context local
+F --> S: Redirige a /dashboard
+
+== 2. Operación Acreditada: Completar Tarea ==
+S -> F: Drag & Drop Tarea a "DONE"
+F -> MW: PATCH /api/v1/tasks/{id}/status \nHeader: Bearer JWT
+MW -> MW: Valida Signature y Expy
+MW -> R: Request Autorizado
+R -> UC: execute(user_id, task_id, "DONE")
+UC -> DB: Fetch TaskDomain
+DB --> UC: Task en "TODO"
+UC -> UC: Estado válido -> change_status()
+UC -> DB: Persiste Estado "DONE"
+UC -> EB: publish(TaskCompletedEvent)
+EB -> DB: Activa NotificationListener asíncronamente
+EB -> GCal: (Stub Fase 7) Marcar Tarea Externa como Completada
+R --> F: 200 OK actualiza caché
+F --> S: UI muestra Tarea Completada
+
+@enduml

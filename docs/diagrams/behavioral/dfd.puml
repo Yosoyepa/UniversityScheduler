@@ -1,47 +1,38 @@
-@startuml DataFlowDiagram
-!include <C4/C4_Context>
-!include <C4/C4_Container>
-!include <C4/C4_Component>
+@startuml Data Flow Diagram
+!theme plain
+skinparam rectangle {
+    BackgroundColor White
+    BorderColor Black
+}
 
-title Data Flow Diagram (DFD) Level 1
+title DFD Nivel 0 - Sistema UniversityScheduler
 
-' Processes
-Component(p1, "Gestionar Materias", "Process 1.0", "Crear, editar, eliminar materias y sesiones.")
-Component(p2, "Detectar Conflictos", "Process 2.0", "Validar solapamientos de horario.")
-Component(p3, "Gestionar Tareas", "Process 3.0", "CRUD de tareas y exámenes.")
-Component(p4, "Sincronizar Calendario", "Process 4.0", "Sincronización externa con Google Calendar.")
+actor "Autenticado Estudiante" as student
 
-' Data Stores
-ContainerDb(ds_subjects, "Subjects Store", "PostgreSQL", "Almacena información de materias.")
-ContainerDb(ds_sessions, "Sessions Store", "PostgreSQL", "Almacena horarios de clases.")
-ContainerDb(ds_tasks, "Tasks Store", "PostgreSQL", "Almacena tareas y exámenes.")
+rectangle "UniversityScheduler System" as us {
+    usecase "Gestión Académica Core" as core
+    usecase "Gestión de Tareas" as tasks
+    usecase "Evaluaciones y Notas" as grades
+    usecase "Tutorías y Profesores" as directory
+}
 
-' External Entities (Actors/Systems)
-Person(user, "Estudiante")
-System_Ext(gcal, "Google Calendar")
+database "PostgreSQL DB" as db
 
-' Flows
+student --> core : Introduce Semestres y Materias
+core --> student : Visualiza Horario de Clases
 
-' Flow 1.0: Gestionar Materias
-Rel(user, p1, "Datos de Materia", "Input")
-Rel(p1, ds_subjects, "Guardar Materia", "Write")
-Rel(p1, ds_sessions, "Guardar Sesión", "Write")
-Rel(ds_subjects, p1, "Leer Materias", "Read")
+student --> tasks : Gestiona entregables
+tasks --> student : Muestra Tablero Kanban
 
-' Flow 2.0: Detectar Conflictos (Validación)
-Rel(p1, p2, "Solicitud de Validación", "Call")
-Rel(p2, ds_sessions, "Leer Horarios Existentes", "Read")
-Rel(p2, p1, "Resultado Validación", "Return")
+student --> grades : Registra calificaciones
+grades --> student : Devuelve promedio ponderado
 
-' Flow 3.0: Gestionar Tareas
-Rel(user, p3, "Datos de Tarea", "Input")
-Rel(p3, ds_tasks, "Guardar Tarea", "Write")
-Rel(ds_subjects, p3, "Vincular con Materia", "Read")
+student --> directory : Agenda citas
+directory --> student : Confirma reserva
 
-' Flow 4.0: Sincronizar Calendario
-Rel(p3, p4, "Tarea creada/actualizada", "Trigger")
-Rel(p4, gcal, "Push Evento", "API Call")
-Rel(gcal, p4, "Confirmación", "Return")
-Rel(p4, ds_tasks, "Actualizar Estado Sync", "Write")
+core --> db : Almacena estructura base
+tasks --> db : Almacena estados
+grades --> db : Computa progreso
+directory --> db : Cruza disponibilidad horaria
 
 @enduml

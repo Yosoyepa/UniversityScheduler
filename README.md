@@ -1,32 +1,37 @@
-# University Scheduler
+# UniversityScheduler v1.0.0-beta.1 🚀🎓
 
-A comprehensive academic management system for university students.
+**UniversityScheduler** es tu centro integral de planificación académica y gestión de la carga estudiantil, construido con una arquitectura moderna robusta para el rendimiento y la mantenibilidad.
 
-## Project Structure
+![Deployment Topology](docs/diagrams/deployment.png)
 
-This monorepo contains:
+## Funcionalidades Core (MVP)
 
-- **[backend/](backend/)**: FastAPI Application (Hexagonal Architecture)
-- **[frontend/](frontend/)**: Next.js Application
-- **[docs/](docs/)**: Architecture documentation and diagrams
-- **[infra/](infra/)**: Infrastructure configurations
+- 📅 **Programación Académica:** Modela tus semestres, inscribe materias, asigna créditos y visualiza tu cruzada semanal en una grilla interactiva que evita conflictos horarios.
+- 📋 **Task Management (Kanban):** Sigue la metodología ágil con tareas de la Universidad. Un estado manejado estrictamente (TODO, IN PROGRESS, DONE) por drag-and-drop con notificaciones tempranas de vencimiento.
+- 📊 **Progreso y Calificaciones:** Ingresa tu matriz de pesos porcentuales (Ej. Parcial 30%, Final 40%) y mide de inmediato de forma proyectada tu probabilidad matemática de sobrepasar la cuota o reprobar con nuestro motor.
+- 👨‍🏫 **Directorio y Tutorías:** Coordina disponibilidad con tus profesores y asegura reuniones privadas en horarios limpios y permitidos en su matriz de oficina. 
+- 🔒 **Full Auth & UX:** Integración de Tema Oscuro Nativo, Ajuste de configuraciones persistentes, Notificaciones activas en campana y Auth por JWT protegiendo todo tu ciclo estudiantil.
 
-## Getting Started
+## Arquitectura y Stack Tecnológico
 
-### Backend
+1. **Frontend:** Next.js (App Router), React 19, TypeScript estricto, TailwindCSS (v4), Metodología `Atomic Design`. Pruebas en-a-en Playwright.
+2. **Backend:** FastAPI (Python), SQLAlchemy 2 (Alembic), PostgreSQL, `Arquitectura Hexagonal (Puertos y Adaptadores)` junto con `Event Driven Design (EventBus)`. Todo orquestado por un `Shared Kernel` estandarizado.
 
-1. Navigate to `backend/`
-2. Create a virtual environment: `python -m venv venv`
-3. Activate it: `source venv/bin/activate`
-4. Install dependencies: `pip install -r requirements.txt`
-5. Run the server: `python -m app.main` ou `uvicorn app.main:app --reload`
+*(Para más detalle por favor lee nuestros Archivos `.puml` convertidos a `.png` en la carpeta `docs/diagrams/` y el Catálogo de Casos de Uso `docs/architecture`)*
 
-### Frontend
+## Empezando Rápidamente (Desarrollo)
 
-1. Navigate to `frontend/`
-2. Install dependencies: `npm install`
-3. Run development server: `npm run dev`
+Asegúrate de tener un servidor PostgreSQL ejecutándose en el puerto 5432 y variables de entorno seteadas tanto en `/frontend` como `/backend`.
 
-## Documentation
+```bash
+# Inicia toda tu suite completa con un hit mágico:
+chmod +x start_dev.sh
+./start_dev.sh
+```
 
-See the [docs/](docs/) folder for detailed architectural decisions, diagrams, and API specifications.
+El Frontend levantará en `http://localhost:3000` y el Backend en `http://localhost:8000/docs` (Swagger UI).
+
+## Comunidad
+Revisa **`CONTRIBUTING.md`** y nuestros PR templates para conocer nuestras rigurosas pero eficaces líneas de aporte mediante Conventional Commits y Pull Requests seguros.
+
+Copyright © 2026 Juan Andrade (Yosoyepa) - Licenciado bajo **MIT License**.
