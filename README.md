@@ -1,37 +1,71 @@
 # UniversityScheduler v1.0.0-beta.1 🚀🎓
 
-**UniversityScheduler** es tu centro integral de planificación académica y gestión de la carga estudiantil, construido con una arquitectura moderna robusta para el rendimiento y la mantenibilidad.
+**UniversityScheduler** es tu central interactiva académica. Es un MVP de software diseñado en una arquitectura orientada al dominio y modularizada para alto rendimiento, escalabilidad comunitaria e ingeniería moderna.
 
-![Deployment Topology](docs/diagrams/deployment.png)
+![Despliegue General](docs/diagrams/Deployment%20Topology.png)
 
-## Funcionalidades Core (MVP)
+## Tabla de Contenido
+1. [Funcionalidades Core](#funcionalidades-core)
+2. [Arquitectura e Infraestructura](#arquitectura-e-infraestructura)
+   - [Event-Driven In-Memory (Pub/Sub)](#event-driven-in-memory-pubsub)
+   - [Documentación Interactiva y Estática](#documentación-interactiva-y-estática)
+   - [API Reference (Swagger)](#api-reference-swagger)
+3. [Empezando Rápidamente](#empezando-rápidamente-desarrollo)
+4. [Contribución Comunitaria](#contribución-comunitaria)
 
-- 📅 **Programación Académica:** Modela tus semestres, inscribe materias, asigna créditos y visualiza tu cruzada semanal en una grilla interactiva que evita conflictos horarios.
-- 📋 **Task Management (Kanban):** Sigue la metodología ágil con tareas de la Universidad. Un estado manejado estrictamente (TODO, IN PROGRESS, DONE) por drag-and-drop con notificaciones tempranas de vencimiento.
-- 📊 **Progreso y Calificaciones:** Ingresa tu matriz de pesos porcentuales (Ej. Parcial 30%, Final 40%) y mide de inmediato de forma proyectada tu probabilidad matemática de sobrepasar la cuota o reprobar con nuestro motor.
-- 👨‍🏫 **Directorio y Tutorías:** Coordina disponibilidad con tus profesores y asegura reuniones privadas en horarios limpios y permitidos en su matriz de oficina. 
-- 🔒 **Full Auth & UX:** Integración de Tema Oscuro Nativo, Ajuste de configuraciones persistentes, Notificaciones activas en campana y Auth por JWT protegiendo todo tu ciclo estudiantil.
+---
 
-## Arquitectura y Stack Tecnológico
+## Funcionalidades Core
 
-1. **Frontend:** Next.js (App Router), React 19, TypeScript estricto, TailwindCSS (v4), Metodología `Atomic Design`. Pruebas en-a-en Playwright.
-2. **Backend:** FastAPI (Python), SQLAlchemy 2 (Alembic), PostgreSQL, `Arquitectura Hexagonal (Puertos y Adaptadores)` junto con `Event Driven Design (EventBus)`. Todo orquestado por un `Shared Kernel` estandarizado.
+- 📅 **Programación Académica:** Modela semestres, inscribe materias, asigna créditos y esquiva choques horarios con validaciones matemáticas integradas a nivel Backend (`DetectScheduleConflictsUseCase`).
+- 📋 **Task Management:** Gestión de prioridades usando la UI Kanban interactiva mediante *Optimistic UI* de Next.js y un despachito de eventos interno asíncrono para las notificaciones al hacer Drag And Drop.
+- 📊 **Progreso Ponderado:** Algoritmos matemáticos implementados en tu dominio para dictaminar con semáforo porcentual tu progresión y proyección de aprobación en tu trimestre.
+- 👨‍🏫 **Directorio Institucional:** Control estricto de horas de asesoría y oficinas para no irrumpir sobre el horario de tus asignaturas diarias. 
+- 🔒 **Full Auth & System Tuning:** UX envidiable; Tema Oscuro persistente en el Contexto de React, y un entorno cerrado y seguro vía JSON Web Tokens protegiendo todo tu panel de control y API.
 
-*(Para más detalle por favor lee nuestros Archivos `.puml` convertidos a `.png` en la carpeta `docs/diagrams/` y el Catálogo de Casos de Uso `docs/architecture`)*
+---
+
+## Arquitectura e Infraestructura
+
+Este software se forjó respetando los patrones de diseño modernos tanto a nivel Backend como Frontend.
+
+1. **Frontend:** React 19, Next.js (App Router), TailwindCSS (v4), Metodología `Atomic Design` con fuerte tipado en TypeScript. Cuenta con suite Pre-Commit e incio de QA E2E bajo Playwright.
+2. **Backend:** FastAPI, Python 3.10+, SQLAlchemy (PostgreSQL y Alembic). Moldeado exquisitamente bajo **Arquitectura Hexagonal** (Puertos, Adaptadores, Dominio, Aplicación), con Inversión de Control de Dependencias.
+
+### Event-Driven In-Memory (Pub/Sub)
+El proyecto cuenta con un sistema Pub/Sub. Sin embargo, no usa conectores pesados e instrumentales como Apache Kafka o RabbitMQ en su estado de Beta MVP (mitigando costos directos y DevOps abultado vía el principio YAGNI).
+Para lograr este flujo, usamos `SyncEventBus` (y `NotificationListener` atados mediante Callables en memoria ubicados en el `Shared Kernel`). La interfaz abstracta de este modelo permitirá el _swap_ rápido e inter-proceso hacia tecnologías de Message Broking (ej: SQS, Rabbit) en Fases masivas posteriores sin disrupción alguna en la lógica gracias a los Adapters.
+
+### Documentación Interactiva y Estática
+* `docs/architecture/06_use_cases.md`: Todo aspecto de negocio estructurado en Formato de Casos de Uso (Metodología Larman).
+* `docs/diagrams/`: Toda la topología gráfica (`ERD` de Postgres, `DFD` - Data Flow para el App Router, `Despliegues` y diagramas de estados) escritos en **PlantUML** y portabilizados nativamente a formato libre PNG.
+* `docs/requirements_traceability.md` y `docs/mockups/`: Listas de control de QA.
+
+### API Reference (Swagger)
+El backend cuenta por defecto y en un 100% con *Documentación Asíncrona Integrada*. FastAPI autogenera las especificaciones [OpenAPI](https://swagger.io/specification/v3/).
+Para consultar los endpoints, validaciones HTTP (4XX, 5XX) o parámetros JWT en tiempo real:
+- Dirígete a la ruta nativa `http://localhost:8000/docs`.
+
+---
 
 ## Empezando Rápidamente (Desarrollo)
 
-Asegúrate de tener un servidor PostgreSQL ejecutándose en el puerto 5432 y variables de entorno seteadas tanto en `/frontend` como `/backend`.
+Asegúrate de preparar tu archivo `.env` de Postgres (local o cloud) con su URL canónica y los secretos HMAC del JWT.
 
 ```bash
-# Inicia toda tu suite completa con un hit mágico:
+# Permisos iniciales de ejecución a nuestro root script
 chmod +x start_dev.sh
+
+# Despliega tu base de PostgreSQL y luego unifica las dos cabezas del stack:
 ./start_dev.sh
 ```
 
-El Frontend levantará en `http://localhost:3000` y el Backend en `http://localhost:8000/docs` (Swagger UI).
+Levanta el Frontend en `http://localhost:3000` y aliméntalo de su respectiva capa Backend en `http://localhost:8000`.
 
-## Comunidad
-Revisa **`CONTRIBUTING.md`** y nuestros PR templates para conocer nuestras rigurosas pero eficaces líneas de aporte mediante Conventional Commits y Pull Requests seguros.
+---
 
-Copyright © 2026 Juan Andrade (Yosoyepa) - Licenciado bajo **MIT License**.
+## Contribución Comunitaria
+
+Apreciamos inmensamente la colaboración en el código abierto. Hemos construido una guía sólida en **`CONTRIBUTING.md`** y un PR template (`.github/PULL_REQUEST_TEMPLATE.md`) que exigen un escrutinio automatizado del Pre-Commit y `git-commit` skills previos para asegurar cero quiebres a este gran software.
+
+*Con amor para la ingeniería,* **MIT License**.
