@@ -146,7 +146,7 @@ export function useSchedule(): UseScheduleReturn {
                     day_of_week: s.day_of_week,
                     start_time: s.start_time + ":00",
                     end_time: s.end_time + ":00",
-                    location: s.location || null,
+                    classroom: s.classroom || null,
                 })),
             };
 

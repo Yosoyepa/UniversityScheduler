@@ -126,7 +126,7 @@ export interface Subject {
     credits: number;
     color: HexColor;
     difficulty: DifficultyLevel;
-    type: SubjectType;
+    subject_type: SubjectType;
     professor_name: string | null;
     created_at: ISODateTime;
     updated_at: ISODateTime;
@@ -138,7 +138,7 @@ export interface ClassSession {
     day_of_week: DayOfWeek;
     start_time: ISOTime;
     end_time: ISOTime;
-    location: string | null;
+    classroom: string | null;
     attendance_required: boolean;
 }
 

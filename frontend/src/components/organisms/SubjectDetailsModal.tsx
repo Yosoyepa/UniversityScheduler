@@ -24,7 +24,7 @@ export function SubjectDetailsModal({
 }: SubjectDetailsModalProps) {
     if (!open || !session) return null;
 
-    const { subject, location, start_time, end_time, day_of_week } = session;
+    const { subject, classroom, start_time, end_time, day_of_week } = session;
 
     // Helper map for days
     const daysMap: Record<number, string> = {
@@ -91,7 +91,7 @@ export function SubjectDetailsModal({
                             <div className="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50">
                                 <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider mb-1">Salón</p>
                                 <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                                    {location || "Sin asignar"}
+                                    {classroom || "Sin asignar"}
                                 </p>
                             </div>
                             <div className="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50">
@@ -111,7 +111,7 @@ export function SubjectDetailsModal({
                         {/* Badges / Extras */}
                         <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100 dark:border-gray-700/50">
                             <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs font-semibold">
-                                {subject.type.replace(/_/g, ' ')}
+                                {subject.subject_type.replace(/_/g, ' ')}
                             </span>
                             <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs font-semibold">
                                 {subject.difficulty}

@@ -27,7 +27,7 @@ export interface ClassSessionFormData {
     day_of_week: DayOfWeek;
     start_time: string;
     end_time: string;
-    location: string;
+    classroom: string;
 }
 
 export interface SubjectFormData {
@@ -91,7 +91,7 @@ const EMPTY_SESSION: ClassSessionFormData = {
     day_of_week: 1,
     start_time: "08:00",
     end_time: "10:00",
-    location: "",
+    classroom: "",
 };
 
 // =============================================================================
@@ -397,11 +397,11 @@ export function ClassFormModal({
                                             </label>
                                             <input
                                                 type="text"
-                                                value={session.location}
+                                                value={session.classroom}
                                                 onChange={(e) =>
                                                     updateSession(
                                                         index,
-                                                        "location",
+                                                        "classroom",
                                                         e.target.value
                                                     )
                                                 }
