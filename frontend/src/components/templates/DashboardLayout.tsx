@@ -21,6 +21,7 @@ import { ReactNode, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NotificationDropdown } from "../organisms/NotificationDropdown";
+import { ProfileDropdown } from "../organisms/ProfileDropdown";
 import { useTheme } from "@/features/theme/context/ThemeContext";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
@@ -233,18 +234,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                     {/* Notification bell */}
                     <NotificationDropdown />
 
-                    {/* User avatar (desktop) — gradient circle with initials */}
-                    {user && (
-                        <Link
-                            href="/dashboard/settings"
-                            id="header-user-avatar"
-                            className="hidden sm:flex"
-                        >
-                            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-primary to-purple-500 text-white flex items-center justify-center font-bold text-sm shadow-md ring-2 ring-white dark:ring-slate-700">
-                                {getInitials(user.full_name)}
-                            </div>
-                        </Link>
-                    )}
+                    {/* User avatar with cascade dropdown (desktop) */}
+                    <ProfileDropdown />
                 </header>
 
                 {/* Page content */}
