@@ -24,6 +24,7 @@ import type { SubjectFormData } from "@/components/organisms/ClassFormModal";
 import type { DayOfWeek } from "@/types";
 import type { SemesterFormData } from "@/components/organisms/SemesterFormModal";
 import type { ClassSessionWithSubject, Subject } from "@/types";
+import { DashboardSidebar } from "@/components/organisms/DashboardSidebar";
 
 // =============================================================================
 // Component
@@ -221,32 +222,39 @@ export default function SchedulePage() {
                 </div>
             ) : null}
 
-            {/* Schedule grid */}
-            {combinedSessions.length > 0 ? (
-                <ScheduleGrid
-                    sessions={combinedSessions}
-                    onSessionClick={handleSessionClick}
-                />
-            ) : (
-                <div className="bg-white dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-12 text-center shadow-sm">
-                    <span className="material-icons-round text-5xl text-gray-300 dark:text-gray-600 mb-4 block">
-                        event_note
-                    </span>
-                    <h3 className="font-bold text-gray-900 dark:text-white mb-2">
-                        Sin materias registradas
-                    </h3>
-                    <p className="text-gray-500 dark:text-gray-400 mb-4">
-                        Aún no tienes materias en este semestre.
-                    </p>
-                    <Button
-                        variant="secondary"
-                        onClick={() => setShowForm(true)}
-                    >
-                        <span className="material-icons-round text-sm">add</span>
-                        Agregar primera materia
-                    </Button>
+            <div className="flex flex-col xl:flex-row gap-6 items-start">
+                {/* Schedule grid */}
+                <div className="flex-1 w-full min-w-0">
+                    {combinedSessions.length > 0 ? (
+                        <ScheduleGrid
+                            sessions={combinedSessions}
+                            onSessionClick={handleSessionClick}
+                        />
+                    ) : (
+                        <div className="bg-white dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-12 text-center shadow-sm">
+                            <span className="material-icons-round text-5xl text-gray-300 dark:text-gray-600 mb-4 block">
+                                event_note
+                            </span>
+                            <h3 className="font-bold text-gray-900 dark:text-white mb-2">
+                                Sin materias registradas
+                            </h3>
+                            <p className="text-gray-500 dark:text-gray-400 mb-4">
+                                Aún no tienes materias en este semestre.
+                            </p>
+                            <Button
+                                variant="secondary"
+                                onClick={() => setShowForm(true)}
+                            >
+                                <span className="material-icons-round text-sm">add</span>
+                                Agregar primera materia
+                            </Button>
+                        </div>
+                    )}
                 </div>
-            )}
+
+                {/* Dashboard Sidebar Right Column */}
+                <DashboardSidebar subjects={subjects} sessions={combinedSessions} />
+            </div>
 
             <SubjectDetailsModal
                 open={!!selectedSession}

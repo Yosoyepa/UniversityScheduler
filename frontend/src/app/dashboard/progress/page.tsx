@@ -20,6 +20,7 @@ import { GradeFormModal } from "@/components/organisms/GradeFormModal";
 import { EvaluationCriteriaForm } from "@/components/organisms/EvaluationCriteriaForm";
 import { AcademicKPIHero } from "@/components/organisms/AcademicKPIHero";
 import { GradePredictor } from "@/components/organisms/GradePredictor";
+import { SubjectProgressCard } from "@/components/organisms/SubjectProgressCard";
 import { useGrades } from "@/features/academic_progress/hooks/useGrades";
 import { api } from "@/lib/api-client";
 import type { Subject, Grade, Semester } from "@/types";
@@ -193,6 +194,40 @@ export default function ProgressPage() {
                         trend={0.1} 
                         percentage={((average?.average || 0) / 5.0) * 100} 
                     />
+
+                    {/* Filters Mockup integration */}
+                    <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+                        <button className="whitespace-nowrap flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20">
+                            <MaterialIcon name="calendar_today" size="sm" />
+                            Current Semester
+                        </button>
+                        <button className="whitespace-nowrap flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-[#111827] border border-gray-200 dark:border-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white text-sm font-medium transition-colors">
+                            <MaterialIcon name="history" size="sm" />
+                            All Time
+                        </button>
+                        <button className="whitespace-nowrap flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-[#111827] border border-gray-200 dark:border-gray-800 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white text-sm font-medium transition-colors">
+                            <MaterialIcon name="trending_up" size="sm" />
+                            Highest Grades
+                        </button>
+                    </div>
+
+                    {/* Subject Cards Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {subjects.map(subject => {
+                            // MOCK: Generate static mock average for subjects not currently selected
+                            const hash = subject.id.charCodeAt(0) + subject.id.charCodeAt(subject.id.length - 1);
+                            const mockAverage = 3.0 + ((hash % 20) / 10); // Between 3.0 and 5.0
+                            const displayedAvg = subject.id === selectedSubjectId ? (average?.average || 0) : mockAverage;
+                            
+                            return (
+                                <SubjectProgressCard 
+                                    key={subject.id} 
+                                    subject={subject} 
+                                    average={displayedAvg} 
+                                />
+                            );
+                        })}
+                    </div>
 
                     {loadingGrades ? (
                         <ProgressLoading />
