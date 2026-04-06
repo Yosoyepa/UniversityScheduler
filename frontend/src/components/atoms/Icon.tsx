@@ -1,11 +1,20 @@
+/* 
+ * Design Rule: Always reference the corresponding visual mockup in `docs/mockups/` 
+ * and strictly mirror its precise styling, layout, typography, and color palette 
+ * using Tailwind CSS. Refer to the `frontend-mockup-implementation` skill for guidance. 
+ */
 /**
  * Icon Atom Component.
  *
- * SVG icon wrapper with consistent sizing.
- * Uses Lucide React icons or custom SVGs.
+ * Provides both:
+ *   1. MaterialIcon — uses Google Material Icons Round font (preferred, matches mockups)
+ *   2. Legacy SVG icon wrappers — preserved for backward compatibility
+ *
+ * All new code should use <MaterialIcon name="..." /> which maps directly
+ * to the mockup's material-icons-round classes.
  */
 
-import { SVGAttributes } from "react";
+import { SVGAttributes, HTMLAttributes } from "react";
 
 // =============================================================================
 // Types
@@ -17,11 +26,17 @@ export interface IconProps extends SVGAttributes<SVGSVGElement> {
     size?: IconSize;
 }
 
+export interface MaterialIconProps extends HTMLAttributes<HTMLSpanElement> {
+    name: string;
+    size?: IconSize;
+    filled?: boolean;
+}
+
 // =============================================================================
-// Styles
+// Sizing
 // =============================================================================
 
-const sizeStyles: Record<IconSize, string> = {
+const svgSizeStyles: Record<IconSize, string> = {
     xs: "w-3 h-3",
     sm: "w-4 h-4",
     md: "w-5 h-5",
@@ -29,8 +44,37 @@ const sizeStyles: Record<IconSize, string> = {
     xl: "w-8 h-8",
 };
 
+const materialSizeStyles: Record<IconSize, string> = {
+    xs: "text-xs",
+    sm: "text-sm",
+    md: "text-xl",
+    lg: "text-2xl",
+    xl: "text-3xl",
+};
+
 // =============================================================================
-// Base Icon Component
+// MaterialIcon Component (Primary — matches mockups)
+// =============================================================================
+
+export function MaterialIcon({
+    name,
+    size = "md",
+    filled = false,
+    className = "",
+    ...props
+}: MaterialIconProps) {
+    const fontClass = filled ? "material-icons-round" : "material-symbols-outlined";
+    const classes = [fontClass, materialSizeStyles[size], className].filter(Boolean).join(" ");
+
+    return (
+        <span className={classes} {...props}>
+            {name}
+        </span>
+    );
+}
+
+// =============================================================================
+// Legacy SVG Base Icon Component
 // =============================================================================
 
 export function Icon({
@@ -39,7 +83,7 @@ export function Icon({
     children,
     ...props
 }: IconProps) {
-    const classes = [sizeStyles[size], className].filter(Boolean).join(" ");
+    const classes = [svgSizeStyles[size], className].filter(Boolean).join(" ");
 
     return (
         <svg
@@ -56,7 +100,7 @@ export function Icon({
 }
 
 // =============================================================================
-// Common Icons
+// Legacy SVG Icons — Preserved for backward compatibility
 // =============================================================================
 
 export function CheckIcon(props: Omit<IconProps, "children">) {
@@ -70,11 +114,7 @@ export function CheckIcon(props: Omit<IconProps, "children">) {
 export function XIcon(props: Omit<IconProps, "children">) {
     return (
         <Icon {...props}>
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
         </Icon>
     );
 }
@@ -82,11 +122,7 @@ export function XIcon(props: Omit<IconProps, "children">) {
 export function PlusIcon(props: Omit<IconProps, "children">) {
     return (
         <Icon {...props}>
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4v16m8-8H4"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
         </Icon>
     );
 }
@@ -142,11 +178,7 @@ export function LogoutIcon(props: Omit<IconProps, "children">) {
 export function MenuIcon(props: Omit<IconProps, "children">) {
     return (
         <Icon {...props}>
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
         </Icon>
     );
 }
@@ -154,11 +186,7 @@ export function MenuIcon(props: Omit<IconProps, "children">) {
 export function ChevronDownIcon(props: Omit<IconProps, "children">) {
     return (
         <Icon {...props}>
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19 9l-7 7-7-7"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </Icon>
     );
 }
@@ -222,10 +250,6 @@ export function TrashIcon(props: Omit<IconProps, "children">) {
         </Icon>
     );
 }
-
-// =============================================================================
-// Phase 5 Icons — Settings, Notifications, Theme
-// =============================================================================
 
 export function SettingsIcon(props: Omit<IconProps, "children">) {
     return (
