@@ -1,3 +1,8 @@
+/* 
+ * Design Rule: Always reference the corresponding visual mockup in `docs/mockups/` 
+ * and strictly mirror its precise styling, layout, typography, and color palette 
+ * using Tailwind CSS. Refer to the `frontend-mockup-implementation` skill for guidance. 
+ */
 /**
  * Academic Progress Page.
  *
@@ -8,7 +13,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PlusIcon } from "@/components/atoms/Icon";
+import { PlusIcon, MaterialIcon } from "@/components/atoms/Icon";
 import { Button } from "@/components/atoms/Button";
 import { GradesTable } from "@/components/organisms/GradesTable";
 import { GradeFormModal } from "@/components/organisms/GradeFormModal";
@@ -133,13 +138,15 @@ export default function ProgressPage() {
 
     if (subjects.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center p-12 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 h-[60vh]">
-                <h2 className="text-xl font-bold text-gray-700 dark:text-gray-300 mb-2">No hay materias registradas</h2>
+            <div className="flex flex-col items-center justify-center p-12 bg-white dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark h-[60vh] shadow-sm">
+                <MaterialIcon name="school" size="xl" className="text-gray-300 dark:text-gray-600 mb-4" />
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No hay materias registradas</h2>
                 <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
                     Debes registrar al menos una materia en tu semestre activo antes de gestionar calificaciones.
                 </p>
-                <Button onClick={() => window.location.href = "/dashboard/classes"}>
-                    Ir a Materias
+                <Button onClick={() => window.location.href = "/dashboard/schedule"}>
+                    <MaterialIcon name="arrow_forward" size="sm" />
+                    Ir a Horario
                 </Button>
             </div>
         );
@@ -152,21 +159,22 @@ export default function ProgressPage() {
             {/* Header / Subject Selector */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Progreso Académico</h1>
+                    <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">Progreso Académico</h1>
                     <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
                         Gestiona tus calificaciones y metas por materia.
                     </p>
                 </div>
 
                 <div className="flex items-center gap-3 w-full sm:w-auto">
-                    <label htmlFor="subject-select" className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                    <label htmlFor="subject-select" className="text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap flex items-center gap-1.5">
+                        <MaterialIcon name="menu_book" size="sm" />
                         Materia:
                     </label>
                     <select
                         id="subject-select"
                         value={selectedSubjectId || ""}
                         onChange={(e) => setSelectedSubjectId(e.target.value)}
-                        className="w-full sm:w-64 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full sm:w-64 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/50 text-gray-900 dark:text-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                     >
                         {subjects.map(s => (
                             <option key={s.id} value={s.id}>{s.name} {s.group_code ? `(${s.group_code})` : ""}</option>
@@ -214,7 +222,7 @@ export default function ProgressPage() {
 
                     {/* Sidebar: Evaluation Criteria (1/3 width) */}
                     <div className="space-y-4">
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-5">
+                        <div className="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-5">
                             <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 border-b border-gray-100 dark:border-gray-700 pb-2">
                                 Reglas de Evaluación
                             </h2>

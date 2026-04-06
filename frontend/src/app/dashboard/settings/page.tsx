@@ -1,3 +1,8 @@
+/* 
+ * Design Rule: Always reference the corresponding visual mockup in `docs/mockups/` 
+ * and strictly mirror its precise styling, layout, typography, and color palette 
+ * using Tailwind CSS. Refer to the `frontend-mockup-implementation` skill for guidance. 
+ */
 "use client";
 
 /**
@@ -11,14 +16,6 @@ import React, { useState } from "react";
 
 import { useSettings } from "@/features/settings/hooks/useSettings";
 import { useTheme } from "@/features/theme/context/ThemeContext";
-import {
-    UserIcon,
-    BellIcon,
-    ShieldIcon,
-    PaletteIcon,
-    SettingsIcon,
-} from "@/components/atoms/Icon";
-import type { IconProps } from "@/components/atoms/Icon";
 import type { UpdateSettingsPayload } from "@/types/entities";
 
 // =============================================================================
@@ -27,11 +24,11 @@ import type { UpdateSettingsPayload } from "@/types/entities";
 
 type SettingsTab = "general" | "alerts" | "privacy" | "appearance";
 
-const TABS: { id: SettingsTab; label: string; icon: React.FC<Omit<IconProps, "children">> }[] = [
-    { id: "general", label: "General", icon: UserIcon },
-    { id: "alerts", label: "Alerts & Notifications", icon: BellIcon },
-    { id: "privacy", label: "Privacy & Security", icon: ShieldIcon },
-    { id: "appearance", label: "Appearance", icon: PaletteIcon },
+const TABS: { id: SettingsTab; label: string; icon: string }[] = [
+    { id: "general", label: "General", icon: "person" },
+    { id: "alerts", label: "Alerts & Notifications", icon: "notifications" },
+    { id: "privacy", label: "Privacy & Security", icon: "shield" },
+    { id: "appearance", label: "Appearance", icon: "palette" },
 ];
 
 const REMINDER_MINUTES_OPTIONS = [5, 10, 15, 30, 60, 120];
@@ -113,8 +110,8 @@ function GeneralTab({ onDiscardChanges, isSaving, updateProfile }: {
 
             {/* Avatar placeholder */}
             <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                    <UserIcon size="lg" className="text-indigo-600 dark:text-indigo-400" />
+                <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-purple-500 text-white flex items-center justify-center">
+                    <span className="material-icons-round text-2xl">person</span>
                 </div>
                 <div>
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Profile photo</p>
@@ -137,12 +134,12 @@ function GeneralTab({ onDiscardChanges, isSaving, updateProfile }: {
                     onChange={handleFullNameChange}
                     placeholder="Tu nombre completo"
                     className="
-                        w-full max-w-sm px-3 py-2 rounded-lg border text-sm
-                        bg-white dark:bg-gray-800
-                        border-gray-300 dark:border-gray-600
+                        w-full max-w-sm px-4 py-2.5 rounded-xl border text-sm
+                        bg-white dark:bg-gray-800/50
+                        border-gray-300 dark:border-gray-700
                         text-gray-900 dark:text-white
                         placeholder-gray-400
-                        focus:outline-none focus:ring-2 focus:ring-indigo-500
+                        focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all
                     "
                 />
             </div>
@@ -379,9 +376,11 @@ export default function SettingsPage() {
             <div className="max-w-4xl mx-auto px-4 py-6">
                 {/* Page header */}
                 <div className="flex items-center gap-3 mb-8">
-                    <SettingsIcon size="lg" className="text-indigo-600 dark:text-indigo-400" />
+                    <div className="p-2.5 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-indigo-400">
+                        <span className="material-icons-round text-2xl">settings</span>
+                    </div>
                     <div>
-                        <h1 className="text-xl font-bold text-gray-900 dark:text-white">Settings</h1>
+                        <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">Settings</h1>
                         <p className="text-sm text-gray-500 dark:text-gray-400">Manage your account preferences</p>
                     </div>
                 </div>
@@ -406,7 +405,7 @@ export default function SettingsPage() {
                                                 }
                                             `}
                                         >
-                                            <Icon size="sm" />
+                                            <span className={`material-icons-round text-lg ${isActive ? "text-indigo-600 dark:text-indigo-400" : "text-gray-500"}`}>{tab.icon}</span>
                                             {tab.label}
                                         </button>
                                     </li>
@@ -422,7 +421,7 @@ export default function SettingsPage() {
                                 <div className="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
                             </div>
                         ) : (
-                            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+                            <div className="bg-white dark:bg-surface-dark rounded-2xl border border-border-light dark:border-border-dark p-6 shadow-sm">
                                 {activeTab === "general" && (
                                     <GeneralTab
                                         onDiscardChanges={discardChanges}
