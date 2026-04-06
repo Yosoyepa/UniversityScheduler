@@ -1,3 +1,8 @@
+/* 
+ * Design Rule: Always reference the corresponding visual mockup in `docs/mockups/` 
+ * and strictly mirror its precise styling, layout, typography, and color palette 
+ * using Tailwind CSS. Refer to the `frontend-mockup-implementation` skill for guidance. 
+ */
 /**
  * TaskFormModal Organism Component.
  *
@@ -115,7 +120,7 @@ export function TaskFormModal({
         <>
             {/* Backdrop */}
             <div
-                className="fixed inset-0 bg-black/50 z-50"
+                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
                 onClick={onClose}
             />
 
