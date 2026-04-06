@@ -70,14 +70,14 @@ export function DashboardSidebar({ subjects, sessions }: DashboardSidebarProps) 
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
                                 </span>
-                                NEXT UP
+                                SIGUIENTE
                             </span>
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">
-                                {nextClass ? nextClass.subject.name : "No upcoming classes"}
+                                {nextClass ? nextClass.subject.name : "No hay clases próximas"}
                             </h3>
                             {nextClass && (
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 truncate">
-                                    {nextClass.classroom?.startsWith('http') ? "Virtual Class" : `Room ${nextClass.classroom || 'Unassigned'}`}
+                                    {nextClass.classroom?.startsWith('http') ? "Clase Virtual" : `Salón ${nextClass.classroom || 'Sin asignar'}`}
                                 </p>
                             )}
                         </div>
@@ -87,7 +87,7 @@ export function DashboardSidebar({ subjects, sessions }: DashboardSidebarProps) 
                                     {nextClass.start_time}
                                 </div>
                                 <div className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                                    {(nextClass as any)._isTomorrow ? 'Tomorrow' : 'Today'}
+                                    {(nextClass as any)._isTomorrow ? 'Mañana' : 'Hoy'}
                                 </div>
                             </div>
                         )}
@@ -97,7 +97,7 @@ export function DashboardSidebar({ subjects, sessions }: DashboardSidebarProps) 
                             <div className="flex-1 bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700 rounded-lg p-2 flex items-center justify-center gap-2">
                                 <span className="material-icons-round text-orange-500 text-xl">timer</span>
                                 <span className="font-bold text-gray-700 dark:text-gray-200">{remainingMinutes} min</span>
-                                <span className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase">remaining</span>
+                                <span className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase">restantes</span>
                             </div>
                         </div>
                     )}
@@ -105,11 +105,11 @@ export function DashboardSidebar({ subjects, sessions }: DashboardSidebarProps) 
                         <div className="grid grid-cols-2 gap-3 mt-4">
                             <button className="flex items-center justify-center gap-2 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                                 <span className="material-icons-round text-lg">{(nextClass.classroom?.startsWith('http')) ? 'videocam' : 'location_on'}</span>
-                                {(nextClass.classroom?.startsWith('http')) ? 'Join' : 'Directions'}
+                                {(nextClass.classroom?.startsWith('http')) ? 'Ingresar' : 'Indicaciones'}
                             </button>
                             <button className="flex items-center justify-center gap-2 w-full py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition">
                                 <span className="material-icons-round text-lg">info</span>
-                                Details
+                                Detalles
                             </button>
                         </div>
                     )}
@@ -119,10 +119,10 @@ export function DashboardSidebar({ subjects, sessions }: DashboardSidebarProps) 
             {/* TOTAL CREDITS */}
             <div className="bg-gradient-to-br from-primary to-blue-600 rounded-xl p-6 shadow-lg text-white relative overflow-hidden group">
                 <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full group-hover:scale-110 transition duration-500"></div>
-                <h3 className="text-lg font-medium opacity-90">Total Credits</h3>
+                <h3 className="text-lg font-medium opacity-90">Total de Créditos</h3>
                 <div className="mt-2 flex items-baseline gap-2">
                     <span className="text-5xl font-bold tracking-tight">{totalCredits}</span>
-                    <span className="text-sm opacity-75">/ 20 Max</span>
+                    <span className="text-sm opacity-75">/ 20 Máx</span>
                 </div>
                 <div className="mt-4 w-full bg-black/20 rounded-full h-2">
                     <div className="bg-white h-2 rounded-full" style={{ width: `${Math.min((totalCredits / 20) * 100, 100)}%` }}></div>
@@ -134,7 +134,7 @@ export function DashboardSidebar({ subjects, sessions }: DashboardSidebarProps) 
                 <div className="flex items-center justify-between mb-6">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <span className="material-icons-round text-primary text-xl">insights</span>
-                        Course Insights
+                        Resumen de Materias
                     </h3>
                 </div>
                 <div className="space-y-4">
@@ -147,22 +147,22 @@ export function DashboardSidebar({ subjects, sessions }: DashboardSidebarProps) 
                                         ${subject.difficulty === 'HARD' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' :
                                           subject.difficulty === 'MEDIUM' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
                                           'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'}`}>
-                                        {subject.difficulty}
+                                        {subject.difficulty === 'HARD' ? 'DIFÍCIL' : subject.difficulty === 'MEDIUM' ? 'MEDIO' : 'FÁCIL'}
                                     </span>
                                 </div>
                                 <div className="mt-1 flex justify-between text-xs">
-                                    <span className="text-gray-500 dark:text-gray-400">Credits: {subject.credits}</span>
+                                    <span className="text-gray-500 dark:text-gray-400">Créditos: {subject.credits}</span>
                                     <span className="text-blue-600 dark:text-blue-400 font-medium truncate max-w-[120px]">{subject.subject_type.substring(0, 15)}</span>
                                 </div>
                             </div>
                         )
                     }) : (
-                        <p className="text-sm text-gray-500 italic text-center">Register classes to see insights.</p>
+                        <p className="text-sm text-gray-500 italic text-center">Registra clases para ver un resumen.</p>
                     )}
                 </div>
                 {subjects.length > 4 && (
                     <button className="w-full mt-6 py-2 text-sm text-gray-500 dark:text-gray-400 font-medium border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition">
-                        View All Courses
+                        Ver Todos los Cursos
                     </button>
                 )}
             </div>
@@ -172,8 +172,8 @@ export function DashboardSidebar({ subjects, sessions }: DashboardSidebarProps) 
                 <div className="flex items-start gap-3">
                     <span className="material-icons-round text-blue-600 dark:text-blue-400">info</span>
                     <div>
-                        <p className="text-sm text-blue-800 dark:text-blue-200 font-medium">Enrollment Period</p>
-                        <p className="text-xs text-blue-600 dark:text-blue-300 mt-1">Ends in 5 days. Check your optative credits.</p>
+                        <p className="text-sm text-blue-800 dark:text-blue-200 font-medium">Período de Inscripción</p>
+                        <p className="text-xs text-blue-600 dark:text-blue-300 mt-1">Termina en 5 días. Revisa tus créditos optativos.</p>
                     </div>
                 </div>
             </div>

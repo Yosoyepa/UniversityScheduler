@@ -69,7 +69,7 @@ export function SubjectProgressCard({ subject, average }: SubjectProgressCardPro
                         <span className="text-lg text-gray-400 font-medium">/5.0</span>
                     </span>
                     <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${isPassing ? 'text-green-700 bg-green-100 dark:text-green-300 dark:bg-green-900/30' : 'text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-900/30'}`}>
-                        {isPassing ? 'Passing' : 'Failing'}
+                        {isPassing ? 'Aprobando' : 'Reprobando'}
                     </span>
                 </div>
             </div>
@@ -97,7 +97,7 @@ export function SubjectProgressCard({ subject, average }: SubjectProgressCardPro
             <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-1">
                     <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
-                        <span>Exams (MOCKED - 40%)</span>
+                        <span>Exámenes (MOCK - 40%)</span>
                         <span className="text-gray-900 dark:text-white font-medium">{formattedAverage}/5.0</span>
                     </div>
                     <div className="w-full h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">

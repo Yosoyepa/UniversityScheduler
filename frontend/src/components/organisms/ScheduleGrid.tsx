@@ -98,38 +98,39 @@ export function ScheduleGrid({
     );
 
     return (
-        <div className="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark overflow-hidden shadow-sm">
-            {/* Day header row */}
-            <div className="grid grid-cols-[72px_repeat(7,1fr)] border-b border-border-light dark:border-border-dark">
-                {/* Empty top-left corner */}
-                <div className="p-3 border-r border-border-light dark:border-border-dark" />
+        <div className="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark overflow-auto shadow-sm pb-2">
+            <div className="min-w-[700px]">
+                {/* Day header row */}
+                <div className="grid grid-cols-[72px_repeat(7,minmax(0,1fr))] border-b border-border-light dark:border-border-dark">
+                    {/* Empty top-left corner */}
+                    <div className="p-3 border-r border-border-light dark:border-border-dark" />
 
-                {DAYS_TO_SHOW.map((day, idx) => {
-                    const hasSessions = (sessionsByDay.get(day) || []).length > 0;
-                    return (
-                        <div
-                            key={day}
-                            className={`
-                                p-3 text-center border-r border-border-light dark:border-border-dark last:border-r-0
-                                ${idx % 2 === 0
-                                    ? "bg-white dark:bg-slate-900/50"
-                                    : "bg-gray-50/50 dark:bg-slate-800/30"
-                                }
-                            `}
-                        >
-                            <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold">
-                                {DAY_LABELS[day].short}
-                            </p>
-                            <p className={`text-lg font-bold ${hasSessions ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-500"}`}>
-                                {DAY_LABELS[day].full}
-                            </p>
-                        </div>
-                    );
-                })}
-            </div>
+                    {DAYS_TO_SHOW.map((day, idx) => {
+                        const hasSessions = (sessionsByDay.get(day) || []).length > 0;
+                        return (
+                            <div
+                                key={day}
+                                className={`
+                                    p-3 text-center border-r border-border-light dark:border-border-dark last:border-r-0
+                                    ${idx % 2 === 0
+                                        ? "bg-white dark:bg-slate-900/50"
+                                        : "bg-gray-50/50 dark:bg-slate-800/30"
+                                    }
+                                `}
+                            >
+                                <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold truncate">
+                                    {DAY_LABELS[day].short}
+                                </p>
+                                <p className={`text-sm lg:text-lg font-bold truncate ${hasSessions ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-500"}`}>
+                                    {DAY_LABELS[day].full}
+                                </p>
+                            </div>
+                        );
+                    })}
+                </div>
 
-            {/* Grid body */}
-            <div className="grid grid-cols-[72px_repeat(7,1fr)]">
+                {/* Grid body */}
+                <div className="grid grid-cols-[72px_repeat(7,minmax(0,1fr))]">
                 {/* Time labels column */}
                 <div className="border-r border-border-light dark:border-border-dark">
                     {hours.map((hour) => (
@@ -211,6 +212,7 @@ export function ScheduleGrid({
                         )}
                     </div>
                 ))}
+            </div>
             </div>
         </div>
     );
