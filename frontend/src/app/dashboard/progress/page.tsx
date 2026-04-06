@@ -18,6 +18,8 @@ import { Button } from "@/components/atoms/Button";
 import { GradesTable } from "@/components/organisms/GradesTable";
 import { GradeFormModal } from "@/components/organisms/GradeFormModal";
 import { EvaluationCriteriaForm } from "@/components/organisms/EvaluationCriteriaForm";
+import { AcademicKPIHero } from "@/components/organisms/AcademicKPIHero";
+import { GradePredictor } from "@/components/organisms/GradePredictor";
 import { useGrades } from "@/features/academic_progress/hooks/useGrades";
 import { api } from "@/lib/api-client";
 import type { Subject, Grade, Semester } from "@/types";
@@ -183,42 +185,58 @@ export default function ProgressPage() {
                 </div>
             </div>
 
-            {loadingGrades ? (
-                <ProgressLoading />
-            ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    
-                    {/* Main Content: Grades Table (2/3 width) */}
-                    <div className="lg:col-span-2 space-y-4">
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                                Calificaciones Registradas
-                            </h2>
-                            <Button
-                                onClick={() => {
-                                    setEditingGrade(undefined);
+            <div className="flex flex-col xl:flex-row gap-6">
+                {/* Left Column: Hero & Table */}
+                <div className="flex-1 flex flex-col gap-6 w-full min-w-0">
+                    <AcademicKPIHero 
+                        gpa={average?.average || 0} 
+                        trend={0.1} 
+                        percentage={((average?.average || 0) / 5.0) * 100} 
+                    />
+
+                    {loadingGrades ? (
+                        <ProgressLoading />
+                    ) : (
+                        <div className="space-y-4 pt-2">
+                            <div className="flex justify-between items-center">
+                                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                                    Calificaciones Registradas
+                                </h2>
+                                <Button
+                                    onClick={() => {
+                                        setEditingGrade(undefined);
+                                        setIsGradeModalOpen(true);
+                                    }}
+                                    disabled={submitting}
+                                    className="flex items-center gap-2"
+                                >
+                                    <PlusIcon size="sm" />
+                                    <span className="hidden sm:inline">Agregar Nota</span>
+                                    <span className="sm:hidden">Agregar</span>
+                                </Button>
+                            </div>
+
+                            <GradesTable 
+                                grades={grades} 
+                                criteria={criteria} 
+                                tasks={tasks}
+                                average={average} 
+                                onEditGrade={(g) => {
+                                    setEditingGrade(g);
                                     setIsGradeModalOpen(true);
                                 }}
-                                disabled={submitting}
-                                className="flex items-center gap-2"
-                            >
-                                <PlusIcon size="sm" />
-                                <span>Agregar Nota</span>
-                            </Button>
+                                onDeleteGrade={handleDeleteGrade}
+                            />
                         </div>
+                    )}
+                </div>
 
-                        <GradesTable 
-                            grades={grades} 
-                            criteria={criteria} 
-                            tasks={tasks}
-                            average={average} 
-                            onEditGrade={(g) => {
-                                setEditingGrade(g);
-                                setIsGradeModalOpen(true);
-                            }}
-                            onDeleteGrade={handleDeleteGrade}
-                        />
-                    </div>
+                {/* Right Column: Sidebar (Predictor & Evaluation Criteria) */}
+                <div className="xl:w-80 shrink-0 flex flex-col gap-6">
+                    <GradePredictor 
+                        subjects={subjects} 
+                        selectedSubjectId={selectedSubjectId || undefined} 
+                    />
 
                     {/* Sidebar: Evaluation Criteria (1/3 width) */}
                     <div className="space-y-4">
@@ -262,7 +280,7 @@ export default function ProgressPage() {
                         </div>
                     </div>
                 </div>
-            )}
+            </div>
 
             {/* Modals */}
             <GradeFormModal
