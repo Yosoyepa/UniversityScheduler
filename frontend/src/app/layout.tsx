@@ -42,7 +42,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} font-sans antialiased transition-colors duration-200`}
+        className={`${inter.variable} font-sans antialiased transition-colors duration-200 overflow-x-hidden`}
       >
         <ThemeProvider>
           <ToastProvider>
