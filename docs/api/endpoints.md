@@ -1,43 +1,113 @@
-# API Specification
+# Referencia de API — UniversityScheduler
 
 ## Autenticación
-Todos los endpoints (excepto `/auth`) requieren un header `Authorization: Bearer <JWT>`.
+
+Todos los endpoints (excepto `/api/v1/auth/register`, `/api/v1/auth/login` y `/api/v1/health`) requieren el header `Authorization` con un token JWT válido.
 
 ```
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 Content-Type: application/json
 ```
 
+Para una referencia detallada del módulo de profesores y tutorías, ver [professors.md](professors.md). Para perfil de usuario, configuración y notificaciones, ver [user_profile.md](user_profile.md).
+
 ---
 
-## 📋 Tabla General de Recursos
+## Tabla General de Recursos
 
-| Recurso | Método | Endpoint | Descripción |
+| Grupo | Método | Endpoint | Descripción |
 | :--- | :--- | :--- | :--- |
-| **Auth** | `POST` | `/api/v1/auth/login` | Autentica usuario y retorna JWT |
-| **Semesters** | `POST` | `/api/v1/semesters` | Crea nuevo período académico |
+| **Auth** | `POST` | `/api/v1/auth/register` | Registra una nueva cuenta de usuario |
+| | `POST` | `/api/v1/auth/login` | Autentica con email/contraseña y retorna tokens JWT |
+| | `POST` | `/api/v1/auth/refresh` | Renueva el access token con el refresh token |
+| | `GET` | `/api/v1/auth/me` | Obtiene el perfil del usuario autenticado |
+| | `POST` | `/api/v1/auth/logout` | Cierra sesión (descarte de tokens en cliente) |
+| **Usuario** | `PUT` | `/api/v1/user/profile` | Actualiza el nombre del usuario |
+| | `GET` | `/api/v1/user/settings` | Obtiene las preferencias del usuario |
+| | `PATCH` | `/api/v1/user/settings` | Actualiza las preferencias parcialmente |
+| | `GET` | `/api/v1/user/notifications` | Lista las notificaciones del usuario |
+| | `GET` | `/api/v1/user/notifications/count` | Obtiene el conteo de notificaciones no leídas |
+| | `PATCH` | `/api/v1/user/notifications/{id}/read` | Marca una notificación como leída |
+| | `PATCH` | `/api/v1/user/notifications/read-all` | Marca todas las notificaciones como leídas |
+| **Semestres** | `POST` | `/api/v1/semesters` | Crea nuevo período académico |
 | | `GET` | `/api/v1/semesters` | Lista todos los semestres del usuario |
 | | `GET` | `/api/v1/semesters/{id}` | Obtiene detalles de un semestre |
 | | `PATCH` | `/api/v1/semesters/{id}` | Actualiza semestre |
-| **Subjects** | `POST` | `/api/v1/subjects` | Crea nueva materia con validación de conflictos |
+| | `DELETE` | `/api/v1/semesters/{id}` | Elimina semestre |
+| | `POST` | `/api/v1/semesters/{id}/activate` | Activa un semestre como el período actual |
+| **Materias** | `POST` | `/api/v1/subjects` | Crea materia con validación de conflictos horarios |
 | | `GET` | `/api/v1/subjects` | Lista materias del semestre activo |
 | | `GET` | `/api/v1/subjects/{id}` | Obtiene detalles de una materia |
 | | `PATCH` | `/api/v1/subjects/{id}` | Actualiza materia |
-| | `DELETE` | `/api/v1/subjects/{id}` | Elimina materia (Cascade a sesiones) |
-| **ClassSessions** | `POST` | `/api/v1/subjects/{id}/sessions` | Agrega sesión a materia |
-| | `PATCH` | `/api/v1/sessions/{id}` | Actualiza sesión |
-| | `DELETE` | `/api/v1/sessions/{id}` | Elimina sesión |
-| **Tasks** | `POST` | `/api/v1/tasks` | Crea tarea asociada a materia o libre |
-| | `GET` | `/api/v1/tasks` | Lista todas las tareas del usuario |
-| | `PATCH` | `/api/v1/tasks/{id}` | Actualiza estado o prioridad |
+| | `DELETE` | `/api/v1/subjects/{id}` | Elimina materia (cascade a sesiones) |
+| | `GET` | `/api/v1/subjects/{id}/average` | Calcula el promedio ponderado de la materia |
+| **Sesiones** | `POST` | `/api/v1/subjects/{id}/class-sessions` | Agrega sesión semanal a materia |
+| | `GET` | `/api/v1/class-sessions` | Lista todas las sesiones del semestre activo |
+| | `PATCH` | `/api/v1/class-sessions/{id}` | Actualiza sesión |
+| | `DELETE` | `/api/v1/class-sessions/{id}` | Elimina sesión |
+| **Horario** | `GET` | `/api/v1/schedule` | Retorna el horario semanal completo del semestre activo |
+| **Tareas** | `POST` | `/api/v1/tasks` | Crea tarea asociada a materia o libre |
+| | `GET` | `/api/v1/tasks` | Lista las tareas del usuario con filtros |
+| | `PATCH` | `/api/v1/tasks/{id}` | Actualiza datos de la tarea |
+| | `PATCH` | `/api/v1/tasks/{id}/status` | Transiciona el estado de la tarea |
 | | `DELETE` | `/api/v1/tasks/{id}` | Elimina tarea |
-| | `POST` | `/api/v1/tasks/{id}/sync` | Sincroniza tarea con Google Calendar |
-| **Settings** | `GET` | `/api/v1/settings` | Obtiene configuración del usuario |
-| | `PATCH` | `/api/v1/settings` | Actualiza preferencias |
+| **Calificaciones** | `POST` | `/api/v1/evaluation-criteria` | Crea criterio de evaluación con peso |
+| | `GET` | `/api/v1/evaluation-criteria` | Lista criterios de una materia |
+| | `PATCH` | `/api/v1/evaluation-criteria/{id}` | Actualiza criterio |
+| | `DELETE` | `/api/v1/evaluation-criteria/{id}` | Elimina criterio |
+| | `POST` | `/api/v1/grades` | Registra una calificación |
+| | `GET` | `/api/v1/grades` | Lista las calificaciones del usuario |
+| | `PATCH` | `/api/v1/grades/{id}` | Actualiza calificación |
+| | `DELETE` | `/api/v1/grades/{id}` | Elimina calificación |
+| **Profesores** | `POST` | `/api/v1/professors` | Agrega profesor al directorio del usuario |
+| | `GET` | `/api/v1/professors` | Lista el directorio de profesores |
+| | `GET` | `/api/v1/professors/{id}` | Detalle de un profesor |
+| | `PATCH` | `/api/v1/professors/{id}` | Actualiza datos del profesor |
+| | `DELETE` | `/api/v1/professors/{id}` | Elimina profesor del directorio |
+| | `POST` | `/api/v1/professors/{id}/office-hours` | Agrega bloque de hora de oficina |
+| | `DELETE` | `/api/v1/professors/{id}/office-hours/{oh_id}` | Elimina bloque de hora de oficina |
+| **Tutorías** | `POST` | `/api/v1/tutoring` | Reserva una sesión de tutoría |
+| | `GET` | `/api/v1/tutoring` | Lista las sesiones de tutoría del usuario |
+| | `PATCH` | `/api/v1/tutoring/{id}/cancel` | Cancela una sesión de tutoría |
+| | `PATCH` | `/api/v1/tutoring/{id}/complete` | Marca una sesión como completada |
+| **Sistema** | `GET` | `/api/v1/health` | Estado del servidor |
 
 ---
 
-## 🔐 Authentication
+## Autenticación
+
+### POST `/api/v1/auth/register`
+
+Registra una nueva cuenta de usuario. Retorna tokens JWT listos para usar.
+
+**Request**:
+```json
+{
+  "email": "estudiante@universidad.edu",
+  "full_name": "Juan García López",
+  "password": "contraseñaSegura123!"
+}
+```
+
+**Response 201 Created**:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer",
+  "user": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "email": "estudiante@universidad.edu",
+    "full_name": "Juan García López",
+    "is_active": true,
+    "created_at": "2026-01-24T12:30:00Z"
+  }
+}
+```
+
+**Errores posibles**: `400 VALIDATION_ERROR` (email inválido, contraseña corta), `409` (email ya registrado).
+
+---
 
 ### POST `/api/v1/auth/login`
 
@@ -75,7 +145,64 @@ Content-Type: application/json
 
 ---
 
-## 📚 Semesters (Períodos Académicos)
+### POST `/api/v1/auth/refresh`
+
+Intercambia un refresh token válido por un nuevo par de tokens (access + refresh).
+
+**Request**:
+```json
+{
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Response 200 OK**:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer"
+}
+```
+
+**Errores posibles**: `401 INVALID_TOKEN` (token expirado o inválido).
+
+---
+
+### GET `/api/v1/auth/me`
+
+Retorna el perfil del usuario autenticado por el access token del header.
+
+**Response 200 OK**:
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "email": "estudiante@universidad.edu",
+  "full_name": "Juan García López",
+  "is_active": true,
+  "created_at": "2026-01-24T12:30:00Z"
+}
+```
+
+**Errores posibles**: `401 UNAUTHORIZED` (token ausente o inválido).
+
+---
+
+### POST `/api/v1/auth/logout`
+
+Finaliza la sesión. Los tokens JWT son sin estado; el logout real ocurre en el cliente al descartar los tokens. Este endpoint confirma la operación.
+
+**Response 200 OK**:
+```json
+{
+  "message": "Successfully logged out",
+  "success": true
+}
+```
+
+---
+
+## Semestres (Períodos Académicos)
 
 ### POST `/api/v1/semesters`
 
@@ -214,9 +341,9 @@ Content-Type: application/json
 
 ---
 
-## 📖 Subjects (Materias/Cursos)
+## Materias
 
-### POST `/api/v1/subjects` ⭐ ENDPOINT CRÍTICO
+### POST `/api/v1/subjects`
 
 **Descripción**: Crea una nueva materia con validación automática de conflictos horarios
 
@@ -436,9 +563,9 @@ Content-Type: application/json
 
 ---
 
-## 📝 Tasks (Tareas y Exámenes)
+## Tareas
 
-### POST `/api/v1/tasks` ⭐ ENDPOINT IMPORTANTE
+### POST `/api/v1/tasks`
 
 **Descripción**: Crea una nueva tarea, examen o asignación
 
@@ -666,9 +793,135 @@ Content-Type: application/json
 
 ---
 
-## ⚙️ Settings (Configuración del Usuario)
+## Calificaciones y Criterios de Evaluación
 
-### GET `/api/v1/settings`
+### POST `/api/v1/evaluation-criteria`
+
+Crea un criterio de evaluación con peso porcentual para una materia (examen parcial, proyecto, quiz, etc.).
+
+**Request**:
+```json
+{
+  "subject_id": "750e8400-e29b-41d4-a716-446655440001",
+  "name": "Examen Parcial 1",
+  "weight": 30.00,
+  "category": "EXAM"
+}
+```
+
+**Validaciones**: `weight` en porcentaje (0-100). La suma de pesos de los criterios de una materia no debe superar 100%.
+
+**Response 201 Created**:
+```json
+{
+  "id": "cc0e8400-e29b-41d4-a716-446655440001",
+  "subject_id": "750e8400-e29b-41d4-a716-446655440001",
+  "name": "Examen Parcial 1",
+  "weight": 30.00,
+  "category": "EXAM",
+  "created_at": "2026-02-01T10:00:00Z",
+  "updated_at": "2026-02-01T10:00:00Z"
+}
+```
+
+---
+
+### GET `/api/v1/evaluation-criteria`
+
+Lista los criterios de evaluación de una materia.
+
+**Query Parameters**: `subject_id` (UUID, obligatorio).
+
+**Response 200 OK**:
+```json
+[
+  {
+    "id": "cc0e8400-e29b-41d4-a716-446655440001",
+    "subject_id": "750e8400-e29b-41d4-a716-446655440001",
+    "name": "Examen Parcial 1",
+    "weight": 30.00,
+    "category": "EXAM",
+    "created_at": "2026-02-01T10:00:00Z",
+    "updated_at": "2026-02-01T10:00:00Z"
+  },
+  {
+    "id": "cc0e8400-e29b-41d4-a716-446655440002",
+    "subject_id": "750e8400-e29b-41d4-a716-446655440001",
+    "name": "Proyecto Final",
+    "weight": 40.00,
+    "category": "PROJECT",
+    "created_at": "2026-02-01T10:05:00Z",
+    "updated_at": "2026-02-01T10:05:00Z"
+  }
+]
+```
+
+---
+
+### POST `/api/v1/grades`
+
+Registra una calificación para un criterio de evaluación.
+
+**Request**:
+```json
+{
+  "subject_id": "750e8400-e29b-41d4-a716-446655440001",
+  "criteria_id": "cc0e8400-e29b-41d4-a716-446655440001",
+  "score": 4.2,
+  "max_score": 5.0,
+  "notes": "Buen manejo de derivadas parciales",
+  "graded_at": "2026-03-10T00:00:00Z"
+}
+```
+
+**Response 201 Created**:
+```json
+{
+  "id": "dd0e8400-e29b-41d4-a716-446655440001",
+  "user_id": "550e8400-e29b-41d4-a716-446655440000",
+  "subject_id": "750e8400-e29b-41d4-a716-446655440001",
+  "criteria_id": "cc0e8400-e29b-41d4-a716-446655440001",
+  "score": 4.2,
+  "max_score": 5.0,
+  "notes": "Buen manejo de derivadas parciales",
+  "graded_at": "2026-03-10T00:00:00Z",
+  "created_at": "2026-03-10T09:00:00Z",
+  "updated_at": "2026-03-10T09:00:00Z"
+}
+```
+
+---
+
+### GET `/api/v1/subjects/{id}/average`
+
+Calcula el promedio ponderado de una materia usando los criterios de evaluación y sus calificaciones.
+
+**Response 200 OK**:
+```json
+{
+  "subject_id": "750e8400-e29b-41d4-a716-446655440001",
+  "subject_name": "Análisis Matemático I",
+  "average": 4.15,
+  "max_possible": 5.0,
+  "weighted_progress": 0.70,
+  "criteria_breakdown": [
+    {
+      "criteria_id": "cc0e8400-e29b-41d4-a716-446655440001",
+      "criteria_name": "Examen Parcial 1",
+      "weight": 30.00,
+      "score": 4.2,
+      "max_score": 5.0,
+      "weighted_contribution": 1.26
+    }
+  ]
+}
+```
+
+---
+
+## Configuración de Usuario
+
+### GET `/api/v1/user/settings`
 
 **Descripción**: Obtiene preferencias del usuario
 
@@ -711,9 +964,9 @@ Content-Type: application/json
 
 ---
 
-### PATCH `/api/v1/settings`
+### PATCH `/api/v1/user/settings`
 
-**Descripción**: Actualiza preferencias del usuario
+**Descripción**: Actualiza preferencias del usuario (semántica PATCH: solo los campos enviados se modifican)
 
 **Request**:
 ```json
@@ -754,7 +1007,7 @@ Content-Type: application/json
 
 ---
 
-## 🔢 Códigos de Error Comunes
+## Códigos de Estado HTTP
 
 | Código | Nombre | Descripción |
 |--------|--------|-------------|
@@ -772,7 +1025,7 @@ Content-Type: application/json
 
 ---
 
-## 🔄 Flujo de Manejo de Errores
+## Formato de Errores
 
 ### Estructura Estándar de Error
 
@@ -816,7 +1069,7 @@ Content-Type: application/json
 
 ---
 
-## 🔐 Headers Requeridos
+## Headers Requeridos
 
 ```
 Authorization: Bearer {jwt_token}
@@ -824,7 +1077,7 @@ Content-Type: application/json
 Accept: application/json
 ```
 
-## ⏱️ Límites de Rate Limiting
+## Límites de Rate Limiting
 
 - **Endpoints GET**: 100 peticiones/minuto por usuario
 - **Endpoints POST**: 30 peticiones/minuto por usuario
@@ -842,7 +1095,7 @@ Accept: application/json
 
 ---
 
-## 📌 Notas de Implementación
+## Notas de Implementación
 
 1. **Timezone**: Todos los timestamps en UTC (Z)
 2. **Formato de Hora**: HH:MM en formato 24 horas
@@ -853,6 +1106,9 @@ Accept: application/json
 
 ---
 
-**Última actualización**: 24 de Enero de 2026  
-**Versión API**: v1.0  
-**Status**: Production Ready
+Para la documentación completa del módulo de Profesores y Tutorías, ver [professors.md](professors.md).
+Para la documentación completa de Perfil de Usuario, Configuración y Notificaciones, ver [user_profile.md](user_profile.md).
+
+**Última actualización**: 2026-04-06
+**Versión API**: v1 (`/api/v1`)
+**Documentación interactiva**: http://localhost:8000/docs (Swagger UI)

@@ -1,71 +1,146 @@
-# UniversityScheduler v1.0.0-beta.1 🚀🎓
+# UniversityScheduler
 
-**UniversityScheduler** es tu central interactiva académica. Es un MVP de software diseñado en una arquitectura orientada al dominio y modularizada para alto rendimiento, escalabilidad comunitaria e ingeniería moderna.
+![Version](https://img.shields.io/badge/versión-1.0.0--beta.2-blue)
+![License](https://img.shields.io/badge/licencia-MIT-green)
+![Python](https://img.shields.io/badge/Python-3.13-blue)
+![Node](https://img.shields.io/badge/Node.js-20%2B-brightgreen)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688)
+![Next.js](https://img.shields.io/badge/Next.js-16.1.4-black)
 
-![Despliegue General](docs/diagrams/Deployment%20Topology.png)
+**UniversityScheduler** es una aplicación web de gestión académica para estudiantes universitarios. Permite organizar semestres, materias y sesiones de clase con detección automática de conflictos horarios, gestionar tareas en un tablero Kanban, hacer seguimiento de calificaciones ponderadas y administrar un directorio de profesores con reserva de tutorías.
+
+El proyecto es un MVP en estado beta, construido con Arquitectura Hexagonal en el backend y Atomic Design en el frontend.
+
+![Topología de Despliegue](docs/diagrams/Deployment%20Topology.png)
+
+---
 
 ## Tabla de Contenido
-1. [Funcionalidades Core](#funcionalidades-core)
-2. [Arquitectura e Infraestructura](#arquitectura-e-infraestructura)
-   - [Event-Driven In-Memory (Pub/Sub)](#event-driven-in-memory-pubsub)
-   - [Documentación Interactiva y Estática](#documentación-interactiva-y-estática)
-   - [API Reference (Swagger)](#api-reference-swagger)
-3. [Empezando Rápidamente](#empezando-rápidamente-desarrollo)
-4. [Contribución Comunitaria](#contribución-comunitaria)
+
+1. [Funcionalidades](#funcionalidades)
+2. [Tecnologías](#tecnologías)
+3. [Arquitectura](#arquitectura)
+4. [Inicio Rápido](#inicio-rápido)
+5. [Documentación](#documentación)
+6. [Contribución](#contribución)
+7. [Licencia](#licencia)
 
 ---
 
-## Funcionalidades Core
+## Funcionalidades
 
-- 📅 **Programación Académica:** Modela semestres, inscribe materias, asigna créditos y esquiva choques horarios con validaciones matemáticas integradas a nivel Backend (`DetectScheduleConflictsUseCase`).
-- 📋 **Task Management:** Gestión de prioridades usando la UI Kanban interactiva mediante *Optimistic UI* de Next.js y un despachito de eventos interno asíncrono para las notificaciones al hacer Drag And Drop.
-- 📊 **Progreso Ponderado:** Algoritmos matemáticos implementados en tu dominio para dictaminar con semáforo porcentual tu progresión y proyección de aprobación en tu trimestre.
-- 👨‍🏫 **Directorio Institucional:** Control estricto de horas de asesoría y oficinas para no irrumpir sobre el horario de tus asignaturas diarias. 
-- 🔒 **Full Auth & System Tuning:** UX envidiable; Tema Oscuro persistente en el Contexto de React, y un entorno cerrado y seguro vía JSON Web Tokens protegiendo todo tu panel de control y API.
-
----
-
-## Arquitectura e Infraestructura
-
-Este software se forjó respetando los patrones de diseño modernos tanto a nivel Backend como Frontend.
-
-1. **Frontend:** React 19, Next.js (App Router), TailwindCSS (v4), Metodología `Atomic Design` con fuerte tipado en TypeScript. Cuenta con suite Pre-Commit e incio de QA E2E bajo Playwright.
-2. **Backend:** FastAPI, Python 3.10+, SQLAlchemy (PostgreSQL y Alembic). Moldeado exquisitamente bajo **Arquitectura Hexagonal** (Puertos, Adaptadores, Dominio, Aplicación), con Inversión de Control de Dependencias.
-
-### Event-Driven In-Memory (Pub/Sub)
-El proyecto cuenta con un sistema Pub/Sub. Sin embargo, no usa conectores pesados e instrumentales como Apache Kafka o RabbitMQ en su estado de Beta MVP (mitigando costos directos y DevOps abultado vía el principio YAGNI).
-Para lograr este flujo, usamos `SyncEventBus` (y `NotificationListener` atados mediante Callables en memoria ubicados en el `Shared Kernel`). La interfaz abstracta de este modelo permitirá el _swap_ rápido e inter-proceso hacia tecnologías de Message Broking (ej: SQS, Rabbit) en Fases masivas posteriores sin disrupción alguna en la lógica gracias a los Adapters.
-
-### Documentación Interactiva y Estática
-* `docs/architecture/06_use_cases.md`: Todo aspecto de negocio estructurado en Formato de Casos de Uso (Metodología Larman).
-* `docs/diagrams/`: Toda la topología gráfica (`ERD` de Postgres, `DFD` - Data Flow para el App Router, `Despliegues` y diagramas de estados) escritos en **PlantUML** y portabilizados nativamente a formato libre PNG.
-* `docs/requirements_traceability.md` y `docs/mockups/`: Listas de control de QA.
-
-### API Reference (Swagger)
-El backend cuenta por defecto y en un 100% con *Documentación Asíncrona Integrada*. FastAPI autogenera las especificaciones [OpenAPI](https://swagger.io/specification/v3/).
-Para consultar los endpoints, validaciones HTTP (4XX, 5XX) o parámetros JWT en tiempo real:
-- Dirígete a la ruta nativa `http://localhost:8000/docs`.
+- **Planificación Académica**: Modelado de semestres, registro de materias con créditos y tipo, asignación de sesiones de clase semanales con validación matemática de conflictos horarios (`ConflictDetectionService`).
+- **Gestión de Tareas**: Tablero Kanban con máquina de estados (TODO → IN_PROGRESS → DONE → ARCHIVED). Soporte de prioridades y categorías (tarea, examen, proyecto, lectura).
+- **Progreso Académico**: Registro de calificaciones con criterios de evaluación ponderados y cálculo de promedio por materia.
+- **Directorio de Profesores**: Gestión de un directorio privado por usuario con horas de oficina y reserva de sesiones de tutoría.
+- **Notificaciones**: Sistema de notificaciones in-app generado por un bus de eventos en memoria (`SyncEventBus`).
+- **Autenticación**: Flujo completo de registro, login, refresh token y logout con JWT (HS256) y bcrypt.
+- **Tema Oscuro**: Modo oscuro persistente gestionado por la Context API de React y sincronizado con el backend.
 
 ---
 
-## Empezando Rápidamente (Desarrollo)
+## Tecnologías
 
-Asegúrate de preparar tu archivo `.env` de Postgres (local o cloud) con su URL canónica y los secretos HMAC del JWT.
+| Categoría | Tecnología | Versión |
+| :--- | :--- | :--- |
+| Backend — Framework | FastAPI | 0.110+ |
+| Backend — Lenguaje | Python | 3.13 |
+| Backend — ORM | SQLAlchemy (async) | 2.0+ |
+| Backend — Migraciones | Alembic | 1.13+ |
+| Backend — Base de datos | PostgreSQL | 15 |
+| Backend — Autenticación | python-jose + bcrypt | 3.3 / 3.2 |
+| Backend — Servidor | Uvicorn | 0.29+ |
+| Frontend — Framework | Next.js (App Router) | 16.1.4 |
+| Frontend — Lenguaje | TypeScript | 5 |
+| Frontend — UI | React | 19.2.3 |
+| Frontend — Estilos | TailwindCSS | 4 |
+| Frontend — Testing E2E | Playwright | 1.59+ |
+| Infraestructura | Docker + Docker Compose | — |
+
+---
+
+## Arquitectura
+
+### Backend — Arquitectura Hexagonal
+
+El backend sigue el patrón Hexagonal (Puertos y Adaptadores) organizado en módulos por dominio. Cada módulo contiene cuatro capas:
+
+- `domain/` — Entidades y servicios de negocio puro (sin dependencias de framework).
+- `application/` — Casos de uso y DTOs.
+- `port/` — Interfaces abstractas (repositorios, servicios externos).
+- `adapter/` — Implementaciones concretas (routers FastAPI, repositorios PostgreSQL).
+
+El Shared Kernel (`app/shared/`) concentra las abstracciones transversales: jerarquía de excepciones, bus de eventos, value objects y sesión de base de datos.
+
+### Frontend — Atomic Design
+
+El frontend organiza los componentes en cuatro niveles: atoms (elementos HTML con estilo), molecules (combinaciones simples), organisms (secciones con estado propio) y templates (layouts de página). La lógica de dominio reside en hooks específicos por feature (`features/{nombre}/hooks/`).
+
+Para más detalle, consultar la documentación de arquitectura en [`docs/architecture/`](docs/architecture/).
+
+---
+
+## Inicio Rápido
+
+Para instrucciones completas de instalación, configuración de variables de entorno y ejecución de pruebas, consultar la **[Guía de Inicio](docs/GETTING_STARTED.md)**.
+
+Resumen del flujo básico:
 
 ```bash
-# Permisos iniciales de ejecución a nuestro root script
-chmod +x start_dev.sh
+# 1. Clonar el repositorio
+git clone https://github.com/usuario/UniversityScheduler.git
+cd UniversityScheduler
 
-# Despliega tu base de PostgreSQL y luego unifica las dos cabezas del stack:
-./start_dev.sh
+# 2. Configurar variables de entorno
+cp backend/.env.example backend/.env
+# Editar backend/.env con los valores reales
+
+# 3. Levantar la base de datos y aplicar migraciones
+docker compose up postgres -d
+cd backend && alembic upgrade head && cd ..
+
+# 4. Iniciar el stack completo
+chmod +x start_dev.sh && ./start_dev.sh
 ```
 
-Levanta el Frontend en `http://localhost:3000` y aliméntalo de su respectiva capa Backend en `http://localhost:8000`.
+| Servicio | URL |
+| :--- | :--- |
+| Frontend | http://localhost:3000 |
+| Backend API | http://localhost:8000 |
+| Documentación Swagger | http://localhost:8000/docs |
 
 ---
 
-## Contribución Comunitaria
+## Documentación
 
-Apreciamos inmensamente la colaboración en el código abierto. Hemos construido una guía sólida en **`CONTRIBUTING.md`** y un PR template (`.github/PULL_REQUEST_TEMPLATE.md`) que exigen un escrutinio automatizado del Pre-Commit y `git-commit` skills previos para asegurar cero quiebres a este gran software.
+| Documento | Descripción |
+| :--- | :--- |
+| [Guía de Inicio](docs/GETTING_STARTED.md) | Prerequisitos, variables de entorno, instalación, pruebas |
+| [Referencia de API](docs/api/endpoints.md) | Todos los endpoints REST con request/response |
+| [Módulo Profesores (API)](docs/api/professors.md) | Endpoints de directorio de profesores y tutorías |
+| [Perfil y Notificaciones (API)](docs/api/user_profile.md) | Endpoints de perfil, configuración y notificaciones |
+| [Decisiones de Arquitectura (ADR)](docs/architecture/00_decisions.md) | Registro de decisiones de diseño |
+| [Modelo C4](docs/architecture/01_c4_model.md) | Diagrama de contexto, contenedores y componentes |
+| [Esquema de Base de Datos](docs/architecture/02_database_schema.md) | DDL PostgreSQL con relaciones e índices |
+| [Modelo de Dominio](docs/architecture/03_domain_model.md) | Entidades, tarjetas CRC y diagramas PlantUML |
+| [Diagramas de Comportamiento](docs/architecture/04_behavioral_diagrams.md) | Diagramas de secuencia de los flujos principales |
+| [Estructura de Directorios](docs/architecture/05_directory_structure.md) | Árbol de archivos con descripción de cada capa |
+| [Casos de Uso](docs/architecture/06_use_cases.md) | Casos de uso en formato Larman |
+| [Eventos de Dominio](docs/architecture/08_domain_events.md) | Bus de eventos, listeners y flujo pub/sub |
+| [Manejo de Errores](docs/architecture/09_error_handling.md) | Jerarquía de excepciones y formato de respuesta |
+| [Arquitectura Frontend](docs/architecture/10_frontend_architecture.md) | Atomic Design, rutas, contextos y convenciones |
+| [Estrategia de Pruebas](docs/testing_strategy.md) | Pirámide de pruebas, herramientas y comandos |
+| [Glosario](docs/GLOSSARY.md) | Términos del dominio y del proyecto |
+| [Diagramas](docs/diagrams/) | ERD, DFD, despliegue y máquinas de estado en PlantUML/PNG |
 
-*Con amor para la ingeniería,* **MIT License**.
+---
+
+## Contribución
+
+Las contribuciones son bienvenidas. Leer la **[Guía de Contribución](CONTRIBUTING.md)** antes de abrir un Pull Request. El proyecto requiere compilación limpia antes de cada commit y sigue el estándar [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+
+---
+
+## Licencia
+
+Este proyecto está bajo la **Licencia MIT**. Ver el archivo [LICENSE](LICENSE) para más detalles.
