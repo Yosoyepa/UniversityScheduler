@@ -30,3 +30,4 @@ This skill enforces:
 3. **Domain layer is framework-free** — no FastAPI, no SQLAlchemy, no Pydantic
 4. **Value objects must be immutable** — use frozen dataclass or equivalent
 5. **Test thoroughly** — changes here ripple across the entire application
+6. **Cross-Module Choreography** — Modules must NEVER orchestrate callbacks sequentially if they don't belong to the same subdomain. They MUST emit an event via `SyncEventBus` inside `shared/domain/events` to ensure maximum decoupling.

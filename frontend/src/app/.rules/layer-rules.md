@@ -50,3 +50,6 @@ app/
 4. **Use templates from Atomic Design** — `DashboardLayout`, `AuthLayout` etc.
 5. **Feature hooks** live in `@/features/<module>/hooks/` — not inlined in pages
 6. **API calls** go through `@/lib/api.ts` — never call `fetch()` directly in pages
+7. **Hydration Prevention** — Strict HTML hierarchy must be maintained in layouts/pages to prevent Next.js hydration mismatch errors (e.g., never nest `<div>` inside `<p>`).
+8. **Route Protection** — Protected routes (e.g. `/dashboard`) must enforce security via Server Layouts or HOC interceptors that strictly push to `/login` if unauthenticated.
+9. **Dark Mode Ecosystem** — Visuals must adhere to the global `ThemeProvider`. Always use the `.dark` class semantics for dark mode compatibility instead of hardcoding non-responsive colors.

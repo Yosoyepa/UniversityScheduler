@@ -40,5 +40,7 @@ components/
 3. **Organisms** → import atoms and molecules
 4. **Templates** → import atoms, molecules, and organisms (rarely)
 5. **Always update barrel exports** (`index.ts`) when adding new components
-6. **No business logic in atoms or molecules** — keep them purely presentational
+6. **No business logic in atoms or molecules** — keep them purely presentational. Mutation hooks (`useAuth`, `useTasks`, etc.) are STRICTLY PROHIBITED in Atmos and Molecules; they belong in Organisms or Templates.
 7. **No direct API calls in components** — use feature hooks from `@/features/`
+8. **Premium Glassmorphism Aesthetic** — Floating elements (Modals, Dropdowns) MUST use `backdrop-blur-sm` (or similar utility) and apply consistent semantic BEM classes mapped in `globals.css` (e.g., `.modal-body`) instead of ad-hoc CSS.
+9. **Component Interactivity** — Components utilizing heavy interactive hooks (like Framer Motion, Context consumers) must explicitly declare `"use client"` at the top.

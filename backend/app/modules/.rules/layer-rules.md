@@ -44,3 +44,6 @@ modules/<module_name>/
 2. **Always** create `__init__.py` in every subdirectory
 3. **Always** register new routers in `main.py`
 4. **Always** use async methods in repository interfaces
+5. **Larman Use Cases Specification** — All use cases MUST comply with the Larman structural format described in `docs/architecture/06_use_cases.md` (e.g., strict decoupling of payload parsing logic vs. pure business invariants).
+6. **Alembic ORM Migrations** — Adapter/infrastructure DB model modifications MUST be followed by `alembic revision --autogenerate` and `alembic upgrade head`. Never modify SQL schema directly.
+7. **Strict DTO Mapping** — FastAPI Routers must communicate using exclusively Pydantic objects (`*Request` / `*Response`). The application use cases map these directly to Domain `Entity` instances.

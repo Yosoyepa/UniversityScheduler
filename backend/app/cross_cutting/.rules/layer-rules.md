@@ -29,3 +29,4 @@ This skill enforces:
 4. **All registrations happen in `main.py`** — single point of wiring
 5. **Can import shared exceptions** — for the exception handler mapping
 6. **Can import module entities for type hints** — e.g., `User` in auth middleware
+7. **Event Pub/Sub Lifespan Registration** — Event listeners subscriptions (e.g. `NotificationListener` to `TaskCompletedEvent`) MUST be registered fundamentally in the FastAPI Lifespan initialization process. They must not be injected in hidden internal states.
